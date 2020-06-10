@@ -1,0 +1,15 @@
+{
+    "compilerOptions": {
+        "outDir": "./dist/",
+        // "sourceMap": true,
+        "incremental": true,
+        "noImplicitAny": true,
+        "module": "commonjs",
+        "target": "es2016",
+        "jsx": "react",
+        "types": [
+            //(various types, e.g. jquery, core-js),
+            "chrome"
+        ]
+    }
+}
