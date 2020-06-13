@@ -105,7 +105,7 @@ export default function Popup(): JSX.Element {
 			})
 			handleTabsFunc()
 		}
-		// Add event linstener
+		// Add event listener
 		chrome.tabs.onCreated.addListener(onCreatedListener)
 		chrome.tabs.onUpdated.addListener(onUpdatedListener)
 		chrome.tabs.onRemoved.addListener(onRemovedListener)
@@ -470,7 +470,7 @@ export default function Popup(): JSX.Element {
 						closeWindow={closeWindow}
 						closeTab={closeTab}
 						hiddenDropDiv={hiddenDropDiv}
-						selectWindow={selectWindow}
+						selectwindow={selectWindow}
 						attachInfo={windowsAttach[key]}
 					/>
 				)
@@ -481,7 +481,7 @@ export default function Popup(): JSX.Element {
 }
 
 // export default connect(
-// 	function mapStateToPropss(state: AppState) {
+// 	function mapStateToProps(state: AppState) {
 // 		return state
 // 	},
 // 	function mapDispatchToProps(dispatch) {
