@@ -2,7 +2,7 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2020-05-29 18:00:07
- * @LastEditTime: 2020-06-05 20:45:02
+ * @LastEditTime: 2020-06-13 20:37:45
  * @Description: 整个项目会用到的接口和类型定义
  */
 export interface Windows {
@@ -47,3 +47,6 @@ export interface SelectObj {
 	status?: boolean
 	lastSelectObj?: SelectObj
 }
+
+
+export type WindowState =  "normal"| "minimized" | "maximized" | "fullscreen" |"docked"
