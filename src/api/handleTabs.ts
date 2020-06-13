@@ -2,7 +2,7 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2020-06-07 21:58:08
- * @LastEditTime: 2020-06-09 18:36:58
+ * @LastEditTime: 2020-06-13 22:44:11
  * @Description: file content
  */
 
@@ -230,13 +230,13 @@ export function groupTabsByWindowId(tabs: Tab[]): Windows {
 	})
 	return rst
 }
-export function groupWindowsByWindowId(windows: chrome.windows.Window[]){
+export function groupWindowsByWindowId(windows: chrome.windows.Window[]): WindowsAttach{
 	const rst:WindowsAttach = {}
 	windows.map((window)=>{
 		rst[window.id] = window
 	})
 	return rst
-} 
+}
 
 
 export function splitUrl(tab: Tab & CustomProps): Tab & CustomProps {
@@ -250,6 +250,8 @@ export function splitUrl(tab: Tab & CustomProps): Tab & CustomProps {
 		tab.userHost = regRst[2]
 		tab.userRoute = regRst[3]
 		tab.userPara = regRst[4]
+	}else{
+		console.log("splitURL", url, tab);
 	}
 
 	return tab

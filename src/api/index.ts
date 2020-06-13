@@ -2,7 +2,7 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2020-05-29 17:30:01
- * @LastEditTime: 2020-06-09 19:30:25
+ * @LastEditTime: 2020-06-13 18:24:52
  * @Description: 整个项目会用到的方法和api
  */
 export function throttle(
@@ -35,7 +35,6 @@ export function debound(
 			fn.apply(this, args)
 		}
 		if (nowTime - lastHandleTime > maxDelay) {
-			console.log('force update interval', nowTime - lastHandleTime)
 			cb()
 		} else {
 			timer = setTimeout(cb, delay)
