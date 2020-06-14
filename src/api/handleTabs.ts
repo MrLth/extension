@@ -2,7 +2,7 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2020-06-07 21:58:08
- * @LastEditTime: 2020-06-13 22:44:11
+ * @LastEditTime: 2020-06-14 21:51:07
  * @Description: file content
  */
 
@@ -220,6 +220,22 @@ function createNewObj(obj: Windows, selectObj: SelectObj): Windows {
 	return newObj
 }
 
+export function getSelectedTab(windows:Windows):number[]{
+	const selectTabs: number[] = []
+	Object.keys(windows).map((key: keyof typeof windows) => {
+		windows[key].map((tab) => {
+			tab.userSelected && selectTabs.push(tab.id)
+		})
+	})
+	return selectTabs
+}
+export function isHaveTabSelected(windows:Windows):boolean{
+	return -1 != Object.keys(windows).findIndex((key: keyof typeof windows) => {
+		return -1 != windows[key].findIndex((tab) => {
+			return tab.userSelected
+		})
+	})
+}
 
 export function groupTabsByWindowId(tabs: Tab[]): Windows {
 	const rst: Windows = {}
