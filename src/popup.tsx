@@ -511,6 +511,7 @@ export default function Popup(): JSX.Element {
                 newWindows[windowIdKey][i] = { ...tab, userSelected: true }
             }
         })
+        isSelect.current = true
         setWindows(newWindows)
     }, [])
 
