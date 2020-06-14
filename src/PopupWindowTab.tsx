@@ -132,8 +132,9 @@ const PopupWindowTab = memo(function PopupWindowTab(props: {
 
             <div className="btn-wrapper">
                 <button
-                    onClick={() => {
+                    onClick={(e) => {
                         discardTab(windowId, tab.id)
+                        e.stopPropagation()
                     }}>
                     丢弃
                 </button>
