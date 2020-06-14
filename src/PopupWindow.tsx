@@ -22,8 +22,8 @@ const PopupWindow = memo(function PopupWindow(props: {
     selectWindow: (windowIdKey: string | number) => void
     attachInfo: chrome.windows.Window
     changeWindowAttach: (windowsId: number, updateInfo: chrome.windows.UpdateInfo, isCb?: boolean) => void
-	duplicateTab: (tabId: number) => void
-	discardTab:(windowId:number|string, tabId:number)=>void
+    duplicateTab: (tabId: number) => void
+    discardTab: (windowId: number | string, tabId: number) => void
 }) {
     const {
         tabs,
@@ -38,8 +38,8 @@ const PopupWindow = memo(function PopupWindow(props: {
         selectWindow,
         attachInfo,
         changeWindowAttach,
-		duplicateTab,
-		discardTab
+        duplicateTab,
+        discardTab,
     } = props
 
     // console.log('🌀 Render    ', windowId)
@@ -71,8 +71,8 @@ const PopupWindow = memo(function PopupWindow(props: {
                         dragOverCb={dragOverCb}
                         closeTab={closeTab}
                         hiddenDropDiv={hiddenDropDiv}
-						duplicateTab={duplicateTab}
-						discardTab={discardTab}
+                        duplicateTab={duplicateTab}
+                        discardTab={discardTab}
                     />
                 )
                 i++
@@ -93,8 +93,8 @@ const PopupWindow = memo(function PopupWindow(props: {
                 dragOverCb={dragOverCb}
                 closeTab={closeTab}
                 hiddenDropDiv={hiddenDropDiv}
-				duplicateTab={duplicateTab}
-				discardTab={discardTab}
+                duplicateTab={duplicateTab}
+                discardTab={discardTab}
             />
         )
 
@@ -128,13 +128,6 @@ const PopupWindow = memo(function PopupWindow(props: {
                 <div className="btn-wrapper">
                     <button
                         onClick={(e) => {
-                            closeWindow(windowId as number)
-                            e.stopPropagation()
-                        }}>
-                        关闭
-                    </button>
-                    <button
-                        onClick={(e) => {
                             selectWindow(windowId)
                             e.stopPropagation()
                         }}>
@@ -157,6 +150,13 @@ const PopupWindow = memo(function PopupWindow(props: {
                             最小化
                         </button>
                     )}
+                    <button
+                        onClick={(e) => {
+                            closeWindow(windowId as number)
+                            e.stopPropagation()
+                        }}>
+                        关闭
+                    </button>
                 </div>
             </h2>
             {

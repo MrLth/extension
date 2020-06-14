@@ -128,7 +128,7 @@ const PopupWindowTab = memo(function PopupWindowTab(props: {
                 hiddenDropDiv()
             }}
             draggable="true">
-            <div className="title">{tab.title}</div>
+            <div className="title">{tab.id+' - '+tab.title}</div>
 
             <div className="btn-wrapper">
                 <button
@@ -148,7 +148,7 @@ const PopupWindowTab = memo(function PopupWindowTab(props: {
                     onClick={() => {
                         closeTab(tab.id)
                     }}>
-                    删除
+                    关闭
                 </button>
             </div>
         </li>

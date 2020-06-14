@@ -5,7 +5,7 @@ import { useEffect, useState, useMemo, useRef, useCallback } from 'react'
 
 import './index.scss'
 
-import { debound } from './api'
+import { debound, deboundFixed } from './api'
 import { Tab, CustomProps, Windows, SelectObj, WindowsAttach } from './api/type'
 import {
     splitUrl,
@@ -22,6 +22,8 @@ import {
     attachTab,
     createNewWindows,
     groupWindowsByWindowId,
+    getSelectedTab,
+    isHaveTabSelected,
 } from './api/handleTabs'
 // import { PopupState } from './store/popup/type'
 // import { AppState } from "./store"
@@ -29,7 +31,6 @@ import {
 import PopupWindow from './PopupWindow'
 import BtnGroup from './BtnGroup'
 import DropDiv from './DropDiv'
-import BtnGroupOnSelected from './BtnGroupOnSelected'
 
 // function Popup(props: { props: Windows }) {
 export default function Popup(): JSX.Element {
@@ -42,7 +43,7 @@ export default function Popup(): JSX.Element {
 
     const handleTabsQueue = useRef([] as Array<(windows: Windows) => Windows>)
     const handleTabsFunc = useCallback(
-        debound(() => {
+        deboundFixed(() => {
             // console.log("handleTabsQueue length", handleTabsQueue.current.length);
             if (10 < handleTabsQueue.current.length) {
                 handleTabsQueue.current = []
@@ -67,13 +68,9 @@ export default function Popup(): JSX.Element {
         })
 
         const onCreatedListener = (tab: chrome.tabs.Tab) => {
+            console.log('**************************************************Created')
+
             if (isEventSleep.current) return
-			console.log("tab created");
-
-			const index = refWindows.current[tab.windowId].findIndex(_tab=>_tab.id === tab.id)
-			console.log('create index', index);
-
-			if (-1 != index)	return
 
             handleTabsQueue.current.push((windows) => {
                 return addTab(windows, tab.windowId, splitUrl(tab), tab.index)
@@ -81,10 +78,10 @@ export default function Popup(): JSX.Element {
             handleTabsFunc()
         }
         const onUpdatedListener = (tabId: number, changeInfo: chrome.tabs.TabChangeInfo, tab: chrome.tabs.Tab) => {
-			
-			if (isEventSleep.current) return
-			if (changeInfo?.discarded) return
-			console.log("tab Updated", tabId, changeInfo, tab);
+            console.log('**************************************************Updated')
+
+            if (isEventSleep.current) return
+            if (changeInfo?.discarded) return
 
             handleTabsQueue.current.push((windows) => {
                 return updTab(windows, tab.windowId, splitUrl(tab), tabId)
@@ -92,9 +89,9 @@ export default function Popup(): JSX.Element {
             handleTabsFunc()
         }
         const onRemovedListener = (tabId: number, { windowId, isWindowClosing }: chrome.tabs.TabRemoveInfo) => {
-			console.log("tab Removed");
-
             if (isEventSleep.current) return
+            // if (1 === windowId) return
+            console.log('**************************************************Removed', tabId, windowId, isWindowClosing)
 
             const cb = isWindowClosing
                 ? (windows: Windows) => {
@@ -107,7 +104,7 @@ export default function Popup(): JSX.Element {
             handleTabsFunc()
         }
         const onMovedListener = (_tabId: number, { windowId, fromIndex, toIndex }: chrome.tabs.TabMoveInfo) => {
-			console.log("tab Moved");
+            console.log('**************************************************Moved')
 
             if (isEventSleep.current) return
 
@@ -117,7 +114,7 @@ export default function Popup(): JSX.Element {
             handleTabsFunc()
         }
         const onActivatedListener = ({ tabId, windowId }: chrome.tabs.TabActiveInfo) => {
-			console.log("tab Activated");
+            console.log('**************************************************Activated')
 
             if (isEventSleep.current) return
 
@@ -127,7 +124,7 @@ export default function Popup(): JSX.Element {
             handleTabsFunc()
         }
         const onDetachedListener = (tabId: number, { oldWindowId, oldPosition }: chrome.tabs.TabDetachInfo) => {
-			console.log("tab Detached");
+            console.log('**************************************************Detached')
 
             if (isEventSleep.current) return
 
@@ -137,7 +134,7 @@ export default function Popup(): JSX.Element {
             handleTabsFunc()
         }
         const onAttachedListener = (tabId: number, { newWindowId, newPosition }: chrome.tabs.TabAttachInfo) => {
-			console.log("tab Attached");
+            console.log('**************************************************Attached')
 
             if (isEventSleep.current) return
 
@@ -216,10 +213,9 @@ export default function Popup(): JSX.Element {
 
     const changeWindowAttach = useCallback((windowId: number, updateInfo: chrome.windows.UpdateInfo, isCb = true) => {
         if (isCb)
-
             chrome.windows.update(windowId, updateInfo, (windowAttach) => {
                 const windowsAttach = { ...refWindowsAttach.current }
-				windowsAttach[windowAttach.id] = windowAttach
+                windowsAttach[windowAttach.id] = windowAttach
 
                 setWindowsAttach(windowsAttach)
             })
@@ -271,7 +267,11 @@ export default function Popup(): JSX.Element {
         if (endWindow == selectObj.current.startWindow && endIndex == selectObj.current.startIndex) return
         selectObj.current.endWindow = endWindow
         selectObj.current.endIndex = endIndex
-        setWindows(selectTabs(refWindows.current, selectObj.current))
+
+        const newWindows = selectTabs(refWindows.current, selectObj.current)
+
+        isSelect.current = isHaveTabSelected(newWindows)
+        setWindows(newWindows)
     }, [])
     const dropCb = useCallback(
         (dragTab: Tab & CustomProps) => {
@@ -427,59 +427,80 @@ export default function Popup(): JSX.Element {
     const createWindow = useCallback(() => {
         chrome.windows.create()
     }, [])
-    const createWindowOnDropCb = useCallback(
-        (dragTab: Tab & CustomProps) => {
-            const selectTabs: number[] = []
-            Object.keys(windows).map((key: keyof typeof windows) => {
-                windows[key].map((tab) => {
-                    tab.userSelected && selectTabs.push(tab.id)
-                })
+    const createWindowOnDropCb = useCallback((dragTab: Tab & CustomProps) => {
+        const selectTabs = getSelectedTab(refWindows.current)
+
+        0 === selectTabs.length && selectTabs.push(dragTab.id)
+
+        isEventSleep.current = true
+        hiddenDropDiv()
+
+        const tabsMovedCb = debound(() => {
+            console.log('tabMovedCb')
+            updateWindowsObj(() => {
+                isEventSleep.current = false
             })
-
-            0 === selectTabs.length && selectTabs.push(dragTab.id)
-
-            isEventSleep.current = true
-            hiddenDropDiv()
-
-            const tabsMovedCb = debound(() => {
-                console.log('tabMovedCb')
-                updateWindowsObj(() => {
-                    isEventSleep.current = false
-                })
-            }, 333)
-            chrome.windows.create({ tabId: selectTabs[0] }, ({ id }) => {
-                tabsMovedCb()
-                const moveProperties = { windowId: id, index: -1 }
-                for (let i = 1; i < selectTabs.length; i++) {
-                    chrome.tabs.move(selectTabs[i], moveProperties, tabsMovedCb)
-                }
-            })
-        },
-        [windows]
-    )
+        }, 333)
+        chrome.windows.create({ tabId: selectTabs[0] }, ({ id }) => {
+            tabsMovedCb()
+            const moveProperties = { windowId: id, index: -1 }
+            for (let i = 1; i < selectTabs.length; i++) {
+                chrome.tabs.move(selectTabs[i], moveProperties, tabsMovedCb)
+            }
+        })
+    }, [])
 
     const closeWindow = useCallback((windowId: number) => {
         chrome.windows.remove(windowId)
-	}, [])
+    }, [])
 
     const closeTab = useCallback((tabId: number) => {
         chrome.tabs.remove(tabId)
-	}, [])
-	const duplicateTab = useCallback((tabId:number)=>{
-		chrome.tabs.duplicate(tabId)
-	}, [])
-	const discardTab = useCallback((windowId:number|string, tabId:number)=>{
-		chrome.tabs.discard(tabId, (tab)=>{
-			if (!tab) return
+    }, [])
+    const closeSelectedTab = useCallback(() => {
+        const selectedTabs = getSelectedTab(refWindows.current)
 
+        isEventSleep.current = true
 
-			setWindows(updTab(createNewWindows(refWindows.current), windowId,splitUrl(tab), tabId))
-			// handleTabsQueue.current.push((windows) => {
-            //     return updTab(windows, windowId, splitUrl(tab), tabId)
-            // })
-			// handleTabsFunc()
-		})
-	}, [])
+        const removedCb = debound(() => {
+            updateWindowsObj(() => {
+                isEventSleep.current = false
+            })
+        }, 333)
+
+        selectedTabs.map((tab) => {
+            chrome.tabs.remove(tab, removedCb)
+        })
+    }, [])
+    const duplicateTab = useCallback((tabId: number) => {
+        chrome.tabs.duplicate(tabId)
+    }, [])
+    const discardTab = useCallback((windowId: number | string, tabId: number) => {
+        chrome.tabs.discard(tabId, (tab) => {
+            if (!tab) return
+
+            // setWindows(updTab(createNewWindows(refWindows.current), windowId, splitUrl(tab), tabId))
+            handleTabsQueue.current.push((windows) => {
+                return updTab(windows, windowId, splitUrl(tab), tabId)
+            })
+            handleTabsFunc()
+        })
+    }, [])
+    const discardSelectedTab = useCallback(()=>{
+        const selectedTabs = getSelectedTab(refWindows.current)
+
+        isEventSleep.current = true
+
+        const removedCb = debound(() => {
+            updateWindowsObj(() => {
+                isEventSleep.current = false
+            })
+        }, 333)
+
+        selectedTabs.map((tab) => {
+            chrome.tabs.discard(tab, removedCb)
+        })
+    },[])
 
     const selectWindow = useCallback((windowIdKey: keyof typeof windows) => {
         const newWindows: Windows = Object.assign({}, refWindows.current)
@@ -507,6 +528,7 @@ export default function Popup(): JSX.Element {
                 newWindows[key] = [...newWindows[key]]
             }
         })
+        isSelect.current = false
         setWindows(newWindows)
     }, [])
 
@@ -521,12 +543,10 @@ export default function Popup(): JSX.Element {
     return (
         <div id="popup">
             <div className="btn-group-wrapper">
-                <BtnGroup createWindow={createWindow} createWindowOnDropCb={createWindowOnDropCb} />
                 <button
                     onClick={() => {
                         updateWindowsObj()
-                    }}
-                >
+                    }}>
                     refresh
                 </button>
                 <button onClick={printTabs}>print tabs</button>
@@ -535,23 +555,28 @@ export default function Popup(): JSX.Element {
                 <button
                     onClick={() => {
                         printUrl(true)
-                    }}
-                >
+                    }}>
                     Print printUrl merge
                 </button>
                 <button
                     onClick={() => {
                         printUrl(false)
-                    }}
-                >
+                    }}>
                     Print printUrl
                 </button>
                 <button onClick={handleTabsFunc}>handleTabsFunc</button>
-            </div>
-            <div className="btn-group-wrapper">
-                <BtnGroupOnSelected cancelSelected={cancelSelected} />
                 <button onClick={printWindowAttach}>printWindowAttach</button>
                 <button onClick={updateWindowAttach}>updateWindowAttach</button>
+            </div>
+            <div className="btn-group-wrapper">
+                <BtnGroup
+                    createWindow={createWindow}
+                    createWindowOnDropCb={createWindowOnDropCb}
+                    isSelect={isSelect.current}
+                    cancelSelected={cancelSelected}
+                    closeSelectedTab={closeSelectedTab}
+                    discardSelectedTab={discardSelectedTab}
+                />
             </div>
             {Object.keys(windows).map((key: keyof typeof windows) => {
                 return (
@@ -568,9 +593,9 @@ export default function Popup(): JSX.Element {
                         hiddenDropDiv={hiddenDropDiv}
                         selectWindow={selectWindow}
                         attachInfo={windowsAttach[key]}
-						changeWindowAttach={changeWindowAttach}
-						duplicateTab={duplicateTab}
-						discardTab={discardTab}
+                        changeWindowAttach={changeWindowAttach}
+                        duplicateTab={duplicateTab}
+                        discardTab={discardTab}
                     />
                 )
             })}
