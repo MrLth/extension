@@ -36,6 +36,7 @@ import DropDiv from './DropDiv'
 export default function Popup(): JSX.Element {
     const [windows, setWindows] = useState<Windows>({})
 
+    //#region 1. 窗口&标签信息
     const refWindows = useRef(windows)
     refWindows.current = useMemo(() => windows, [windows])
 
@@ -162,12 +163,30 @@ export default function Popup(): JSX.Element {
         }
     }, [])
 
-    const openTab = useCallback((tab: Tab & CustomProps) => {
-        chrome.tabs.update(tab.id, { active: true }, () => {
-            // console.log('updated tab:', tab)
-        })
-    }, [])
+    const updateWindowsObj = (cb?: (...args: unknown[]) => unknown) => {
+        const startTime = new Date().valueOf()
+        chrome.tabs.query({}, (newTabs: Array<Tab & CustomProps>) => {
+            const startQueryCbTime = new Date().valueOf() - startTime
+            const newObj = groupTabsByWindowId(newTabs)
 
+            Object.keys(refWindows.current).length && minimalUpdate(refWindows.current, newObj)
+
+            const middleTime = new Date().valueOf() - startQueryCbTime - startTime
+
+            setWindows(newObj)
+            console.log(
+                'update speed times:',
+                startQueryCbTime,
+                middleTime,
+                new Date().valueOf() - middleTime - startQueryCbTime - startTime
+            )
+
+            cb && cb()
+        })
+    }
+    //#endregion
+
+    //#region 2. 窗口扩展信息
     const [windowsAttach, setWindowsAttach] = useState<WindowsAttach>({})
     const refWindowsAttach = useRef(windowsAttach)
     refWindowsAttach.current = useMemo(() => windowsAttach, [windowsAttach])
@@ -221,29 +240,9 @@ export default function Popup(): JSX.Element {
             })
         else chrome.windows.update(windowId, updateInfo)
     }, [])
+    //#endregion
 
-    const updateWindowsObj = (cb?: (...args: unknown[]) => unknown) => {
-        const startTime = new Date().valueOf()
-        chrome.tabs.query({}, (newTabs: Array<Tab & CustomProps>) => {
-            const startQueryCbTime = new Date().valueOf() - startTime
-            const newObj = groupTabsByWindowId(newTabs)
-
-            Object.keys(refWindows.current).length && minimalUpdate(refWindows.current, newObj)
-
-            const middleTime = new Date().valueOf() - startQueryCbTime - startTime
-
-            setWindows(newObj)
-            console.log(
-                'update speed times:',
-                startQueryCbTime,
-                middleTime,
-                new Date().valueOf() - middleTime - startQueryCbTime - startTime
-            )
-
-            cb && cb()
-        })
-    }
-
+    //#region 3. 多选&拖动标签
     const isSelect = useRef(false)
     const selectObj = useRef<SelectObj>({
         startWindow: -1,
@@ -328,7 +327,128 @@ export default function Popup(): JSX.Element {
         }
         setIsHidden(false)
     }, [])
+    //#endregion
 
+    //#region 4. 全局按钮
+    // 4.1 新建窗口
+    const createWindow = useCallback(() => {
+        chrome.windows.create()
+    }, [])
+    const createWindowOnDropCb = useCallback((dragTab: Tab & CustomProps) => {
+        const selectTabs = getSelectedTab(refWindows.current)
+
+        0 === selectTabs.length && selectTabs.push(dragTab.id)
+
+        isEventSleep.current = true
+        hiddenDropDiv()
+
+        const tabsMovedCb = debound(() => {
+            console.log('tabMovedCb')
+            updateWindowsObj(() => {
+                isEventSleep.current = false
+            })
+        }, 333)
+        chrome.windows.create({ tabId: selectTabs[0] }, ({ id }) => {
+            tabsMovedCb()
+            const moveProperties = { windowId: id, index: -1 }
+            for (let i = 1; i < selectTabs.length; i++) {
+                chrome.tabs.move(selectTabs[i], moveProperties, tabsMovedCb)
+            }
+        })
+    }, [])
+    const closeSelectedTab = useCallback(() => {
+        const selectedTabs = getSelectedTab(refWindows.current)
+
+        isEventSleep.current = true
+
+        const removedCb = debound(() => {
+            updateWindowsObj(() => {
+                isEventSleep.current = false
+            })
+        }, 333)
+
+        selectedTabs.map((tab) => {
+            chrome.tabs.remove(tab, removedCb)
+        })
+    }, [])
+    const discardSelectedTab = useCallback(()=>{
+        const selectedTabs = getSelectedTab(refWindows.current)
+
+        isEventSleep.current = true
+
+        const removedCb = debound(() => {
+            updateWindowsObj(() => {
+                isEventSleep.current = false
+            })
+        }, 333)
+
+        selectedTabs.map((tab) => {
+            chrome.tabs.discard(tab, removedCb)
+        })
+    },[])
+    const cancelSelected = useCallback(() => {
+        const newWindows: Windows = Object.assign({}, refWindows.current)
+        Object.keys(newWindows).map((key: keyof typeof newWindows) => {
+            let isUpdate = false
+            newWindows[key].map((tab, i) => {
+                if (tab.userSelected) {
+                    isUpdate = true
+                    newWindows[key][i] = { ...tab, userSelected: false }
+                }
+            })
+            if (isUpdate) {
+                newWindows[key] = [...newWindows[key]]
+            }
+        })
+        isSelect.current = false
+        setWindows(newWindows)
+    }, [])
+    //#endregion
+
+    //#region 5. 窗口按钮
+    const closeWindow = useCallback((windowId: number) => {
+        chrome.windows.remove(windowId)
+    }, [])
+    const selectWindow = useCallback((windowIdKey: keyof typeof windows) => {
+        const newWindows: Windows = Object.assign({}, refWindows.current)
+        newWindows[windowIdKey] = [...newWindows[windowIdKey]]
+
+        newWindows[windowIdKey].map((tab, i) => {
+            if (!tab.userSelected) {
+                newWindows[windowIdKey][i] = { ...tab, userSelected: true }
+            }
+        })
+        isSelect.current = true
+        setWindows(newWindows)
+    }, [])
+    //#endregion
+
+    //#region 6. 标签按钮
+    const openTab = useCallback((tab: Tab & CustomProps) => {
+        chrome.tabs.update(tab.id, { active: true }, () => {
+            // console.log('updated tab:', tab)
+        })
+    }, [])
+    const closeTab = useCallback((tabId: number) => {
+        chrome.tabs.remove(tabId)
+    }, [])
+    const duplicateTab = useCallback((tabId: number) => {
+        chrome.tabs.duplicate(tabId)
+    }, [])
+    const discardTab = useCallback((windowId: number | string, tabId: number) => {
+        chrome.tabs.discard(tabId, (tab) => {
+            if (!tab) return
+
+            // setWindows(updTab(createNewWindows(refWindows.current), windowId, splitUrl(tab), tabId))
+            handleTabsQueue.current.push((windows) => {
+                return updTab(windows, windowId, splitUrl(tab), tabId)
+            })
+            handleTabsFunc()
+        })
+    }, [])
+    //#endregion
+
+    //#region 7. 测试
     const printTabs = useCallback(() => {
         console.log('windows:', windows)
     }, [windows])
@@ -423,122 +543,7 @@ export default function Popup(): JSX.Element {
     const printDropInfo = useCallback(() => {
         console.log('dropInfo:', dropInfo.current)
     }, [])
-
-    const createWindow = useCallback(() => {
-        chrome.windows.create()
-    }, [])
-    const createWindowOnDropCb = useCallback((dragTab: Tab & CustomProps) => {
-        const selectTabs = getSelectedTab(refWindows.current)
-
-        0 === selectTabs.length && selectTabs.push(dragTab.id)
-
-        isEventSleep.current = true
-        hiddenDropDiv()
-
-        const tabsMovedCb = debound(() => {
-            console.log('tabMovedCb')
-            updateWindowsObj(() => {
-                isEventSleep.current = false
-            })
-        }, 333)
-        chrome.windows.create({ tabId: selectTabs[0] }, ({ id }) => {
-            tabsMovedCb()
-            const moveProperties = { windowId: id, index: -1 }
-            for (let i = 1; i < selectTabs.length; i++) {
-                chrome.tabs.move(selectTabs[i], moveProperties, tabsMovedCb)
-            }
-        })
-    }, [])
-
-    const closeWindow = useCallback((windowId: number) => {
-        chrome.windows.remove(windowId)
-    }, [])
-
-    const closeTab = useCallback((tabId: number) => {
-        chrome.tabs.remove(tabId)
-    }, [])
-    const closeSelectedTab = useCallback(() => {
-        const selectedTabs = getSelectedTab(refWindows.current)
-
-        isEventSleep.current = true
-
-        const removedCb = debound(() => {
-            updateWindowsObj(() => {
-                isEventSleep.current = false
-            })
-        }, 333)
-
-        selectedTabs.map((tab) => {
-            chrome.tabs.remove(tab, removedCb)
-        })
-    }, [])
-    const duplicateTab = useCallback((tabId: number) => {
-        chrome.tabs.duplicate(tabId)
-    }, [])
-    const discardTab = useCallback((windowId: number | string, tabId: number) => {
-        chrome.tabs.discard(tabId, (tab) => {
-            if (!tab) return
-
-            // setWindows(updTab(createNewWindows(refWindows.current), windowId, splitUrl(tab), tabId))
-            handleTabsQueue.current.push((windows) => {
-                return updTab(windows, windowId, splitUrl(tab), tabId)
-            })
-            handleTabsFunc()
-        })
-    }, [])
-    const discardSelectedTab = useCallback(()=>{
-        const selectedTabs = getSelectedTab(refWindows.current)
-
-        isEventSleep.current = true
-
-        const removedCb = debound(() => {
-            updateWindowsObj(() => {
-                isEventSleep.current = false
-            })
-        }, 333)
-
-        selectedTabs.map((tab) => {
-            chrome.tabs.discard(tab, removedCb)
-        })
-    },[])
-
-    const selectWindow = useCallback((windowIdKey: keyof typeof windows) => {
-        const newWindows: Windows = Object.assign({}, refWindows.current)
-        newWindows[windowIdKey] = [...newWindows[windowIdKey]]
-
-        newWindows[windowIdKey].map((tab, i) => {
-            if (!tab.userSelected) {
-                newWindows[windowIdKey][i] = { ...tab, userSelected: true }
-            }
-        })
-        isSelect.current = true
-        setWindows(newWindows)
-    }, [])
-
-    const cancelSelected = useCallback(() => {
-        const newWindows: Windows = Object.assign({}, refWindows.current)
-        Object.keys(newWindows).map((key: keyof typeof newWindows) => {
-            let isUpdate = false
-            newWindows[key].map((tab, i) => {
-                if (tab.userSelected) {
-                    isUpdate = true
-                    newWindows[key][i] = { ...tab, userSelected: false }
-                }
-            })
-            if (isUpdate) {
-                newWindows[key] = [...newWindows[key]]
-            }
-        })
-        isSelect.current = false
-        setWindows(newWindows)
-    }, [])
-
-    // const [windowInfo, setWindowInfo] = useState([]as Array<chrome.windows.Window>)
-    // useEffect(()=>{
-    // 	chrome.windows.getAll((windows)=>{
-    // 		setWindowInfo(windows)
-    // 	})
-    // }, [])
+    //#endregion
 
     console.log('🌀 Popup Render')
     return (
