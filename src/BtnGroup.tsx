@@ -11,9 +11,10 @@ const BtnGroup = memo(function BtnGroup(props: {
     isSelect: boolean
     cancelSelected: () => void
 	closeSelectedTab: () => void
-	discardSelectedTab:()=>void
+    discardSelectedTab:()=>void
+    searchTabCb:(text:string)=>void
 }) {
-    const { createWindow, createWindowOnDropCb, isSelect, cancelSelected, closeSelectedTab , discardSelectedTab} = props
+    const { createWindow, createWindowOnDropCb, isSelect, cancelSelected, closeSelectedTab , discardSelectedTab, searchTabCb} = props
 
     const BtnGroupOnSelected = useMemo(() => {
         return isSelect ? (
@@ -27,7 +28,7 @@ const BtnGroup = memo(function BtnGroup(props: {
     }, [isSelect])
     return (
         <div>
-            <input type="text" placeholder="搜索" />
+            <input type="text" placeholder="搜索" onChange={(e)=>{searchTabCb(e.target.value)}}/>
             <button
                 onClick={createWindow}
                 onDragOver={(e) => {

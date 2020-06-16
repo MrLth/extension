@@ -2,7 +2,7 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2020-05-29 18:00:07
- * @LastEditTime: 2020-06-13 20:37:45
+ * @LastEditTime: 2020-06-16 21:02:06
  * @Description: 整个项目会用到的接口和类型定义
  */
 export interface Windows {
