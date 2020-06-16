@@ -24,6 +24,7 @@ import {
     groupWindowsByWindowId,
     getSelectedTab,
     isHaveTabSelected,
+    searchTab,
 } from './api/handleTabs'
 // import { PopupState } from './store/popup/type'
 // import { AppState } from "./store"
@@ -32,7 +33,6 @@ import PopupWindow from './PopupWindow'
 import BtnGroup from './BtnGroup'
 import DropDiv from './DropDiv'
 
-// function Popup(props: { props: Windows }) {
 export default function Popup(): JSX.Element {
     const [windows, setWindows] = useState<Windows>({})
 
@@ -330,7 +330,6 @@ export default function Popup(): JSX.Element {
     //#endregion
 
     //#region 4. 全局按钮
-    // 4.1 新建窗口
     const createWindow = useCallback(() => {
         chrome.windows.create()
     }, [])
@@ -402,6 +401,18 @@ export default function Popup(): JSX.Element {
         })
         isSelect.current = false
         setWindows(newWindows)
+    }, [])
+    const [searchRstWindows, setSearchRstWindows] = useState<Windows>({})
+    const isSearching = useRef(false)
+    const searchTabCb = useCallback((text:string)=>{
+        if (0 === text.length){
+            isSearching.current = false
+            setSearchRstWindows({})
+        }else{
+            isSearching.current = true
+         setSearchRstWindows(searchTab(refWindows.current, text.toUpperCase()))
+
+        }
     }, [])
     //#endregion
 
@@ -545,6 +556,8 @@ export default function Popup(): JSX.Element {
     }, [])
     //#endregion
 
+    const renderWindows = isSearching.current ? searchRstWindows : windows
+
     console.log('🌀 Popup Render')
     return (
         <div id="popup">
@@ -582,12 +595,16 @@ export default function Popup(): JSX.Element {
                     cancelSelected={cancelSelected}
                     closeSelectedTab={closeSelectedTab}
                     discardSelectedTab={discardSelectedTab}
+                    searchTabCb={searchTabCb}
                 />
             </div>
-            {Object.keys(windows).map((key: keyof typeof windows) => {
+            {
+            Object.keys(renderWindows).map((key: keyof typeof renderWindows) => {
+                console.log(" renderWindows", renderWindows);
+                
                 return (
                     <PopupWindow
-                        tabs={windows[key]}
+                        tabs={renderWindows[key]}
                         openTab={openTab}
                         windowId={key}
                         key={key}
@@ -610,11 +627,3 @@ export default function Popup(): JSX.Element {
     )
 }
 
-// export default connect(
-// 	function mapStateToProps(state: AppState) {
-// 		return state
-// 	},
-// 	function mapDispatchToProps(dispatch) {
-// 		return { dispatch }
-// 	}
-// )(Popup)

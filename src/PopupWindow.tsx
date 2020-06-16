@@ -152,7 +152,7 @@ const PopupWindow = memo(function PopupWindow(props: {
                     )}
                     <button
                         onClick={(e) => {
-                            closeWindow(windowId as number)
+                            closeWindow(+windowId)
                             e.stopPropagation()
                         }}>
                         关闭
