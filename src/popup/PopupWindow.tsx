@@ -4,9 +4,10 @@ import * as React from 'react'
 
 import './index.scss'
 
-import { Tab, CustomProps } from '../../api/type'
+import { Tab, CustomProps } from '../api/type'
 import PopupWindowTab from './PopupWindowTab'
 import classNames = require('classnames')
+import { RecordDispatch } from '../store/record/type'
 // import classNames = require('classnames')
 
 const PopupWindow = memo(function PopupWindow(props: {
@@ -24,6 +25,7 @@ const PopupWindow = memo(function PopupWindow(props: {
     changeWindowAttach: (windowsId: number, updateInfo: chrome.windows.UpdateInfo, isCb?: boolean) => void
     duplicateTab: (tabId: number) => void
     discardTab: (windowId: number | string, tabId: number) => void
+    recordDispatch: RecordDispatch
 }) {
     const {
         tabs,
@@ -40,6 +42,7 @@ const PopupWindow = memo(function PopupWindow(props: {
         changeWindowAttach,
         duplicateTab,
         discardTab,
+        recordDispatch
     } = props
 
     // console.log('🌀 Render    ', windowId)
@@ -73,6 +76,7 @@ const PopupWindow = memo(function PopupWindow(props: {
                         hiddenDropDiv={hiddenDropDiv}
                         duplicateTab={duplicateTab}
                         discardTab={discardTab}
+                        recordDispatch = {recordDispatch}
                     />
                 )
                 i++
@@ -95,6 +99,7 @@ const PopupWindow = memo(function PopupWindow(props: {
                 hiddenDropDiv={hiddenDropDiv}
                 duplicateTab={duplicateTab}
                 discardTab={discardTab}
+                recordDispatch = {recordDispatch}
             />
         )
 

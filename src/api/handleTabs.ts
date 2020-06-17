@@ -2,7 +2,7 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2020-06-07 21:58:08
- * @LastEditTime: 2020-06-16 21:57:38
+ * @LastEditTime: 2020-06-17 22:07:14
  * @Description: file content
  */
 
@@ -276,8 +276,6 @@ function collectTheSameTabsOfOldAndNewWindow(oldWindow: Array<Tab & CustomProps>
 }
 
 export function searchTab(windows: Windows, text: string) :Windows{
-	
-	
     const newWindows: Windows = {}
     Object.keys(windows).map((key: keyof typeof windows) => {
         const newWindow: (Tab & CustomProps)[] = []
