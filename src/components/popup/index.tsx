@@ -5,8 +5,8 @@ import { useEffect, useState, useMemo, useRef, useCallback } from 'react'
 
 import './index.scss'
 
-import { debound, deboundFixed } from './api'
-import { Tab, CustomProps, Windows, SelectObj, WindowsAttach } from './api/type'
+import { debound, deboundFixed } from '../../api'
+import { Tab, CustomProps, Windows, SelectObj, WindowsAttach } from '../../api/type'
 import {
     splitUrl,
     selectTabs,
@@ -25,7 +25,7 @@ import {
     getSelectedTab,
     isHaveTabSelected,
     searchTab,
-} from './api/handleTabs'
+} from '../../api/handleTabs'
 // import { PopupState } from './store/popup/type'
 // import { AppState } from "./store"
 
