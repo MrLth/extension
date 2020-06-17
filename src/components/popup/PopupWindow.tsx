@@ -4,7 +4,7 @@ import * as React from 'react'
 
 import './index.scss'
 
-import { Tab, CustomProps } from './api/type'
+import { Tab, CustomProps } from '../../api/type'
 import PopupWindowTab from './PopupWindowTab'
 import classNames = require('classnames')
 // import classNames = require('classnames')

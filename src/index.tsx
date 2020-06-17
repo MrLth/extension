@@ -3,7 +3,7 @@ import * as ReactDOM from "react-dom";
 // import { Provider } from 'react-redux';
 
 // import store from './store';
-import Popup from './popup'
+import Popup from './components/popup'
 
 
 

@@ -4,8 +4,8 @@ import classNames = require('classnames')
 
 import './index.scss'
 
-import { throttle } from './api'
-import { Tab, CustomProps } from './api/type'
+import { throttle } from '../../api'
+import { Tab, CustomProps } from '../../api/type'
 
 const PopupWindowTab = memo(function PopupWindowTab(props: {
     tab: Tab & CustomProps
@@ -18,11 +18,11 @@ const PopupWindowTab = memo(function PopupWindowTab(props: {
     closeTab: (tabId: number) => void
     hiddenDropDiv: () => void
     duplicateTab: (tabId: number) => void
-    discardTab: (windowId: number|string, tabId: number) => void
+    discardTab: (windowId: number | string, tabId: number) => void
 }) {
     const {
-		tab,
-		windowId,
+        tab,
+        windowId,
         openTab,
         mousedownCb,
         mouseupCb,
@@ -108,8 +108,23 @@ const PopupWindowTab = memo(function PopupWindowTab(props: {
                     e.dataTransfer.effectAllowed = 'move'
                     e.dataTransfer.setData('text/plain', JSON.stringify(tab))
                     // const img = new Image();
+                    // img.src = 'https://react.docschina.org/favicon.ico';
                     // img.src = './tabs.png';
-                    // e.dataTransfer.setDragImage(img, 0, 0);
+                    const canvas = document.createElement('canvas')
+                    canvas.width = canvas.height = 50
+
+                    const ctx = canvas.getContext('2d')
+                    ctx.lineWidth = 4
+                    ctx.moveTo(0, 0)
+                    ctx.lineTo(50, 50)
+                    ctx.moveTo(0, 50)
+                    ctx.lineTo(50, 0)
+                    ctx.stroke()
+
+                    document.body.appendChild(canvas)
+                    // console.log(canvas);
+                    
+                    e.dataTransfer.setDragImage(canvas, 25, 25)
                 }
             }}
             onDragEnd={() => {
@@ -128,7 +143,7 @@ const PopupWindowTab = memo(function PopupWindowTab(props: {
                 hiddenDropDiv()
             }}
             draggable="true">
-            <div className="title">{tab.id+' - '+tab.title}</div>
+            <div className="title">{tab.id + ' - ' + tab.title}</div>
 
             <div className="btn-wrapper">
                 <button
