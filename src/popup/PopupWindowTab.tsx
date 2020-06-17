@@ -1,11 +1,13 @@
 import * as React from 'react'
-import { useState, useRef, memo, useCallback } from 'react'
+import { memo, useCallback, useRef, useState } from 'react'
+import { throttle } from '../api'
+import { CustomProps, Tab } from '../api/type'
+import { recordActionAdd } from '../store/record/actions'
+import { RecordDispatch } from '../store/record/type'
+import './index.scss'
 import classNames = require('classnames')
 
-import './index.scss'
 
-import { throttle } from '../../api'
-import { Tab, CustomProps } from '../../api/type'
 
 const PopupWindowTab = memo(function PopupWindowTab(props: {
     tab: Tab & CustomProps
@@ -19,6 +21,7 @@ const PopupWindowTab = memo(function PopupWindowTab(props: {
     hiddenDropDiv: () => void
     duplicateTab: (tabId: number) => void
     discardTab: (windowId: number | string, tabId: number) => void
+    recordDispatch: RecordDispatch
 }) {
     const {
         tab,
@@ -31,6 +34,7 @@ const PopupWindowTab = memo(function PopupWindowTab(props: {
         hiddenDropDiv,
         duplicateTab,
         discardTab,
+        recordDispatch
     } = props
 
     const [refresh, setRefresh] = useState(tab.userSelected)
@@ -123,7 +127,7 @@ const PopupWindowTab = memo(function PopupWindowTab(props: {
 
                     document.body.appendChild(canvas)
                     // console.log(canvas);
-                    
+
                     e.dataTransfer.setDragImage(canvas, 25, 25)
                 }
             }}
@@ -146,6 +150,19 @@ const PopupWindowTab = memo(function PopupWindowTab(props: {
             <div className="title">{tab.id + ' - ' + tab.title}</div>
 
             <div className="btn-wrapper">
+                <button
+                    onClick={(e) => {
+                        recordDispatch(recordActionAdd({
+                            url: tab.url,
+                            title: tab.title,
+                            host: tab.userHost,
+                            route: tab.userRoute,
+                            para: tab.userPara
+                        }))
+                        e.stopPropagation()
+                    }}>
+                    记录
+                </button>
                 <button
                     onClick={(e) => {
                         discardTab(windowId, tab.id)

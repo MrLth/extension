@@ -1,12 +1,12 @@
 import * as React from 'react'
-import { useEffect, useState, useMemo, useRef, useCallback } from 'react'
+import { useEffect, useState, useMemo, useRef, useCallback, useContext } from 'react'
 // import { connect } from "react-redux"
 // import classNames = require('classnames')
 
 import './index.scss'
 
-import { debound, deboundFixed } from '../../api'
-import { Tab, CustomProps, Windows, SelectObj, WindowsAttach } from '../../api/type'
+import { debound, deboundFixed } from '../api'
+import { Tab, CustomProps, Windows, SelectObj, WindowsAttach } from '../api/type'
 import {
     splitUrl,
     selectTabs,
@@ -25,13 +25,16 @@ import {
     getSelectedTab,
     isHaveTabSelected,
     searchTab,
-} from '../../api/handleTabs'
+} from '../api/handleTabs'
 // import { PopupState } from './store/popup/type'
 // import { AppState } from "./store"
 
 import PopupWindow from './PopupWindow'
 import BtnGroup from './BtnGroup'
 import DropDiv from './DropDiv'
+import { RecordContext } from '../store/record'
+import { recordActionAdds } from '../store/record/actions'
+import { RecordUrl } from '../store/record/type'
 
 export default function Popup(): JSX.Element {
     const [windows, setWindows] = useState<Windows>({})
@@ -96,11 +99,11 @@ export default function Popup(): JSX.Element {
 
             const cb = isWindowClosing
                 ? (windows: Windows) => {
-                      return removeWindow(windows, windowId)
-                  }
+                    return removeWindow(windows, windowId)
+                }
                 : (windows: Windows) => {
-                      return removeTab(windows, windowId, tabId)
-                  }
+                    return removeTab(windows, windowId, tabId)
+                }
             handleTabsQueue.current.push(cb)
             handleTabsFunc()
         }
@@ -370,7 +373,7 @@ export default function Popup(): JSX.Element {
             chrome.tabs.remove(tab, removedCb)
         })
     }, [])
-    const discardSelectedTab = useCallback(()=>{
+    const discardSelectedTab = useCallback(() => {
         const selectedTabs = getSelectedTab(refWindows.current)
 
         isEventSleep.current = true
@@ -384,7 +387,7 @@ export default function Popup(): JSX.Element {
         selectedTabs.map((tab) => {
             chrome.tabs.discard(tab, removedCb)
         })
-    },[])
+    }, [])
     const cancelSelected = useCallback(() => {
         const newWindows: Windows = Object.assign({}, refWindows.current)
         Object.keys(newWindows).map((key: keyof typeof newWindows) => {
@@ -404,15 +407,31 @@ export default function Popup(): JSX.Element {
     }, [])
     const [searchRstWindows, setSearchRstWindows] = useState<Windows>({})
     const isSearching = useRef(false)
-    const searchTabCb = useCallback((text:string)=>{
-        if (0 === text.length){
+    const searchTabCb = useCallback((text: string) => {
+        if (0 === text.length) {
             isSearching.current = false
             setSearchRstWindows({})
-        }else{
+        } else {
             isSearching.current = true
-         setSearchRstWindows(searchTab(refWindows.current, text.toUpperCase()))
+            setSearchRstWindows(searchTab(refWindows.current, text.toUpperCase()))
 
         }
+    }, [])
+    const recordSelectedTab = useCallback(() => {
+        const selectedTabs = [] as Array<RecordUrl>
+        Object.keys(refWindows.current).map((key: keyof typeof windows) => {
+            refWindows.current[key].map((tab) => {
+                tab.userSelected && selectedTabs.push({
+                    url: tab.url,
+                    title: tab.title,
+                    host: tab.userHost,
+                    route: tab.userRoute,
+                    para: tab.userPara
+                })
+            })
+        })
+
+        recordDispatch(recordActionAdds(selectedTabs))
     }, [])
     //#endregion
 
@@ -558,6 +577,9 @@ export default function Popup(): JSX.Element {
 
     const renderWindows = isSearching.current ? searchRstWindows : windows
 
+    const { dispatch: recordDispatch } = useContext(RecordContext)
+
+
     console.log('🌀 Popup Render')
     return (
         <div id="popup">
@@ -596,32 +618,33 @@ export default function Popup(): JSX.Element {
                     closeSelectedTab={closeSelectedTab}
                     discardSelectedTab={discardSelectedTab}
                     searchTabCb={searchTabCb}
+                    recordSelectedTab={recordSelectedTab}
                 />
             </div>
             {
-            Object.keys(renderWindows).map((key: keyof typeof renderWindows) => {
-                console.log(" renderWindows", renderWindows);
-                
-                return (
-                    <PopupWindow
-                        tabs={renderWindows[key]}
-                        openTab={openTab}
-                        windowId={key}
-                        key={key}
-                        mousedownCb={mousedownCb}
-                        mouseupCb={mouseupCb}
-                        dragOverCb={dragOverCb}
-                        closeWindow={closeWindow}
-                        closeTab={closeTab}
-                        hiddenDropDiv={hiddenDropDiv}
-                        selectWindow={selectWindow}
-                        attachInfo={windowsAttach[key]}
-                        changeWindowAttach={changeWindowAttach}
-                        duplicateTab={duplicateTab}
-                        discardTab={discardTab}
-                    />
-                )
-            })}
+                Object.keys(renderWindows).map((key: keyof typeof renderWindows) => {
+                    return (
+                        <PopupWindow
+                            tabs={renderWindows[key]}
+                            openTab={openTab}
+                            windowId={key}
+                            key={key}
+                            mousedownCb={mousedownCb}
+                            mouseupCb={mouseupCb}
+                            dragOverCb={dragOverCb}
+                            closeWindow={closeWindow}
+                            closeTab={closeTab}
+                            hiddenDropDiv={hiddenDropDiv}
+                            selectWindow={selectWindow}
+                            attachInfo={windowsAttach[key]}
+                            changeWindowAttach={changeWindowAttach}
+                            duplicateTab={duplicateTab}
+                            discardTab={discardTab}
+                            recordDispatch={recordDispatch}
+
+                        />
+                    )
+                })}
             <DropDiv isHidden={isHidden} dropCb={dropCb} />
         </div>
     )
