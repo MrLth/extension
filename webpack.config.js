@@ -2,11 +2,11 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2020-05-27 15:30:26
- * @LastEditTime: 2020-06-02 16:49:09
+ * @LastEditTime: 2020-06-18 20:34:20
  * @Description: file content
  */
 
-// const path = require('path');
+const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 
 module.exports = {
@@ -18,7 +18,11 @@ module.exports = {
 
     resolve: {
         // Add '.ts' and '.tsx' as resolvable extensions.
-        extensions: [".ts", ".tsx", ".js"]
+        extensions: [".ts", ".tsx", ".js"],
+        alias:{
+            "@store": path.resolve("src/store"),
+            "@api": path.resolve("src/api"),
+        }
     },
 
     module: {

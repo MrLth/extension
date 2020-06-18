@@ -1,12 +1,9 @@
 import * as React from "react";
 import * as ReactDOM from "react-dom";
 
-import Popup from './popup'
-import Record from './record'
+import Popup from './view/Popup'
+import Record from './view/Record'
 import { RecordProvider } from "./store/record";
-
-
-
 
 
 ReactDOM.render(

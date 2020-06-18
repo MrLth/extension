@@ -4,10 +4,10 @@ import * as React from 'react'
 
 import './index.scss'
 
-import { Tab, CustomProps } from '../api/type'
+import { Tab, CustomProps } from '@api/type'
 import PopupWindowTab from './PopupWindowTab'
 import classNames = require('classnames')
-import { RecordDispatch } from '../store/record/type'
+import { RecordDispatch } from '@store/record/type'
 // import classNames = require('classnames')
 
 const PopupWindow = memo(function PopupWindow(props: {
@@ -108,6 +108,7 @@ const PopupWindow = memo(function PopupWindow(props: {
             // <div className={classNames({ 'group': tempArr.length > 1 })} key={key}>
             <div className="group" key={key}>
                 <div className="title">
+                    
                     <img src={favIconUrl} />
                     {host}
                 </div>
