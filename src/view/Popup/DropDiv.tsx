@@ -4,7 +4,7 @@ import classNames = require('classnames');
 
 import './index.scss';
 
-import { Tab, CustomProps } from '../api/type';
+import { Tab, CustomProps } from '@api/type';
 
 const DropDiv = memo(function DropDiv(props: { isHidden: boolean; dropCb: (dragTab: Tab & CustomProps) => void }) {
 	const { isHidden, dropCb } = props
@@ -23,6 +23,8 @@ const DropDiv = memo(function DropDiv(props: { isHidden: boolean; dropCb: (dragT
 			}}
 			onDrop={(e) => {
 				e.preventDefault()
+				console.log("drop ", e.dataTransfer.getData('text/plain'));
+				
 				const tab = JSON.parse(e.dataTransfer.getData('text/plain'))
 				dropCb(tab)
 			}}

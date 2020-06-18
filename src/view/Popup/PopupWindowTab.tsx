@@ -1,9 +1,9 @@
 import * as React from 'react'
 import { memo, useCallback, useRef, useState } from 'react'
-import { throttle } from '../api'
-import { CustomProps, Tab } from '../api/type'
-import { recordActionAdd } from '../store/record/actions'
-import { RecordDispatch } from '../store/record/type'
+import { throttle } from '@api'
+import { CustomProps, Tab } from '@api/type'
+import { recordActionAdd } from '@store/record/actions'
+import { RecordDispatch } from '@store/record/type'
 import './index.scss'
 import classNames = require('classnames')
 

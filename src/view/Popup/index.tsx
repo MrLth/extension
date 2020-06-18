@@ -5,8 +5,8 @@ import { useEffect, useState, useMemo, useRef, useCallback, useContext } from 'r
 
 import './index.scss'
 
-import { debound, deboundFixed } from '../api'
-import { Tab, CustomProps, Windows, SelectObj, WindowsAttach } from '../api/type'
+import { debound, deboundFixed } from '@api'
+import { Tab, CustomProps, Windows, SelectObj, WindowsAttach } from '@api/type'
 import {
     splitUrl,
     selectTabs,
@@ -25,16 +25,16 @@ import {
     getSelectedTab,
     isHaveTabSelected,
     searchTab,
-} from '../api/handleTabs'
+} from '@api/handleTabs'
 // import { PopupState } from './store/popup/type'
 // import { AppState } from "./store"
 
 import PopupWindow from './PopupWindow'
 import BtnGroup from './BtnGroup'
 import DropDiv from './DropDiv'
-import { RecordContext } from '../store/record'
-import { recordActionAdds } from '../store/record/actions'
-import { RecordUrl } from '../store/record/type'
+import { RecordContext } from '@store/record'
+import { recordActionAdds } from '@store/record/actions'
+import { RecordUrl } from '@store/record/type'
 
 export default function Popup(): JSX.Element {
     const [windows, setWindows] = useState<Windows>({})
@@ -578,7 +578,6 @@ export default function Popup(): JSX.Element {
     const renderWindows = isSearching.current ? searchRstWindows : windows
 
     const { dispatch: recordDispatch } = useContext(RecordContext)
-
 
     console.log('🌀 Popup Render')
     return (
