@@ -2,7 +2,7 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2020-06-07 21:58:08
- * @LastEditTime: 2020-06-17 22:07:14
+ * @LastEditTime: 2020-06-22 20:09:08
  * @Description: file content
  */
 
@@ -275,7 +275,7 @@ function collectTheSameTabsOfOldAndNewWindow(oldWindow: Array<Tab & CustomProps>
     return sameTabs
 }
 
-export function searchTab(windows: Windows, text: string) :Windows{
+export function searchTab(windows: Windows, text: string): Windows {
     const newWindows: Windows = {}
     Object.keys(windows).map((key: keyof typeof windows) => {
         const newWindow: (Tab & CustomProps)[] = []
@@ -285,8 +285,8 @@ export function searchTab(windows: Windows, text: string) :Windows{
             }
         })
         if (newWindow.length != 0) newWindows[key] = newWindow
-	})
-	return newWindows
+    })
+    return newWindows
 }
 
 // function compareSelectObjWithLastSelectObj(

@@ -3,15 +3,35 @@ import * as ReactDOM from "react-dom";
 
 import Popup from './view/Popup'
 import Record from './view/Record'
-import { RecordProvider } from "./store/record";
+import { RecordProvider, RecordContext } from "./store";
 import Bookmark from "./view/Bookmark";
+import { useContext, useEffect } from "react";
+import { recordActionInit } from "@store/record/actions";
+import { faviconStorageActionAdd } from "@store/bookmark/actions";
 
 
-ReactDOM.render(
-    <div className="content-wrapper">
-        <RecordProvider>
+function App() {
+    const { dispatch, faviconStorage, faviconStorageDispatch } = useContext(RecordContext)
+
+    useEffect(() => {
+
+        chrome.storage.local.get((storage) => {
+
+            const urls = storage?.urls || []
+
+            dispatch(recordActionInit(Array.from(urls)))
+
+            const favicons = storage?.favicons || {}
+
+            faviconStorageDispatch(faviconStorageActionAdd(favicons))
+        })
+    }, [])
+
+
+    return (
+        <div className="content-wrapper">
             <div className="bookmark-wrapper">
-                <Bookmark/>
+                <Bookmark />
             </div>
             <div className="popup-wrapper">
                 <Popup />
@@ -19,7 +39,28 @@ ReactDOM.render(
             <div className="record-wrapper">
                 <Record />
             </div>
-        </RecordProvider>
-    </div>,
+        </div>
+    )
+}
+
+ReactDOM.render(
+    <RecordProvider>
+        <App />
+    </RecordProvider>
+    ,
     document.getElementById("example")
 );
+
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', function () {
+        navigator.serviceWorker.register('./sw.js')
+            .then(function (registration) {
+                // 注册成功
+                console.log('ServiceWorker registration successful with scope: ', registration.scope);
+            })
+            .catch(function (err) {
+                // 注册失败
+                console.log('ServiceWorker registration failed: ', err);
+            });
+    });
+}
