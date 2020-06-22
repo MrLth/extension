@@ -32,7 +32,7 @@ import {
 import PopupWindow from './PopupWindow'
 import BtnGroup from './BtnGroup'
 import DropDiv from './DropDiv'
-import { RecordContext } from '@store/record'
+import { RecordContext } from '@store'
 import { recordActionAdds } from '@store/record/actions'
 import { RecordUrl } from '@store/record/type'
 
@@ -66,7 +66,13 @@ export default function Popup(): JSX.Element {
         }, 200),
         []
     )
+    const { faviconUpd, faviconStorage } = useContext(RecordContext)
+    const refFaviconUpd = useRef(faviconUpd)
+    refFaviconUpd.current = useMemo(() => faviconUpd, [faviconUpd])
+
     useEffect(() => {
+
+        console.log('useEffect updated updatedupdatedupdatedupdatedupdatedupdatedupdated')
         updateWindowsObj(() => {
             isEventSleep.current = false
         })
@@ -83,6 +89,18 @@ export default function Popup(): JSX.Element {
         }
         const onUpdatedListener = (tabId: number, changeInfo: chrome.tabs.TabChangeInfo, tab: chrome.tabs.Tab) => {
             console.log('**************************************************Updated')
+
+            if (0 != refFaviconUpd.current.length && 'favIconUrl' in tab) {
+                const host = new URL(tab.url).host
+                const index = refFaviconUpd.current.findIndex(item => item.host == host)
+                if (-1 != index) {
+                    refFaviconUpd.current[index].updCb(tab.favIconUrl)
+                    refFaviconUpd.current.splice(index, 1)
+                    faviconStorage[host] = tab.favIconUrl
+                    chrome.storage.local.set({ 'favicons': faviconStorage })
+
+                }
+            }
 
             if (isEventSleep.current) return
             if (changeInfo?.discarded) return
@@ -164,7 +182,7 @@ export default function Popup(): JSX.Element {
             chrome.tabs.onDetached.removeListener(onDetachedListener)
             chrome.tabs.onAttached.removeListener(onAttachedListener)
         }
-    }, [])
+    }, [faviconStorage])
 
     const updateWindowsObj = (cb?: (...args: unknown[]) => unknown) => {
         const startTime = new Date().valueOf()
@@ -201,17 +219,15 @@ export default function Popup(): JSX.Element {
     }, [])
     useEffect(() => {
         updateWindowsAttachProp()
-        // const onCreatedListener = ()=>{
 
-        // }
-        chrome.windows.onCreated.addListener((windowsAttach) => {
+        const onCreatedListener = (windowsAttach: chrome.windows.Window) => {
             refWindowsAttach.current[windowsAttach.id] = windowsAttach
             console.log('window create', refWindowsAttach.current)
-        })
-        chrome.windows.onRemoved.addListener((windowId) => {
+        }
+        const onRemovedListener = (windowId: number) => {
             delete refWindowsAttach.current[windowId]
-        })
-        chrome.windows.onFocusChanged.addListener((windowId) => {
+        }
+        const onFocusChangedListener = (windowId: number) => {
             if (-1 === windowId) return
 
             const windowsAttach = { ...refWindowsAttach.current }
@@ -223,7 +239,13 @@ export default function Popup(): JSX.Element {
             windowsAttach[windowId] = { ...windowsAttach[windowId], focused: true }
             console.log('window FocusChanged', refWindowsAttach.current, windowId)
             setWindowsAttach(windowsAttach)
-        })
+        }
+
+
+        chrome.windows.onCreated.addListener(onCreatedListener)
+        chrome.windows.onRemoved.addListener(onRemovedListener)
+        chrome.windows.onFocusChanged.addListener(onFocusChangedListener)
+
     }, [])
 
     const printWindowAttach = useCallback(() => {
@@ -573,6 +595,11 @@ export default function Popup(): JSX.Element {
     const printDropInfo = useCallback(() => {
         console.log('dropInfo:', dropInfo.current)
     }, [])
+
+    const printFaviconsUpd = useCallback(() => {
+        console.log("faviconUpd", faviconUpd);
+
+    }, [faviconUpd])
     //#endregion
 
     const renderWindows = isSearching.current ? searchRstWindows : windows
@@ -607,6 +634,8 @@ export default function Popup(): JSX.Element {
                 <button onClick={handleTabsFunc}>handleTabsFunc</button>
                 <button onClick={printWindowAttach}>printWindowAttach</button>
                 <button onClick={updateWindowAttach}>updateWindowAttach</button>
+                <button onClick={printFaviconsUpd}>printFaviconsUpd</button>
+
             </div>
             <div className="btn-group-wrapper">
                 <BtnGroup

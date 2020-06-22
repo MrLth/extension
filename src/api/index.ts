@@ -2,9 +2,14 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2020-05-29 17:30:01
- * @LastEditTime: 2020-06-14 20:30:23
+ * @LastEditTime: 2020-06-22 21:34:13
  * @Description: 整个项目会用到的方法和api
  */
+export const isLocal = (hostname: string): boolean =>
+    /^((127\.0\.0\.1)|(localhost)|(10\.\d{1,3}\.\d{1,3}\.\d{1,3})|(172\.((1[6-9])|(2\d)|(3[01]))\.\d{1,3}\.\d{1,3})|(192\.168\.\d{1,3}\.\d{1,3}))(:\d{0,5})?$/.test(
+        hostname
+    )
+
 export function throttle(fn: (...args: unknown[]) => unknown, interval: number): (...args: unknown[]) => void {
     let lastTime: number = null
     return function (...args: unknown[]): void {
@@ -16,10 +21,7 @@ export function throttle(fn: (...args: unknown[]) => unknown, interval: number):
     }
 }
 
-export function debound(
-    fn: (...args: unknown[]) => unknown,
-    delay: number
-): (...args: unknown[]) => void {
+export function debound(fn: (...args: unknown[]) => unknown, delay: number): (...args: unknown[]) => void {
     let timer: number = null
     return function (...args: unknown[]): void {
         clearTimeout(timer)

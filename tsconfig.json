@@ -16,7 +16,8 @@
             "@api": ["src/api"],
             "@api/*": ["src/api/*"],
             "@store": ["src/store"],
-            "@store/*": ["src/store/*"]
+            "@store/*": ["src/store/*"],
+            "@img/*": ["public/img/*"]
           }
     }
 }
