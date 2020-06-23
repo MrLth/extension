@@ -29,7 +29,7 @@ const Record = (): JSX.Element => {
     }, [urls])
 
 
-    console.log('🌀 Record Render')
+    // console.log('🌀 Record Render')
     return (
         <>
             <div>{isSaved ? '已保存' : ''}</div>

@@ -2,7 +2,7 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2020-06-19 16:25:32
- * @LastEditTime: 2020-06-22 21:31:27
+ * @LastEditTime: 2020-06-23 12:12:05
  * @Description: file content
  */
 import * as React from 'react'
@@ -33,7 +33,7 @@ const Label = memo(function Label(props: {
         setImgSrc(src)
     }, [faviconStorage])
 
-    console.log("---------------------------------Label render", isLocal(host));
+    // console.log("---------------------------------Label render", isLocal(host));
 
     return (
         <li className="label" onClick={(e) => {
