@@ -26,6 +26,7 @@ const PopupWindow = memo(function PopupWindow(props: {
     duplicateTab: (tabId: number) => void
     discardTab: (windowId: number | string, tabId: number) => void
     recordDispatch: RecordDispatch
+    canvasEl: React.MutableRefObject<HTMLCanvasElement>
 }) {
     const {
         tabs,
@@ -42,10 +43,11 @@ const PopupWindow = memo(function PopupWindow(props: {
         changeWindowAttach,
         duplicateTab,
         discardTab,
-        recordDispatch
+        recordDispatch,
+        canvasEl
     } = props
 
-    // console.log('🌀 Render    ', windowId)
+    console.log('🌀 Render    ', windowId)
 
     // console.log("attach Info", attachInfo);
 
@@ -76,7 +78,8 @@ const PopupWindow = memo(function PopupWindow(props: {
                         hiddenDropDiv={hiddenDropDiv}
                         duplicateTab={duplicateTab}
                         discardTab={discardTab}
-                        recordDispatch = {recordDispatch}
+                        recordDispatch={recordDispatch}
+                        canvasEl={canvasEl}
                     />
                 )
                 i++
@@ -99,7 +102,8 @@ const PopupWindow = memo(function PopupWindow(props: {
                 hiddenDropDiv={hiddenDropDiv}
                 duplicateTab={duplicateTab}
                 discardTab={discardTab}
-                recordDispatch = {recordDispatch}
+                recordDispatch={recordDispatch}
+                canvasEl={canvasEl}
             />
         )
 
@@ -108,7 +112,7 @@ const PopupWindow = memo(function PopupWindow(props: {
             // <div className={classNames({ 'group': tempArr.length > 1 })} key={key}>
             <div className="group" key={key}>
                 <div className="title">
-                    
+
                     <img src={favIconUrl} />
                     {host}
                 </div>
@@ -119,16 +123,17 @@ const PopupWindow = memo(function PopupWindow(props: {
 
     // tabArr.sort((a, b) => b.tempArr.length - a.tempArr.length)
 
-    console.log('🌀 Window Render')
+    // console.log('🌀 Window Render')
     return (
         <ul
             className={classNames('window', {
                 focused: attachInfo && attachInfo.focused,
                 'is-not-normal-window': attachInfo && attachInfo.type != 'normal',
             })}
-            onClick={() => {
-                changeWindowAttach(parseInt(windowId as string), { focused: true }, false)
-            }}>
+        // onClick={() => {
+        //     changeWindowAttach(parseInt(windowId as string), { focused: true }, false)
+        // }}
+        >
             <h2 className="title">
                 {windowId}
                 <div className="btn-wrapper">
@@ -148,14 +153,14 @@ const PopupWindow = memo(function PopupWindow(props: {
                             恢复
                         </button>
                     ) : (
-                        <button
-                            onClick={(e) => {
-                                changeWindowAttach(parseInt(windowId as string), { state: 'minimized' })
-                                e.stopPropagation()
-                            }}>
-                            最小化
-                        </button>
-                    )}
+                            <button
+                                onClick={(e) => {
+                                    changeWindowAttach(parseInt(windowId as string), { state: 'minimized' })
+                                    e.stopPropagation()
+                                }}>
+                                最小化
+                            </button>
+                        )}
                     <button
                         onClick={(e) => {
                             closeWindow(+windowId)
@@ -177,7 +182,7 @@ const PopupWindow = memo(function PopupWindow(props: {
                 // 	</div>
                 // )
             }
-        </ul>
+        </ul >
     )
 })
 

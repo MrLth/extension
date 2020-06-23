@@ -2,11 +2,11 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2020-06-07 21:58:08
- * @LastEditTime: 2020-06-22 20:09:08
+ * @LastEditTime: 2020-06-23 21:48:06
  * @Description: file content
  */
 
-import { Windows, WindowsAttach, CustomProps, Tab, SelectObj } from './type'
+import { Windows, WindowsAttach, CustomProps, Tab, SelectObj, UpdateWindowQueueObj } from './type'
 
 const windowsA = {}
 const windowsB = {}
@@ -17,9 +17,20 @@ export function createNewWindows(windows: Windows): Windows {
     })
     return Object.assign(windowsC, windows)
 }
-function createNewWindow(windows: Windows, windowKey: keyof typeof windows) {
-    if (windows[windowKey]) windows[windowKey] = [...windows[windowKey]]
-    else windows[windowKey] = []
+let oldWindows: Windows
+export function referOldWindows(windows: Windows): void {
+    oldWindows = windows
+}
+export function dereferOldWindows(): void {
+    oldWindows = null
+}
+export function createNewWindow(windows: Windows, windowKey: keyof typeof windows): (Tab & CustomProps)[] {
+    if (windows[windowKey]) {
+        if (windows[windowKey] === oldWindows[windowKey]) {
+            windows[windowKey] = [...windows[windowKey]]
+            console.log('create new Window')
+        }
+    } else windows[windowKey] = []
     return windows[windowKey]
 }
 export function addTab(
@@ -56,7 +67,10 @@ export function removeTab(windows: Windows, windowKey: keyof typeof windows, tab
     const tabIndex = newWindow.findIndex((tab) => tab.id === tabId)
     if (-1 != tabIndex) newWindow.splice(tabIndex, 1)
 
-    return updTabIndex(windows, windowKey, false)
+    setUpdateWindowStartIndex(windowKey, tabIndex)
+
+    // return updTabIndex(windows, windowKey, false)
+    return windows
 }
 export function removeWindow(
     windows: Windows,
@@ -76,8 +90,24 @@ export function moveTab(windows: Windows, windowKey: keyof typeof windows, form:
     const [transit] = newWindow.splice(form, 1)
     newWindow.splice(to, 0, transit)
 
-    return updTabIndex(windows, windowKey, false, Math.min(form, to))
+    setUpdateWindowStartIndex(windowKey, Math.min(form, to))
+    return windows
 }
+
+let updateWindowQueueObj = {} as UpdateWindowQueueObj
+function setUpdateWindowStartIndex(key: string | number, index: number) {
+    if (key in updateWindowQueueObj) updateWindowQueueObj[key] = Math.min(updateWindowQueueObj[key], index)
+    else updateWindowQueueObj[key] = index
+}
+export function batchUpdTabIndex(windows: Windows): Windows {
+    Object.keys(updateWindowQueueObj).map((windowKey) => {
+        console.log('windowKye, index', windowKey, updateWindowQueueObj[windowKey])
+        updTabIndex(windows, windowKey, false, updateWindowQueueObj[windowKey])
+    })
+    updateWindowQueueObj = {} as UpdateWindowQueueObj
+    return windows
+}
+
 export function updTabIndex(
     windows: Windows,
     windowKey: keyof typeof windows,
@@ -124,10 +154,12 @@ export function detachTab(windows: Windows, windowKey: keyof typeof windows, tab
     const newWindow = createNewWindow(windows, windowKey)
 
     transit[tabId] = newWindow.splice(index, 1)[0]
-    console.log('transit', transit)
 
-    if (0 === window.length) removeWindow(windows, windowKey)
-    else updTabIndex(windows, windowKey, false, index)
+    if (0 === newWindow.length) {
+        removeWindow(windows, windowKey)
+    } else setUpdateWindowStartIndex(windowKey, index)
+
+    // updTabIndex(windows, windowKey, false, index)
 
     return windows
 }
@@ -135,7 +167,6 @@ export function attachTab(windows: Windows, windowKey: keyof typeof windows, tab
     // const newWindows = createNewWindows(windows)
     const newWindow = createNewWindow(windows, windowKey)
 
-    console.log('transit', transit)
     Object.assign(transit[tabId], { windowId: windowKey })
 
     newWindow.splice(index, 0, transit[tabId])
@@ -143,10 +174,12 @@ export function attachTab(windows: Windows, windowKey: keyof typeof windows, tab
 
     avtiveTab(windows, windowKey, index, false)
 
-    return updTabIndex(windows, windowKey, false, index)
+    setUpdateWindowStartIndex(windowKey, index)
+    return windows
+    // return updTabIndex(windows, windowKey, false, index)
 }
 
-export function selectTabs(obj: Windows, selectObj: SelectObj): Windows {
+export function selectTabs(obj: Windows, selectObj: SelectObj): [Windows, boolean] {
     const selectWindows = getSelectWindows(obj, selectObj)
     const sortSelectObj = getSortSelectObj(selectWindows, selectObj)
 
@@ -163,15 +196,20 @@ function getSelectWindows(obj: Windows, selectObj: SelectObj): string[] {
 function getSortSelectObj(selectWindows: string[], selectObj: SelectObj): SelectObj {
     let { startIndex, endIndex, startWindow, endWindow } = selectObj
 
-    if (selectWindows[0] != '' + startWindow)
-        [startWindow, endWindow, startIndex, endIndex] = [endWindow, startWindow, endIndex, startIndex]
-    else if (startWindow == endWindow && startIndex > endIndex) [startIndex, endIndex] = [endIndex, startIndex]
+    let isReverse = false
+    if (selectWindows[0] != '' + startWindow) {
+        isReverse = true
+        ;[startWindow, endWindow, startIndex, endIndex] = [endWindow, startWindow, endIndex, startIndex]
+    } else if (startWindow == endWindow && startIndex > endIndex) {
+        isReverse = true
+        ;[startIndex, endIndex] = [endIndex, startIndex]
+    }
 
-    return { startWindow, endWindow, startIndex, endIndex, status: selectObj.status }
+    return { startWindow, endWindow, startIndex, endIndex, status: selectObj.status, isReverse }
 }
-function createNewObj(obj: Windows, selectObj: SelectObj): Windows {
+function createNewObj(obj: Windows, selectObj: SelectObj): [Windows, boolean] {
     const selectWindows = getSelectWindows(obj, selectObj)
-    const { status, startWindow, startIndex, endWindow, endIndex } = selectObj
+    const { status, startWindow, startIndex, endWindow, endIndex, isReverse } = selectObj
 
     const newObj: Windows = Object.assign({}, obj)
     selectWindows.map((key: keyof typeof obj) => {
@@ -183,17 +221,21 @@ function createNewObj(obj: Windows, selectObj: SelectObj): Windows {
         })
     })
 
-    return newObj
+    return [newObj, isReverse]
 }
 
-export function getSelectedTab(windows: Windows): number[] {
-    const selectTabs: number[] = []
+export function getSelectedTab(windows: Windows): [number[], string[]] {
+    const selectTabsId: number[] = []
+    const selectTabsFaviconsUrl: string[] = []
     Object.keys(windows).map((key: keyof typeof windows) => {
         windows[key].map((tab) => {
-            tab.userSelected && selectTabs.push(tab.id)
+            if (tab.userSelected) {
+                selectTabsId.push(tab.id)
+                selectTabsFaviconsUrl.push(tab.favIconUrl)
+            }
         })
     })
-    return selectTabs
+    return [selectTabsId, selectTabsFaviconsUrl]
 }
 export function isHaveTabSelected(windows: Windows): boolean {
     return (
@@ -227,19 +269,28 @@ export function groupWindowsByWindowId(windows: chrome.windows.Window[]): Window
 }
 
 export function splitUrl(tab: Tab & CustomProps): Tab & CustomProps {
-    const urlReg = /^(http(?:s)?|chrome.*):\/\/(.*?)\/([^\?]*)(\?.*)?/
+    // const urlReg = /^(http(?:s)?|chrome.*):\/\/(.*?)\/([^\?]*)(\?.*)?/
     const url = tab.url || tab.pendingUrl
+    const urlRst = new URL(url)
+    // const regRst = urlReg.exec(url)
 
-    const regRst = urlReg.exec(url)
+    // try{
+    tab.userProtocol = urlRst.protocol
+    tab.userHost = urlRst.host
+    tab.userRoute = urlRst.pathname
+    tab.userPara = urlRst.search
+    // }caches(e){
 
-    if (regRst) {
-        tab.userProtocol = regRst[1]
-        tab.userHost = regRst[2]
-        tab.userRoute = regRst[3]
-        tab.userPara = regRst[4]
-    } else {
-        console.log('splitURL', url, tab)
-    }
+    // }
+
+    // if (regRst) {
+    //     tab.userProtocol = regRst[1]
+    //     tab.userHost = regRst[2]
+    //     tab.userRoute = regRst[3]
+    //     tab.userPara = regRst[4]
+    // } else {
+    //     console.log('splitURL', url, tab)
+    // }
 
     return tab
 }

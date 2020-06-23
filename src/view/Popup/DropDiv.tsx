@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useState, memo} from 'react';
+import { useState, memo } from 'react';
 import classNames = require('classnames');
 
 import './index.scss';
@@ -23,8 +23,7 @@ const DropDiv = memo(function DropDiv(props: { isHidden: boolean; dropCb: (dragT
 			}}
 			onDrop={(e) => {
 				e.preventDefault()
-				console.log("drop ", e.dataTransfer.getData('text/plain'));
-				
+
 				const tab = JSON.parse(e.dataTransfer.getData('text/plain'))
 				dropCb(tab)
 			}}

@@ -23,8 +23,10 @@ import {
     createNewWindows,
     groupWindowsByWindowId,
     getSelectedTab,
-    isHaveTabSelected,
     searchTab,
+    batchUpdTabIndex,
+    referOldWindows,
+    dereferOldWindows,
 } from '@api/handleTabs'
 // import { PopupState } from './store/popup/type'
 // import { AppState } from "./store"
@@ -35,6 +37,8 @@ import DropDiv from './DropDiv'
 import { RecordContext } from '@store'
 import { recordActionAdds } from '@store/record/actions'
 import { RecordUrl } from '@store/record/type'
+
+
 
 export default function Popup(): JSX.Element {
     const [windows, setWindows] = useState<Windows>({})
@@ -49,19 +53,23 @@ export default function Popup(): JSX.Element {
     const handleTabsFunc = useCallback(
         deboundFixed(() => {
             // console.log("handleTabsQueue length", handleTabsQueue.current.length);
-            if (10 < handleTabsQueue.current.length) {
+            if (16 < handleTabsQueue.current.length) {
                 handleTabsQueue.current = []
                 isEventSleep.current = true
                 updateWindowsObj(() => {
                     isEventSleep.current = false
                 })
+                console.log("force update with chrome.tabs.get");
+
             } else {
+                referOldWindows(refWindows.current)
                 let newWindows = createNewWindows(refWindows.current)
                 handleTabsQueue.current.map((func) => {
                     newWindows = func(newWindows)
                 })
                 handleTabsQueue.current = []
-                setWindows(newWindows)
+                dereferOldWindows()
+                setWindows(batchUpdTabIndex(newWindows))
             }
         }, 200),
         []
@@ -72,13 +80,12 @@ export default function Popup(): JSX.Element {
 
     useEffect(() => {
 
-        console.log('useEffect updated updatedupdatedupdatedupdatedupdatedupdatedupdated')
         updateWindowsObj(() => {
             isEventSleep.current = false
         })
 
         const onCreatedListener = (tab: chrome.tabs.Tab) => {
-            console.log('**************************************************Created')
+            // console.log('**************************************************Created')
 
             if (isEventSleep.current) return
 
@@ -88,7 +95,7 @@ export default function Popup(): JSX.Element {
             handleTabsFunc()
         }
         const onUpdatedListener = (tabId: number, changeInfo: chrome.tabs.TabChangeInfo, tab: chrome.tabs.Tab) => {
-            console.log('**************************************************Updated')
+            // console.log('**************************************************Updated')
 
             if (0 != refFaviconUpd.current.length && 'favIconUrl' in tab) {
                 const host = new URL(tab.url).host
@@ -113,7 +120,7 @@ export default function Popup(): JSX.Element {
         const onRemovedListener = (tabId: number, { windowId, isWindowClosing }: chrome.tabs.TabRemoveInfo) => {
             if (isEventSleep.current) return
             // if (1 === windowId) return
-            console.log('**************************************************Removed', tabId, windowId, isWindowClosing)
+            // console.log('**************************************************Removed', tabId, windowId, isWindowClosing)
 
             const cb = isWindowClosing
                 ? (windows: Windows) => {
@@ -126,7 +133,7 @@ export default function Popup(): JSX.Element {
             handleTabsFunc()
         }
         const onMovedListener = (_tabId: number, { windowId, fromIndex, toIndex }: chrome.tabs.TabMoveInfo) => {
-            console.log('**************************************************Moved')
+            // console.log('**************************************************Moved')
 
             if (isEventSleep.current) return
 
@@ -136,7 +143,7 @@ export default function Popup(): JSX.Element {
             handleTabsFunc()
         }
         const onActivatedListener = ({ tabId, windowId }: chrome.tabs.TabActiveInfo) => {
-            console.log('**************************************************Activated')
+            // console.log('**************************************************Activated')
 
             if (isEventSleep.current) return
 
@@ -146,7 +153,7 @@ export default function Popup(): JSX.Element {
             handleTabsFunc()
         }
         const onDetachedListener = (tabId: number, { oldWindowId, oldPosition }: chrome.tabs.TabDetachInfo) => {
-            console.log('**************************************************Detached')
+            // console.log('**************************************************Detached')
 
             if (isEventSleep.current) return
 
@@ -156,7 +163,7 @@ export default function Popup(): JSX.Element {
             handleTabsFunc()
         }
         const onAttachedListener = (tabId: number, { newWindowId, newPosition }: chrome.tabs.TabAttachInfo) => {
-            console.log('**************************************************Attached')
+            // console.log('**************************************************Attached')
 
             if (isEventSleep.current) return
 
@@ -185,22 +192,22 @@ export default function Popup(): JSX.Element {
     }, [faviconStorage])
 
     const updateWindowsObj = (cb?: (...args: unknown[]) => unknown) => {
-        const startTime = new Date().valueOf()
+        // const startTime = new Date().valueOf()
         chrome.tabs.query({}, (newTabs: Array<Tab & CustomProps>) => {
-            const startQueryCbTime = new Date().valueOf() - startTime
+            // const startQueryCbTime = new Date().valueOf() - startTime
             const newObj = groupTabsByWindowId(newTabs)
 
             Object.keys(refWindows.current).length && minimalUpdate(refWindows.current, newObj)
 
-            const middleTime = new Date().valueOf() - startQueryCbTime - startTime
+            // const middleTime = new Date().valueOf() - startQueryCbTime - startTime
 
             setWindows(newObj)
-            console.log(
-                'update speed times:',
-                startQueryCbTime,
-                middleTime,
-                new Date().valueOf() - middleTime - startQueryCbTime - startTime
-            )
+            // console.log(
+            //     'update speed times:',
+            //     startQueryCbTime,
+            //     middleTime,
+            //     new Date().valueOf() - middleTime - startQueryCbTime - startTime
+            // )
 
             cb && cb()
         })
@@ -222,7 +229,7 @@ export default function Popup(): JSX.Element {
 
         const onCreatedListener = (windowsAttach: chrome.windows.Window) => {
             refWindowsAttach.current[windowsAttach.id] = windowsAttach
-            console.log('window create', refWindowsAttach.current)
+            // console.log('window create', refWindowsAttach.current)
         }
         const onRemovedListener = (windowId: number) => {
             delete refWindowsAttach.current[windowId]
@@ -237,7 +244,6 @@ export default function Popup(): JSX.Element {
             })
 
             windowsAttach[windowId] = { ...windowsAttach[windowId], focused: true }
-            console.log('window FocusChanged', refWindowsAttach.current, windowId)
             setWindowsAttach(windowsAttach)
         }
 
@@ -249,7 +255,7 @@ export default function Popup(): JSX.Element {
     }, [])
 
     const printWindowAttach = useCallback(() => {
-        console.log('window Attach', refWindowsAttach.current)
+        // console.log('window Attach', refWindowsAttach.current)
     }, [])
     const updateWindowAttach = useCallback(() => {
         updateWindowsAttachProp()
@@ -286,35 +292,101 @@ export default function Popup(): JSX.Element {
             status: status,
         }
     }, [])
+
+    const canvasEl = useRef<HTMLCanvasElement>(null)
     const mouseupCb = useCallback((endWindow: number, endIndex: number) => {
         // isSelect.current = false
         if (endWindow == selectObj.current.startWindow && endIndex == selectObj.current.startIndex) return
         selectObj.current.endWindow = endWindow
         selectObj.current.endIndex = endIndex
 
-        const newWindows = selectTabs(refWindows.current, selectObj.current)
+        const [newWindows] = selectTabs(refWindows.current, selectObj.current)
 
-        isSelect.current = isHaveTabSelected(newWindows)
+        const faviconsUrl = getSelectedTab(newWindows)[1]
+        isSelect.current = faviconsUrl.length != 0
+
         setWindows(newWindows)
+
+        const ctx = canvasEl.current.getContext('2d')
+        canvasEl.current.height = 16
+        if (isSelect.current) {
+
+            const drawUrls: string[] = []
+            for (let j = 0, i = 0; j < faviconsUrl.length && i < 3; j++) {
+                if ('' == faviconsUrl[j] || faviconsUrl.indexOf(faviconsUrl[j]) != j) continue
+                drawUrls.push(faviconsUrl[j])
+                i++
+            }
+
+            const ellipsesWidth = drawUrls.length != faviconsUrl.length ? 15 : 0
+            canvasEl.current.width = 25 + 17 * drawUrls.length + ellipsesWidth
+
+            // draw length
+            ctx.font = "16px Hack,verdana, sans-serif"
+            ctx.textAlign = "center"
+            ctx.fillStyle = "#000000";  //<======= here
+            ctx.fillText('' + faviconsUrl.length, 12.5, 15, 25);
+
+            //draw img
+            drawUrls.map((url, i) => {
+                const img = new Image()
+                img.onload = () => {
+                    ctx.drawImage(img, i * 17 + 25, 2, 16, 16)
+                }
+                img.src = url
+            })
+
+            //draw '..'
+            if (drawUrls.length != faviconsUrl.length) {
+                ctx.textAlign = "end"
+                ctx.font = "12px Hack,verdana, sans-serif"
+
+                ctx.fillStyle = "#666";  //<======= here
+                ctx.fillText('..', drawUrls.length * 17 + 40, 15);
+            }
+
+        }
+
+
     }, [])
     const dropCb = useCallback(
         (dragTab: Tab & CustomProps) => {
-            const selectTabs: number[] = []
+            const selectTabs: {
+                id: number
+                windowId: number
+                index: number
+            }[] = []
             Object.keys(windows).map((key: keyof typeof windows) => {
                 windows[key].map((tab) => {
-                    tab.userSelected && selectTabs.push(tab.id)
+                    tab.userSelected && selectTabs.push({ id: tab.id, windowId: tab.windowId, index: tab.index })
                 })
             })
 
+            const dropInfoFix = {
+                ...dropInfo.current,
+                index: dropInfo.current.index + 1
+            }
+
             if (selectTabs.length) {
-                selectTabs.reverse().map((tabId) => {
-                    chrome.tabs.move(tabId, dropInfo.current)
+                selectTabs.reverse().map((tab) => {
+                    if (tab.windowId != dropInfoFix.windowId || tab.index > dropInfo.current.index)
+
+                        chrome.tabs.move(tab.id, dropInfoFix)
+                    else
+                        chrome.tabs.move(tab.id, dropInfo.current)
                 })
                 // chrome.tabs.move(selectTabs, dropInfo.current);
             } else {
-                chrome.tabs.move(dragTab.id, dropInfo.current)
-                console.log('dropInfo', dropInfo.current)
+                // chrome.tabs.move(dragTab.id, dropInfo.current)
+
+                if (dragTab.windowId != dropInfoFix.windowId || dragTab.index > dropInfo.current.index)
+
+                    chrome.tabs.move(dragTab.id, dropInfoFix)
+                else
+                    chrome.tabs.move(dragTab.id, dropInfo.current)
+                // console.log('dropInfo', dropInfo.current)
             }
+            console.log(dropInfo.current);
 
             // setIsHidden(true)
             hiddenDropDiv()
@@ -350,6 +422,8 @@ export default function Popup(): JSX.Element {
             ul.insertBefore(dropDiv.current, li.nextElementSibling)
             dropInfo.current.index = tabIndex
         }
+        console.log("dropInfo.current.index", dropInfo.current.index);
+
         setIsHidden(false)
     }, [])
     //#endregion
@@ -359,7 +433,7 @@ export default function Popup(): JSX.Element {
         chrome.windows.create()
     }, [])
     const createWindowOnDropCb = useCallback((dragTab: Tab & CustomProps) => {
-        const selectTabs = getSelectedTab(refWindows.current)
+        const [selectTabs] = getSelectedTab(refWindows.current)
 
         0 === selectTabs.length && selectTabs.push(dragTab.id)
 
@@ -381,7 +455,7 @@ export default function Popup(): JSX.Element {
         })
     }, [])
     const closeSelectedTab = useCallback(() => {
-        const selectedTabs = getSelectedTab(refWindows.current)
+        const [selectedTabs] = getSelectedTab(refWindows.current)
 
         isEventSleep.current = true
 
@@ -396,7 +470,7 @@ export default function Popup(): JSX.Element {
         })
     }, [])
     const discardSelectedTab = useCallback(() => {
-        const selectedTabs = getSelectedTab(refWindows.current)
+        const [selectedTabs] = getSelectedTab(refWindows.current)
 
         isEventSleep.current = true
 
@@ -606,7 +680,7 @@ export default function Popup(): JSX.Element {
 
     const { dispatch: recordDispatch } = useContext(RecordContext)
 
-    console.log('🌀 Popup Render')
+    // console.log('🌀 Popup Render')
     return (
         <div id="popup">
             <div className="btn-group-wrapper">
@@ -669,11 +743,12 @@ export default function Popup(): JSX.Element {
                             duplicateTab={duplicateTab}
                             discardTab={discardTab}
                             recordDispatch={recordDispatch}
-
+                            canvasEl={canvasEl}
                         />
                     )
                 })}
             <DropDiv isHidden={isHidden} dropCb={dropCb} />
+            <canvas ref={canvasEl}></canvas>
         </div>
     )
 }

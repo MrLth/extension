@@ -39,6 +39,13 @@ body {
         }
     }
 
+    canvas {
+        background-color: #fff;
+        border-radius: 0.2rem;
+        padding: 0.2rem;
+        border: 1px #888 solid;
+    }
+
     .btn-group-wrapper {
         margin-top: 0.5rem;
         & > div {
@@ -275,7 +282,7 @@ body {
             }
             .title {
                 font-size: 1rem;
-                img{
+                img {
                     width: 1rem;
                     vertical-align: text-top;
 

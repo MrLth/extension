@@ -39,7 +39,7 @@ const Folder = (props: {
     }, [renderCount, node])
 
 
-    list && console.log("tree", path + "/" + node.id, node.title);
+    // list && console.log("tree", path + "/" + node.id, node.title);
 
 
     const [isExpand, setIsExpand] = useState(false)

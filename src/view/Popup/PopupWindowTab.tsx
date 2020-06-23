@@ -11,7 +11,7 @@ import classNames = require('classnames')
 
 const PopupWindowTab = memo(function PopupWindowTab(props: {
     tab: Tab & CustomProps
-    windowId: string | number
+    windowId: number | string
     index: number
     openTab: (tab: Tab & CustomProps) => void
     mousedownCb: (startWindow: number, startIndex: number, status: boolean) => void
@@ -22,10 +22,12 @@ const PopupWindowTab = memo(function PopupWindowTab(props: {
     duplicateTab: (tabId: number) => void
     discardTab: (windowId: number | string, tabId: number) => void
     recordDispatch: RecordDispatch
+    canvasEl: React.MutableRefObject<HTMLCanvasElement>
 }) {
     const {
         tab,
         windowId,
+        index,
         openTab,
         mousedownCb,
         mouseupCb,
@@ -34,7 +36,8 @@ const PopupWindowTab = memo(function PopupWindowTab(props: {
         hiddenDropDiv,
         duplicateTab,
         discardTab,
-        recordDispatch
+        recordDispatch,
+        canvasEl
     } = props
 
     const [refresh, setRefresh] = useState(tab.userSelected)
@@ -45,11 +48,13 @@ const PopupWindowTab = memo(function PopupWindowTab(props: {
         (e) => {
             if (e.shiftKey || e.ctrlKey) {
                 tab.userSelected = !Boolean(tab.userSelected)
-                console.log('clicked', tab.userSelected, tab)
                 setRefresh(!refresh)
             } else {
                 openTab(tab)
             }
+            console.log("tab clicked");
+
+            e.stopPropagation()
         },
         [refresh]
     )
@@ -68,9 +73,9 @@ const PopupWindowTab = memo(function PopupWindowTab(props: {
             const { clientY } = e
             // console.log('top/bottom', clientY < y + height / 2);
 
-            dragOverCb(li, clientY < y + height / 2, tab.windowId, tab.index)
+            dragOverCb(li, clientY < y + height / 2, +windowId, index)
         }, 333),
-        []
+        [windowId, index]
     )
 
     const refDragObj = useRef({
@@ -79,7 +84,7 @@ const PopupWindowTab = memo(function PopupWindowTab(props: {
     })
 
     // console.log('🌀 Render       ', tab.index, tab.title)
-    console.log('🌀 Tab Render')
+    // console.log('🌀 Tab Render')
     return (
         <li
             className={classNames({
@@ -89,7 +94,9 @@ const PopupWindowTab = memo(function PopupWindowTab(props: {
                 dragover: isDragover,
             })}
             onClick={onClick}
-            onMouseDown={() => {
+            onMouseDown={(e) => {
+                e.stopPropagation()
+
                 clearTimeout(refDragObj.current.timerId)
                 refDragObj.current.timerId = setTimeout(() => {
                     setDragable(true)
@@ -100,35 +107,36 @@ const PopupWindowTab = memo(function PopupWindowTab(props: {
             onMouseLeave={() => {
                 clearTimeout(refDragObj.current.timerId)
             }}
-            onMouseUp={() => {
+            onMouseUp={(e) => {
                 mouseupCb(tab.windowId, tab.index)
                 clearTimeout(refDragObj.current.timerId)
                 setDragable(false)
+                e.stopPropagation()
             }}
             onDragStart={(e) => {
                 if (!dragable) e.preventDefault()
                 else {
-                    console.log('drag start')
+                    // console.log('drag start')
                     e.dataTransfer.effectAllowed = 'move'
                     e.dataTransfer.setData('text/plain', JSON.stringify(tab))
                     // const img = new Image();
                     // img.src = 'https://react.docschina.org/favicon.ico';
                     // img.src = './tabs.png';
-                    const canvas = document.createElement('canvas')
-                    canvas.width = canvas.height = 50
+                    // const canvas = document.createElement('canvas')
+                    // canvas.width = canvas.height = 50
 
-                    const ctx = canvas.getContext('2d')
-                    ctx.lineWidth = 4
-                    ctx.moveTo(0, 0)
-                    ctx.lineTo(50, 50)
-                    ctx.moveTo(0, 50)
-                    ctx.lineTo(50, 0)
-                    ctx.stroke()
+                    // const ctx = canvas.getContext('2d')
+                    // ctx.lineWidth = 4
+                    // ctx.moveTo(0, 0)
+                    // ctx.lineTo(50, 50)
+                    // ctx.moveTo(0, 50)
+                    // ctx.lineTo(50, 0)
+                    // ctx.stroke()
 
-                    document.body.appendChild(canvas)
-                    // console.log(canvas);
+                    // document.body.appendChild(canvas)
+                    // // console.log(canvas);
 
-                    e.dataTransfer.setDragImage(canvas, 25, 25)
+                    e.dataTransfer.setDragImage(canvasEl.current, 25, 25)
                 }
             }}
             onDragEnd={() => {
@@ -147,7 +155,7 @@ const PopupWindowTab = memo(function PopupWindowTab(props: {
                 hiddenDropDiv()
             }}
             draggable="true">
-            <div className="title">{tab.id + ' - ' + tab.title}</div>
+            <div className="title">{tab.index + ' - ' + tab.id + ' - ' + tab.title}</div>
 
             <div className="btn-wrapper">
                 <button
