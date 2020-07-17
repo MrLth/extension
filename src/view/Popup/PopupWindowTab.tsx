@@ -155,7 +155,11 @@ const PopupWindowTab = memo(function PopupWindowTab(props: {
                 hiddenDropDiv()
             }}
             draggable="true">
-            <div className="title">{tab.index + ' - ' + tab.id + ' - ' + tab.title}</div>
+            <div className="title">
+                <img src={tab.favIconUrl} />
+
+                {tab.title}</div>
+            {/* <div className="title">{tab.index + ' - ' + tab.id + ' - ' + tab.title}</div> */}
 
             <div className="btn-wrapper">
                 <button
@@ -169,26 +173,26 @@ const PopupWindowTab = memo(function PopupWindowTab(props: {
                         }))
                         e.stopPropagation()
                     }}>
-                    记录
+                    •
                 </button>
                 <button
                     onClick={(e) => {
                         discardTab(windowId, tab.id)
                         e.stopPropagation()
                     }}>
-                    丢弃
+                    z
                 </button>
-                <button
+                {/* <button
                     onClick={() => {
                         duplicateTab(tab.id)
                     }}>
                     复制
-                </button>
+                </button> */}
                 <button
                     onClick={() => {
                         closeTab(tab.id)
                     }}>
-                    关闭
+                    x
                 </button>
             </div>
         </li>

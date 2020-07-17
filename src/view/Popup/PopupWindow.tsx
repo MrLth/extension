@@ -113,7 +113,6 @@ const PopupWindow = memo(function PopupWindow(props: {
             <div className="group" key={key}>
                 <div className="title">
 
-                    <img src={favIconUrl} />
                     {host}
                 </div>
                 {tempArr}
