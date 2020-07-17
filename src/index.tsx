@@ -1,14 +1,16 @@
 import * as React from "react";
+import { useContext, useEffect } from "react";
 import * as ReactDOM from "react-dom";
+
+
+import { recordActionInit } from "@store/record/actions";
+import { faviconStorageActionAdd } from "@store/bookmark/actions";
+import { RecordProvider, RecordContext } from "./store";
 
 import Popup from './view/Popup'
 import Record from './view/Record'
-import { RecordProvider, RecordContext } from "./store";
 import Bookmark from "./view/Bookmark";
-import { useContext, useEffect } from "react";
-import { recordActionInit } from "@store/record/actions";
-import { faviconStorageActionAdd } from "@store/bookmark/actions";
-
+import History from './view/History'
 
 function App() {
     const { dispatch, faviconStorage, faviconStorageDispatch } = useContext(RecordContext)
@@ -38,6 +40,9 @@ function App() {
             </div>
             <div className="record-wrapper">
                 <Record />
+            </div>
+            <div className="history-wrapper">
+                <History />
             </div>
         </div>
     )
