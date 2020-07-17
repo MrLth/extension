@@ -23,19 +23,7 @@ const Label = memo(function Label(props: {
     const { node, faviconUpdDispatch, faviconStorage } = props
 
     const host = new URL(node.url).host
-    const defaultSrc = isLocal(host) ? '' : `chrome://favicon/size/18@2x/${node.url}`
-    // const defaultSrc = isLocal(host) ? '' : `https://www.google.com/s2/favicons?domain=${host}`
-    const [imgSrc, setImgSrc] = useState(() => faviconStorage[host] || defaultSrc)
-
-
-
-    useEffect(() => {
-        const src =  defaultSrc
-        // const src = faviconStorage[host] || defaultSrc
-        setImgSrc(src)
-    }, [faviconStorage])
-
-    // console.log("---------------------------------Label render", isLocal(host));
+    const [imgSrc, setImgSrc] = useState(`chrome://favicon/size/18@2x/${node.url}`)
 
     return (
         <li className="label" onClick={(e) => {

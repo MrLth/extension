@@ -103,9 +103,6 @@ export default function Popup(): JSX.Element {
                 if (-1 != index) {
                     refFaviconUpd.current[index].updCb(tab.favIconUrl)
                     refFaviconUpd.current.splice(index, 1)
-                    faviconStorage[host] = tab.favIconUrl
-                    chrome.storage.local.set({ 'favicons': faviconStorage })
-
                 }
             }
 
