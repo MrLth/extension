@@ -422,8 +422,6 @@ export default function Popup(): JSX.Element {
             ul.insertBefore(dropDiv.current, li.nextElementSibling)
             dropInfo.current.index = tabIndex
         }
-        console.log("dropInfo.current.index", dropInfo.current.index);
-
         setIsHidden(false)
     }, [])
     //#endregion

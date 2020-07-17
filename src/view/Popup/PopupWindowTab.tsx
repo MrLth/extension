@@ -162,6 +162,9 @@ const PopupWindowTab = memo(function PopupWindowTab(props: {
             {/* <div className="title">{tab.index + ' - ' + tab.id + ' - ' + tab.title}</div> */}
 
             <div className="btn-wrapper">
+                {
+                    tab.discarded && 'z'
+                }
                 <button
                     onClick={(e) => {
                         recordDispatch(recordActionAdd({
@@ -179,7 +182,9 @@ const PopupWindowTab = memo(function PopupWindowTab(props: {
                     onClick={(e) => {
                         discardTab(windowId, tab.id)
                         e.stopPropagation()
-                    }}>
+                    }}
+                    disabled={tab.discarded}
+                    >
                     z
                 </button>
                 {/* <button

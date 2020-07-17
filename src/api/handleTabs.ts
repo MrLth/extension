@@ -269,28 +269,28 @@ export function groupWindowsByWindowId(windows: chrome.windows.Window[]): Window
 }
 
 export function splitUrl(tab: Tab & CustomProps): Tab & CustomProps {
-    // const urlReg = /^(http(?:s)?|chrome.*):\/\/(.*?)\/([^\?]*)(\?.*)?/
+    const urlReg = /^(http(?:s)?|chrome.*):\/\/(.*?)\/([^\?]*)(\?.*)?/
     const url = tab.url || tab.pendingUrl
-    const urlRst = new URL(url)
-    // const regRst = urlReg.exec(url)
+    // const urlRst = new URL(url)
+    const regRst = urlReg.exec(url)
 
     // try{
-    tab.userProtocol = urlRst.protocol
-    tab.userHost = urlRst.host
-    tab.userRoute = urlRst.pathname
-    tab.userPara = urlRst.search
+    // tab.userProtocol = urlRst.protocol
+    // tab.userHost = urlRst.host
+    // tab.userRoute = urlRst.pathname
+    // tab.userPara = urlRst.search
     // }caches(e){
 
     // }
 
-    // if (regRst) {
-    //     tab.userProtocol = regRst[1]
-    //     tab.userHost = regRst[2]
-    //     tab.userRoute = regRst[3]
-    //     tab.userPara = regRst[4]
-    // } else {
-    //     console.log('splitURL', url, tab)
-    // }
+    if (regRst) {
+        tab.userProtocol = regRst[1]
+        tab.userHost = regRst[2]
+        tab.userRoute = regRst[3]
+        tab.userPara = regRst[4]
+    } else {
+        console.log('splitURL', url, tab)
+    }
 
     return tab
 }
