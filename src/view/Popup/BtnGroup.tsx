@@ -3,7 +3,7 @@ import { memo, useMemo } from 'react'
 import * as React from 'react'
 
 import './index.scss'
-import { CustomProps, Tab } from '../api/type'
+import { CustomProps, Tab } from '@api/type'
 
 const BtnGroup = memo(function BtnGroup(props: {
     createWindow: () => void
