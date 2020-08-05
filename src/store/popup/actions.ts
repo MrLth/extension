@@ -6,7 +6,7 @@
  * @Description: file content
  */
 
-import {Tab, TabsAction} from '../../api/type'
+import {Tab, TabsAction} from '@api/type'
 
 export const enum ACTION {
     SET_TABS

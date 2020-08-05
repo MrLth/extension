@@ -2,11 +2,11 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2020-05-27 15:30:26
- * @LastEditTime: 2020-06-02 16:49:09
+ * @LastEditTime: 2020-06-20 13:05:45
  * @Description: file content
  */
 
-// const path = require('path');
+const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 
 module.exports = {
@@ -18,7 +18,13 @@ module.exports = {
 
     resolve: {
         // Add '.ts' and '.tsx' as resolvable extensions.
-        extensions: [".ts", ".tsx", ".js"]
+        extensions: [".ts", ".tsx", ".js"],
+        alias: {
+            "@store": path.resolve("src/store"),
+            "@api": path.resolve("src/api"),
+            "src": path.resolve("src"),
+            "@img": path.resolve("public/img")
+        }
     },
 
     module: {
@@ -44,6 +50,13 @@ module.exports = {
                     "style-loader", // 将 JS 字符串生成为 style 节点
                     "css-loader", // 将 CSS 转化成 CommonJS 模块
                     "sass-loader" // 将 Sass 编译成 CSS，默认使用 Node Sass
+                ]
+            },
+            {
+                test: /\.(jpeg|jpg|img|gif|svg)$/,
+                use: [
+                    // 'file-loader',
+                    'url-loader?limit=8192'
                 ]
             }
         ]
