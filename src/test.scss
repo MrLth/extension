@@ -1,0 +1,117 @@
+$sideWidthMax : 300;
+$sideWidthMin : 250;
+$cardWidthMax : 300;
+$cardWidthMin : 250;
+$cardMargin : 20;
+$centerMargin : 30;
+
+$lastMaxWidth: 0;
+$lastI:0;
+
+@each $i,$sideCount in (2,0),(2,1),(2,2),(3,2),(4,2) {
+    $maxWidth :  $sideWidthMax * $sideCount + $cardWidthMax*$i + $cardMargin*($i+1)+$centerMargin*2;
+    $middleWidth :  $sideWidthMax * $sideCount + $cardWidthMin*$i + $cardMargin*($i+1)+$centerMargin*2;
+    $minWidth : $sideWidthMin * $sideCount + $cardWidthMin*$i + $cardMargin*($i+1)+$centerMargin*2;
+
+    @media (max-width: #{$maxWidth}px) and (min-width: #{$middleWidth}px) {
+        .rightSide,
+        .leftSide {
+            width: #{$sideWidthMax}px;
+            flex-grow: 0;
+        }
+
+        .centerContent {
+            flex-grow: 1;
+        }
+
+        .leftSpace,
+        .rightSpace {
+            flex-grow: 0;
+        }
+    }
+
+    @media (max-width: #{$middleWidth}px) and (min-width: #{$minWidth}px) {
+        .rightSide,
+        .leftSide {
+            width: #{$sideWidthMin}px;
+            flex-grow: 1;
+        }
+
+        .centerContent {
+            width: #{$i*$cardWidthMin + ($i+1)*$cardMargin}px;
+            flex-grow: 0;
+        }
+
+        .leftSpace,
+        .rightSpace {
+            flex-grow: 0;
+        }
+    }
+
+    @media (min-width: #{$minWidth}px){
+        $sideNum:$minWidth  - $sideWidthMin*$sideCount - $centerMargin*2;
+
+        $marginLeft:$cardMargin/$sideNum* 100%;
+        .card{
+			margin-left:$marginLeft;
+            width:(100%-$marginLeft*($i+1))/$i;
+        }
+    }
+
+    @if $lastMaxWidth != 0 and $lastI != 0{
+        @media (max-width: #{$minWidth}px) and (min-width: #{$lastMaxWidth}px) {
+            .rightSide,
+            .leftSide {
+                width: #{$sideWidthMax}px;
+                flex-grow: 0;
+            }
+
+            .centerContent {
+                width: #{$lastI*$cardWidthMax + ($lastI+1)*$cardMargin}px;
+                flex-grow: 0;
+            }
+
+            .leftSpace,
+            .rightSpace {
+                flex-grow: 1;
+            }
+        }
+    }
+
+    @if $sideCount == 1 {
+        $nextMinWidth : $sideWidthMin * 2 + $cardWidthMin*$i + $cardMargin*($i+1)+$centerMargin*2;
+        @media (max-width: #{$nextMinWidth}px){
+            .rightSide {
+                display: none;
+            }
+        }
+    }
+    @if $sideCount == 0 {
+        $nextMinWidth : $sideWidthMin * 1 + $cardWidthMin*$i + $cardMargin*($i+1)+$centerMargin*2;
+        @media (max-width: #{$nextMinWidth}px){
+            .leftSide {
+                display: none;
+            }
+        }
+    }
+    $lastMaxWidth : $maxWidth !global;
+    $lastI : $i !global;
+}
+
+@media (min-width: #{$lastMaxWidth}px) {
+    .rightSide,
+    .leftSide {
+        width: #{$sideWidthMax}px;
+        flex-grow: 0;
+    }
+
+    .centerContent {
+        width:  #{$lastI*$cardWidthMax + ($lastI+1)*$cardMargin}px;
+        flex-grow: 0;
+    }
+
+    .leftSpace,
+    .rightSpace {
+        flex-grow: 1;
+    }
+}
