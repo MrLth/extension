@@ -3,6 +3,8 @@ import { useContext, useEffect, useMemo, useCallback, useState } from 'react'
 
 import { RecordContext } from '@store'
 import { debound } from '@api'
+import { HistorySortedObj } from './type'
+import { sortNativeHistory } from './api'
 
 const History = (): JSX.Element => {
 
@@ -23,9 +25,22 @@ const History = (): JSX.Element => {
 
         }
     }, [])
+
+
+    const [historySortedObj, setHistorySortedObj] = useState<HistorySortedObj>({})
+    useEffect(() => {
+        chrome.history.search({ text: '' }, (result) => {
+            setHistorySortedObj(sortNativeHistory(result))
+        })
+    }, [])
     return (
         <div>
-            History component
+            {Object.keys(historySortedObj).map((key) => {
+                return <ul>{historySortedObj[key].map((item) => {
+                    // return <li>{item.title}|{decodeURI(item.url)}</li>
+                    return <li>{decodeURI(item.url)}</li>
+                })}</ul>
+            })}
         </div>
     )
 }

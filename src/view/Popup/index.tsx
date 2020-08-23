@@ -38,8 +38,6 @@ import { RecordContext } from '@store'
 import { recordActionAdds } from '@store/record/actions'
 import { RecordUrl } from '@store/record/type'
 
-
-
 export default function Popup(): JSX.Element {
     const [windows, setWindows] = useState<Windows>({})
 

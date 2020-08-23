@@ -38,12 +38,13 @@ function App() {
             <div className="popup-wrapper">
                 <Popup />
             </div>
-            <div className="record-wrapper">
-                <Record />
-            </div>
             <div className="history-wrapper">
                 <History />
             </div>
+            <div className="record-wrapper">
+                <Record />
+            </div>
+            
         </div>
     )
 }
