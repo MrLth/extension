@@ -10,7 +10,8 @@ body {
 .content-wrapper {
     display: flex;
     .bookmark-wrapper {
-        width: 10rem;
+        width: 300px;
+        // width: 20rem;
     }
     .popup-wrapper {
         width: 36rem;
@@ -107,7 +108,7 @@ body {
                 padding-right: 0.8rem;
                 vertical-align: middle;
                 position: relative;
-                top: 100%;
+                // top: 100%;
             }
         }
 
@@ -236,6 +237,7 @@ body {
                 max-width: 20rem;
                 padding: 0;
                 position: absolute;
+                // left: 10rem;
                 left: 100%;
                 top: 0;
                 display: none;
@@ -246,6 +248,7 @@ body {
                     margin: 0;
                 }
             }
+            
 
             &.expand {
                 & > ul {

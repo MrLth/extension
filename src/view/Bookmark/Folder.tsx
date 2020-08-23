@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useState, useCallback, useRef } from 'react'
 
 import { BookmarkTreeNode, FaviconStorageObj } from '@store/bookmark/type'
 import { useForceRender } from 'src/hooks'
@@ -8,6 +8,7 @@ import classNames = require('classnames')
 
 import imgFolder from '@img/folder.svg'
 import { FaviconUpdDispatch } from '@store/record/type'
+import { throttle } from '@api'
 
 const Folder = (props: {
     node: BookmarkTreeNode
@@ -44,9 +45,26 @@ const Folder = (props: {
 
     const [isExpand, setIsExpand] = useState(false)
 
+    const [ulLeft, setUlLeft] = useState('300px')
+
+    const onMouseMoveListener = useCallback((e: React.MouseEvent) => {
+        if (e.pageX < lastPageX.current) {
+            setUlLeft(e.pageX + 40 + 'px')
+            lastPageX.current = e.pageX
+        }
+    }, [])
+    const onMouseLeaveListener = useCallback(() => {
+        lastPageX.current = 300
+    }, [])
+
+    const lastPageX = useRef(300)
+
     return (
-        <li className={classNames('folder', { "expand": isExpand })}  >
-            <ul>
+        <li className={classNames('folder', { "expand": isExpand })}
+            onMouseMove={onMouseMoveListener}
+            onMouseLeave={onMouseLeaveListener}
+        >
+            <ul style={{ left: ulLeft }}>
                 {list}
             </ul>
             <div className="folder-name" onClick={(e) => {
