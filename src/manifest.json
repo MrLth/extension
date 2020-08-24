@@ -1,0 +1,22 @@
+{
+  "manifest_version": 2,
+  "name": "扩展练习",
+  "description": "这是一个用于练习的扩展程序",
+  "version": "1.0",
+  "permissions": [
+    "activeTab",
+    "storage",
+    "tabs",
+    "bookmarks",
+    "cookies",
+    "history",
+    "chrome://favicon/*"
+  ],
+  "chrome_url_overrides": {
+    "newtab": "./index.html"
+  },
+  "browser_action": {
+    "default_title": "这是一个示例Chrome插件",
+    "default_popup": "./index.html"
+  }
+}

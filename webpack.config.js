@@ -2,19 +2,30 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2020-05-27 15:30:26
- * @LastEditTime: 2020-06-20 13:05:45
+ * @LastEditTime: 2020-08-24 21:44:55
  * @Description: file content
  */
 
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin')
+const CopyWebpackPlugin = require('copy-webpack-plugin')
+
 
 module.exports = {
-    mode: "production",
-    // mode: "development",
-
+    // mode: "production",
+    mode: "development",
+    entry: {
+        newtab: './src/newtab.tsx',
+        popup: './src/popup.tsx',
+        content: './src/content.ts',
+        background: './src/background.ts'
+    },
+    output: {
+        path: path.resolve(__dirname, 'dist'),
+        filename: '[name].bundle.js'
+    },
     // Enable sourcemaps for debugging webpack's output.
-    // devtool: "source-map",
+    devtool: "source-map",
 
     resolve: {
         // Add '.ts' and '.tsx' as resolvable extensions.
@@ -26,7 +37,6 @@ module.exports = {
             "@img": path.resolve("public/img")
         }
     },
-
     module: {
         rules: [
             {
@@ -39,11 +49,18 @@ module.exports = {
                 ]
             },
             //  All output '.js' files will have any sourcemaps re-processed by 'source-map-loader'.
-            // {
-            //     enforce: "pre",
-            //     test: /\.js$/,
-            //     loader: "source-map-loader"
-            // },
+            {
+                enforce: "pre",
+                test: /\.js$/,
+                loader: "source-map-loader"
+            },
+            {
+                test: /\.css$/,
+                use: [
+                    "style-loader", // 将 JS 字符串生成为 style 节点
+                    "css-loader" // 将 CSS 转化成 CommonJS 模块
+                ]
+            },
             {
                 test: /\.scss$/,
                 use: [
@@ -63,15 +80,13 @@ module.exports = {
     },
 
     plugins: [
-        new HtmlWebpackPlugin({ template: './index.html' })
+        new HtmlWebpackPlugin({ template: './public/index.html' }),
+        new CopyWebpackPlugin({
+            patterns: [{ from: './src/manifest.json' }]
+        })
     ],
-
-    // When importing a module whose path matches one of the following, just
-    // assume a corresponding global variable exists and use that instead.
-    // This is important because it allows us to avoid bundling all of our
-    // dependencies, which allows browsers to cache those libraries between builds.
-    externals: {
-        react: "React",
-        "react-dom": "ReactDOM"
-    }
+    // externals: {
+    //     react: "React",
+    //     "react-dom": "ReactDOM"
+    // }
 };
