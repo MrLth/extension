@@ -13,10 +13,10 @@
     "chrome://favicon/*"
   ],
   "chrome_url_overrides": {
-    "newtab": "./index.html"
+    "newtab": "./newtab.html"
   },
   "browser_action": {
     "default_title": "这是一个示例Chrome插件",
-    "default_popup": "./index.html"
+    "default_popup": "./popup.html"
   }
 }

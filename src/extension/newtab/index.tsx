@@ -2,14 +2,14 @@ import * as React from 'react'
 import { useEffect, useState, useMemo, useCallback, useRef } from 'react'
 import * as ReactDOM from 'react-dom'
 
-import Bookmark from './components/Bookmark'
-import Popup from './components/Popup'
+import Bookmark from '../../components/Bookmark'
+import Popup from '../../components/Popup'
 
-import './index.css'
+import 'src/index.css'
 import './index.scss'
-import './components/Popup/index.scss'
+import 'src/components/Popup/index.scss'
 
-import { deboundFixed } from './api'
+import { deboundFixed } from '../../api'
 
 const randomNum = (minNum: number, maxNum: number) =>
   Number(Math.random() * (maxNum - minNum + 1) + minNum)
@@ -217,4 +217,4 @@ function App() {
   )
 }
 
-ReactDOM.render(<App />, document.getElementById('example'))
+ReactDOM.render(<App />, document.getElementById('newtab'))

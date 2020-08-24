@@ -2,30 +2,31 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2020-05-27 15:30:26
- * @LastEditTime: 2020-08-24 21:44:55
+ * @LastEditTime: 2020-08-24 22:56:02
  * @Description: file content
  */
 
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
-
+const {CleanWebpackPlugin} = require("clean-webpack-plugin")
 
 module.exports = {
     // mode: "production",
     mode: "development",
     entry: {
-        newtab: './src/newtab.tsx',
-        popup: './src/popup.tsx',
-        content: './src/content.ts',
-        background: './src/background.ts'
+        newtab: './src/extension/newtab/index.tsx',
+        popup: './src/extension/popup.tsx',
+        // content: './src/extension/newtab/content.ts',
+        // background: './src/extension/newtab/background.ts'
     },
     output: {
         path: path.resolve(__dirname, 'dist'),
         filename: '[name].bundle.js'
     },
     // Enable sourcemaps for debugging webpack's output.
-    devtool: "source-map",
+    devtool: "inline-cheap-source-map",
+    // devtool: "inline-source-map",
 
     resolve: {
         // Add '.ts' and '.tsx' as resolvable extensions.
@@ -80,10 +81,22 @@ module.exports = {
     },
 
     plugins: [
-        new HtmlWebpackPlugin({ template: './public/index.html' }),
+        new HtmlWebpackPlugin({
+            inject:true,
+            chunks:['newtab'],
+            filename: 'newtab.html',
+            template: './template/newtab.html'
+        }),
+        new HtmlWebpackPlugin({
+            inject:true,
+            chunks:['popup'],
+            filename: 'popup.html',
+            template: './template/newtab.html'
+        }),
         new CopyWebpackPlugin({
             patterns: [{ from: './src/manifest.json' }]
-        })
+        }),
+        new CleanWebpackPlugin()
     ],
     // externals: {
     //     react: "React",
