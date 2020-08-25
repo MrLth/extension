@@ -1,0 +1,111 @@
+.bookmark {
+  box-shadow: -12px 0px 48px 0px rgba(0, 0, 0, 0.3);
+  width: 300px;
+
+  .side-title {
+    height: 2.8125rem;
+    line-height: 2.8125rem;
+    padding-left: 1.5625rem;
+    border-bottom: 1px #efefef solid;
+    font-size: 0.875rem;
+    font-family: PingFangSC-Regular, PingFang SC;
+    background-color: #fff;
+  }
+
+  .bookmark-list {
+    height: 100%;
+    background: rgba(250, 250, 250, 1);
+
+    li {
+      height: 2rem;
+      line-height: 2rem;
+
+      user-select: none;
+      list-style: none;
+    }
+
+    .folder {
+      position: relative;
+
+      .folder-name {
+        padding-left: 3rem;
+        background-repeat: no-repeat;
+        background-position: 0.875rem;
+        background-image: url('~@img/folder.svg');
+        background-size: 1.375rem 1.125rem;
+
+        &.open {
+          background-image: url('~@img/folder-open.svg');
+          background-size: 1.5625rem 1.125rem;
+        }
+      }
+    }
+
+    .label {
+      padding-left: 1rem;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+
+      img {
+        height: 1.125rem;
+        width: 1.125rem;
+        margin-right: 0.875rem;
+        vertical-align: sub;
+      }
+    }
+  }
+}
+
+.bookmark-wrapper {
+  ul {
+    .folder {
+      & > ul {
+        // min-width: 10rem;
+        // max-width: 20rem;
+        // padding: 0;
+        position: absolute;
+        // left: 10rem;
+        left: 100%;
+        top: 0;
+        display: none;
+        z-index: 999;
+        // border: 1px solid #aaf;
+        // margin-top: -1px;
+        li {
+          margin: 0;
+        }
+      }
+
+      &.expand {
+        & > ul {
+          padding-left: 1rem;
+          border: none;
+          position: relative;
+          display: block;
+          top: 1.5rem;
+          left: 0;
+          margin-bottom: 1.5rem;
+        }
+        .folder-name {
+          position: absolute;
+          left: 0;
+          right: 0;
+          width: auto;
+          top: 0;
+          height: 1.5rem;
+          // &:hover {
+          //     background-color: transparent;
+          // }
+        }
+      }
+      &:hover > ul {
+        display: block;
+      }
+      ul:hover + .folder-name {
+        background-color: #ddf;
+      }
+    }
+
+  }
+}

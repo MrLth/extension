@@ -10,6 +10,7 @@ import './index.scss'
 import 'src/components/Popup/index.scss'
 
 import { deboundFixed } from '../../api'
+import DropDiv from 'src/components/Popup/DropDiv'
 
 const randomNum = (minNum: number, maxNum: number) =>
   Number(Math.random() * (maxNum - minNum + 1) + minNum)
@@ -193,6 +194,9 @@ function App() {
   }, [onMouseMoveCb])
 
   return (
+    // <div className="bookmark-wrapper">
+    //   <Bookmark />
+    // </div>
     <div className="container" style={containerStyle}>
       <div className="leftSide bookmark-wrapper" ref={leftSideRef} style={leftSideStyle}>
         <Bookmark />

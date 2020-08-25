@@ -2,7 +2,7 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2020-05-27 15:30:26
- * @LastEditTime: 2020-08-24 22:56:02
+ * @LastEditTime: 2020-08-25 21:25:52
  * @Description: file content
  */
 
@@ -96,7 +96,7 @@ module.exports = {
         new CopyWebpackPlugin({
             patterns: [{ from: './src/manifest.json' }]
         }),
-        new CleanWebpackPlugin()
+        // new CleanWebpackPlugin()
     ],
     // externals: {
     //     react: "React",
