@@ -197,6 +197,10 @@ function App() {
     // <div className="bookmark-wrapper">
     //   <Bookmark />
     // </div>
+    // <div className="popup-wrapper">
+    //   <Popup />
+    // </div>
+
     <div className="container" style={containerStyle}>
       <div className="leftSide bookmark-wrapper" ref={leftSideRef} style={leftSideStyle}>
         <Bookmark />

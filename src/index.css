@@ -89,7 +89,7 @@
     transition: right .3s ease-in-out;
     right: -300px;
 
-    text-align: right;
+    /* text-align: right; */
   }
 
   ::-webkit-scrollbar {

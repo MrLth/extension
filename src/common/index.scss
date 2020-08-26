@@ -1,0 +1,29 @@
+* {
+  font-family: PingFangSC-Regular, PingFang SC;
+}
+
+.side-title {
+  height: 2.8125rem;
+  line-height: 2.8125rem;
+  padding-left: 1.5625rem;
+  border-bottom: 1px #efefef solid;
+  font-size: 0.875rem;
+  font-family: PingFangSC-Regular, PingFang SC;
+  background-color: #fff;
+}
+
+.unit-tab {
+  height: 2rem;
+  line-height: 2rem;
+  padding-left: 1rem;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+
+  img {
+    height: 1.125rem;
+    width: 1.125rem;
+    margin-right: 0.875rem;
+    vertical-align: sub;
+  }
+}

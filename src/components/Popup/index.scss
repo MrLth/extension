@@ -1,199 +1,180 @@
-html,
-body {
-    margin: 0;
-    padding: 0;
-}
-body {
-    background-color: #f1f1f1;
-}
-
-.content-wrapper {
-    display: flex;
-    .bookmark-wrapper {
-        width: 300px;
-        // width: 20rem;
+.tab {
+  width: 300px;
+  height: 100vh;
+  float: right;
+  // background-color: #faa;
+  box-shadow: 12px 0px 48px 0px rgba(0, 0, 0, 0.3);
+  background: rgba(250, 250, 250, 1);
+  .tab-window-title {
+    height: 2.25rem;
+    line-height: 2.25rem;
+    margin-left: 1rem;
+    font-size: 0.875rem;
+    color: #8c8c8c;
+  }
+  .tab-group {
+    .unit-tab {
+      // background-color: #faa;
+      height: 1.75rem;
+      line-height: 1.75rem;
+      background-image: url('~@img/tabGroupBg.svg');
+      background-repeat: repeat-y;
+      background-size: 1.5rem 1.75rem;
+      background-position: 0.8rem 0rem;
+      &:first-of-type {
+        background-image: url('~@img/tabGroupBgFirst.svg');
+        background-position-y: -0.25rem;
+        background-size: 1.5rem 2rem;
+      }
+      &:last-of-type {
+        background-image: url('~@img/tabGroupBgLast.svg');
+      }
     }
-    .popup-wrapper {
-        width: 36rem;
-    }
-    .record-wrapper {
-        width: 36rem;
-        margin-top: 6.76171875rem;
-    }
-}
-
-.popup-wrapper {
-    // background-color: #faa;
-    padding: 0 2rem;
-
-    #drop-div {
-        background: #faa;
-        width: 35rem;
-        height: 0.5rem;
-        transition: transform 0.3s;
-        &.drag-over {
-            transform: scale(1, 2);
-            background-color: #e00;
-        }
-        &.hide {
-            display: none;
-        }
-    }
-
-    canvas {
-        background-color: #fff;
-        border-radius: 0.2rem;
-        padding: 0.2rem;
-        border: 1px #888 solid;
-        // visibility:hidden;
-        position: fixed;
-        top:-100rem;
-
-    }
-    
-    
-
-    .btn-group-wrapper {
-        margin-top: 0.5rem;
-        & > div {
-            display: flex;
-        }
-        button,
-        input[type="text"] {
-            margin-right: 0.5rem;
-            margin-bottom: 0.5rem;
-        }
-    }
-
-    .window {
-        margin: 0.2rem;
-        margin-bottom: 1.5rem;
-        padding: 0.5rem 0.75rem;
-        width: 35rem;
-        background: #fff;
-
-        &.focused {
-            // border: 0.1rem solid #00f;
-            box-shadow: 0 0 0.5rem #aaf;
-        }
-        &.is-not-normal-window {
-            opacity: 0.5;
-        }
-
-        & > .title {
-            display: flex;
-            justify-content: space-between;
-            .btn-wrapper {
-                button {
-                    margin-right: 0.5rem;
-                }
-            }
-        }
-
-        .group {
-            // border-left: 3px solid #000;
-            // padding-left: 0.2rem;
-            margin-bottom: 0.5rem;
-            border: 1px #f5f5f5 solid;
-            background-color: #f5f5f5;
-
-            & > .title {
-                text-align: right;
-                padding-right: 0.5rem;
-            }
-            img {
-                width: 1.125rem;
-                // height: 1.125rem;
-                // border-radius: 0.2rem;
-                padding-right: 0.8rem;
-                vertical-align: middle;
-                position: relative;
-                // top: 100%;
-            }
-        }
-
-        li {
-            position: relative;
-            list-style: none;
-            font-size: 0.875rem;
-            line-height: 2rem;
-            // margin-left:  1.5rem;
-            padding: 0 0.5rem;
-            user-select: none;
-            transition: background-color 0.5s;
-
-            display: flex;
-            justify-content: space-between;
-
-            &:hover {
-                color: #44f;
-            }
-            &.selected {
-                background-color: #eef;
-            }
-
-            &.activated {
-                color: #00f;
-            }
-
-            &.dragable {
-                background-color: #efe;
-            }
-
-            // &.dragover{
-            //     border-bottom: 0.2rem solid #f55;
-            // }
-            .title {
-                // color: #66f;
-                overflow: hidden;
-                white-space: nowrap;
-                text-overflow: ellipsis;
-            }
-            .url {
-                font-size: 0.75rem;
-                color: #888;
-            }
-
-            .btn-wrapper {
-                min-width: 6rem;
-                text-align: right;
-                button {
-                    margin-left: 0.2rem;
-                }
-            }
-        }
-    }
+  }
 }
 
-.record-wrapper {
-    background-color: #fff;
-    & > div {
-        text-align: center;
-        height: 1rem;
-        line-height: 1rem;
-        color: #888;
-    }
-    ul {
-        padding: 0;
-        margin: 0;
-        padding-bottom: 1rem;
-        li {
-            list-style: none;
-            margin-top: 1rem;
-            padding: 0 1.5rem;
-
-            div {
-                overflow: hidden;
-                white-space: nowrap;
-                text-overflow: ellipsis;
-            }
-            div:nth-child(1) {
-                font-size: 1rem;
-            }
-            div:nth-child(2) {
-                color: #888;
-            }
-        }
-    }
+.test {
+  float: left;
+  width: 500px;
 }
 
+// .popup-wrapper {
+//     // background-color: #faa;
+//     padding: 0 2rem;
+
+//     #drop-div {
+//         background: #faa;
+//         width: 35rem;
+//         height: 0.5rem;
+//         transition: transform 0.3s;
+//         &.drag-over {
+//             transform: scale(1, 2);
+//             background-color: #e00;
+//         }
+//         &.hide {
+//             display: none;
+//         }
+//     }
+
+//     canvas {
+//         background-color: #fff;
+//         border-radius: 0.2rem;
+//         padding: 0.2rem;
+//         border: 1px #888 solid;
+//         // visibility:hidden;
+//         position: fixed;
+//         top:-100rem;
+
+//     }
+
+//     .btn-group-wrapper {
+//         margin-top: 0.5rem;
+//         & > div {
+//             display: flex;
+//         }
+//         button,
+//         input[type="text"] {
+//             margin-right: 0.5rem;
+//             margin-bottom: 0.5rem;
+//         }
+//     }
+
+//     .window {
+//         margin: 0.2rem;
+//         margin-bottom: 1.5rem;
+//         padding: 0.5rem 0.75rem;
+//         width: 35rem;
+//         background: #fff;
+
+//         &.focused {
+//             // border: 0.1rem solid #00f;
+//             box-shadow: 0 0 0.5rem #aaf;
+//         }
+//         &.is-not-normal-window {
+//             opacity: 0.5;
+//         }
+
+//         & > .title {
+//             display: flex;
+//             justify-content: space-between;
+//             .btn-wrapper {
+//                 button {
+//                     margin-right: 0.5rem;
+//                 }
+//             }
+//         }
+
+//         .group {
+//             // border-left: 3px solid #000;
+//             // padding-left: 0.2rem;
+//             margin-bottom: 0.5rem;
+//             border: 1px #f5f5f5 solid;
+//             background-color: #f5f5f5;
+
+//             & > .title {
+//                 text-align: right;
+//                 padding-right: 0.5rem;
+//             }
+//             img {
+//                 width: 1.125rem;
+//                 // height: 1.125rem;
+//                 // border-radius: 0.2rem;
+//                 padding-right: 0.8rem;
+//                 vertical-align: middle;
+//                 position: relative;
+//                 // top: 100%;
+//             }
+//         }
+
+//         li {
+//             position: relative;
+//             list-style: none;
+//             font-size: 0.875rem;
+//             line-height: 2rem;
+//             // margin-left:  1.5rem;
+//             padding: 0 0.5rem;
+//             user-select: none;
+//             transition: background-color 0.5s;
+
+//             display: flex;
+//             justify-content: space-between;
+
+//             &:hover {
+//                 color: #44f;
+//             }
+//             &.selected {
+//                 background-color: #eef;
+//             }
+
+//             &.activated {
+//                 color: #00f;
+//             }
+
+//             &.dragable {
+//                 background-color: #efe;
+//             }
+
+//             // &.dragover{
+//             //     border-bottom: 0.2rem solid #f55;
+//             // }
+//             .title {
+//                 // color: #66f;
+//                 overflow: hidden;
+//                 white-space: nowrap;
+//                 text-overflow: ellipsis;
+//             }
+//             .url {
+//                 font-size: 0.75rem;
+//                 color: #888;
+//             }
+
+//             .btn-wrapper {
+//                 min-width: 6rem;
+//                 text-align: right;
+//                 button {
+//                     margin-left: 0.2rem;
+//                 }
+//             }
+//         }
+//     }
+// }
