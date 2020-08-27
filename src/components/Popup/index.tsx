@@ -96,8 +96,7 @@ export default function Popup(): JSX.Element {
       tab: chrome.tabs.Tab
     ) => {
       // console.log('**************************************************Updated')
-
-      if (0 != refFaviconUpd.current.length && 'favIconUrl' in tab) {
+      if (0 != refFaviconUpd.current?.length && 'favIconUrl' in tab) {
         const host = new URL(tab.url).host
         const index = refFaviconUpd.current.findIndex((item) => item.host == host)
         if (-1 != index) {
@@ -262,7 +261,7 @@ export default function Popup(): JSX.Element {
   }, [])
 
   const printWindowAttach = useCallback(() => {
-    // console.log('window Attach', refWindowsAttach.current)
+    console.log('window Attach', refWindowsAttach.current)
   }, [])
   const updateWindowAttach = useCallback(() => {
     updateWindowsAttachProp()
@@ -556,9 +555,8 @@ export default function Popup(): JSX.Element {
 
   //#region 6. 标签按钮
   const openTab = useCallback((tab: Tab & CustomProps) => {
-    chrome.tabs.update(tab.id, { active: true }, () => {
-      // console.log('updated tab:', tab)
-    })
+    chrome.tabs.update(tab.id, { active: true })
+    chrome.windows.update(tab.windowId, { focused: true })
   }, [])
   const closeTab = useCallback((tabId: number) => {
     chrome.tabs.remove(tabId)
@@ -730,37 +728,37 @@ export default function Popup(): JSX.Element {
     </>
   )
 
-  return (<>
-    <div className='test'>
-        {btnGroup}
-    </div>
-    <div className="tab">
-      <div className="side-title">TAB</div>
-      {Object.keys(renderWindows).map((key: keyof typeof renderWindows) => {
-        return (
-          <PopupWindow
-            tabs={renderWindows[key]}
-            openTab={openTab}
-            windowId={key}
-            key={key}
-            mousedownCb={mousedownCb}
-            mouseupCb={mouseupCb}
-            dragOverCb={dragOverCb}
-            closeWindow={closeWindow}
-            closeTab={closeTab}
-            hiddenDropDiv={hiddenDropDiv}
-            selectWindow={selectWindow}
-            attachInfo={windowsAttach[key]}
-            changeWindowAttach={changeWindowAttach}
-            duplicateTab={duplicateTab}
-            discardTab={discardTab}
-            recordDispatch={recordDispatch}
-            canvasEl={canvasEl}
-          />
-        )
-      })}
-      <DropDiv isHidden={isHidden} dropCb={dropCb} />
-      <canvas ref={canvasEl}></canvas>
-    </div>
-  </>)
+  return (
+    <>
+      <div className="test">{btnGroup}</div>
+      <div className="tab">
+        <div className="side-title">TAB</div>
+        {Object.keys(renderWindows).map((key: keyof typeof renderWindows) => {
+          return (
+            <PopupWindow
+              tabs={renderWindows[key]}
+              openTab={openTab}
+              windowId={key}
+              key={key}
+              mousedownCb={mousedownCb}
+              mouseupCb={mouseupCb}
+              dragOverCb={dragOverCb}
+              closeWindow={closeWindow}
+              closeTab={closeTab}
+              hiddenDropDiv={hiddenDropDiv}
+              selectWindow={selectWindow}
+              attachInfo={windowsAttach[key]}
+              changeWindowAttach={changeWindowAttach}
+              duplicateTab={duplicateTab}
+              discardTab={discardTab}
+              recordDispatch={recordDispatch}
+              canvasEl={canvasEl}
+            />
+          )
+        })}
+        <DropDiv isHidden={isHidden} dropCb={dropCb} />
+        <canvas ref={canvasEl}></canvas>
+      </div>
+    </>
+  )
 }

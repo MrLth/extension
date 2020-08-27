@@ -1,9 +1,13 @@
 import * as React from 'react'
-import { useEffect, useState, useMemo, useCallback, useRef } from 'react'
+import { useEffect, useState, useMemo, useCallback, useRef, useContext } from 'react'
 import * as ReactDOM from 'react-dom'
 
 import Bookmark from '../../components/Bookmark'
 import Popup from '../../components/Popup'
+
+import { RecordProvider, RecordContext } from 'src/store'
+import { recordActionInit } from '@store/record/actions'
+import { faviconStorageActionAdd } from '@store/bookmark/actions'
 
 import 'src/index.css'
 import './index.scss'
@@ -29,6 +33,20 @@ const minWidthIndex = (arr: number[]) => {
 const SIDE_WIDTH_THRESHOLD = [870, 1120]
 
 function App() {
+  const { dispatch, faviconStorage, faviconStorageDispatch } = useContext(RecordContext)
+
+  useEffect(() => {
+    chrome.storage.local.get((storage) => {
+      const urls = storage?.urls || []
+
+      dispatch(recordActionInit(Array.from(urls)))
+
+      const favicons = storage?.favicons || {}
+
+      faviconStorageDispatch(faviconStorageActionAdd(favicons))
+    })
+  }, [])
+
   const [windowSize, setWindowSize] = useState(getWindowWidth)
 
   useEffect(() => {
@@ -197,32 +215,37 @@ function App() {
     // <div className="bookmark-wrapper">
     //   <Bookmark />
     // </div>
-    // <div className="popup-wrapper">
-    //   <Popup />
-    // </div>
-
-    <div className="container" style={containerStyle}>
-      <div className="leftSide bookmark-wrapper" ref={leftSideRef} style={leftSideStyle}>
-        <Bookmark />
-      </div>
-      <div className="leftSpace"></div>
-      <div className="centerContent">
-        <ul className="wrapper">
-          {cols.map((col, i) => {
-            return (
-              <li className="col" key={`col-${i}`}>
-                <ul>{col}</ul>
-              </li>
-            )
-          })}
-        </ul>
-      </div>
-      <div className="rightSpace"></div>
-      <div className="rightSide popup-wrapper" style={rightSideStyle}>
-        <Popup />
-      </div>
+    <div className="popup-wrapper">
+      <Popup />
     </div>
+
+    // <div className="container" style={containerStyle}>
+    //   <div className="leftSide bookmark-wrapper" ref={leftSideRef} style={leftSideStyle}>
+    //     <Bookmark />
+    //   </div>
+    //   <div className="leftSpace"></div>
+    //   <div className="centerContent">
+    //     <ul className="wrapper">
+    //       {cols.map((col, i) => {
+    //         return (
+    //           <li className="col" key={`col-${i}`}>
+    //             <ul>{col}</ul>
+    //           </li>
+    //         )
+    //       })}
+    //     </ul>
+    //   </div>
+    //   <div className="rightSpace"></div>
+    //   <div className="rightSide popup-wrapper" style={rightSideStyle}>
+    //     <Popup />
+    //   </div>
+    // </div>
   )
 }
 
-ReactDOM.render(<App />, document.getElementById('newtab'))
+ReactDOM.render(
+  <RecordProvider>
+    <App />
+  </RecordProvider>,
+  document.getElementById('newtab')
+)

@@ -52,7 +52,7 @@ const PopupWindowTab = memo(function PopupWindowTab(props: {
       } else {
         openTab(tab)
       }
-      console.log('tab clicked')
+      console.log('tab clicked', tab)
 
       e.stopPropagation()
     },
@@ -129,8 +129,6 @@ const PopupWindowTab = memo(function PopupWindowTab(props: {
     </>
   )
 
-  // console.log('🌀 Render       ', tab.index, tab.title)
-  // console.log('🌀 Tab Render')
   return (
     <li
       className={classNames('unit-tab', {
