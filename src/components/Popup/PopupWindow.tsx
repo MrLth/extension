@@ -8,6 +8,7 @@ import { Tab, CustomProps } from '@api/type'
 import PopupWindowTab from './PopupWindowTab'
 import classNames = require('classnames')
 import { RecordDispatch } from '@store/record/type'
+import { useWindowSize } from 'src/hooks'
 // import classNames = require('classnames')
 
 const PopupWindow = memo(function PopupWindow(props: {
@@ -50,11 +51,6 @@ const PopupWindow = memo(function PopupWindow(props: {
     recordDispatch,
     canvasEl,
   } = props
-
-  console.log('🌀 Render    ', windowId)
-
-  // console.log("attach Info", attachInfo);
-
   const tabArr = []
 
   for (let i = 0; i < tabs.length; i++) {

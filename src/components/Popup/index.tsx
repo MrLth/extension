@@ -38,9 +38,11 @@ import { RecordUrl } from '@store/record/type'
 
 import 'src/common/index.scss'
 import './index.scss'
+import PopupFrame from '../PopupFrame'
 export default function Popup(): JSX.Element {
   const [windows, setWindows] = useState<Windows>({})
 
+  // console.log("attach Info", attachInfo);
   //#region 1. 窗口&标签信息
   const refWindows = useRef(windows)
   refWindows.current = useMemo(() => windows, [windows])
@@ -758,6 +760,7 @@ export default function Popup(): JSX.Element {
         })}
         <DropDiv isHidden={isHidden} dropCb={dropCb} />
         <canvas ref={canvasEl}></canvas>
+        <PopupFrame />
       </div>
     </>
   )

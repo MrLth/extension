@@ -19,6 +19,28 @@
     }
   }
 
+  .unit-tab-wrapper {
+    // display: flex;
+    position: relative;
+    // justify-content: space-between;
+    .tab-btn-close {
+      // margin-right: -1.6rem;
+      // display: none;
+      opacity: 0;
+      position: absolute;
+      right: 0;
+      top: 0;
+      padding: 0 0.3rem 0 1rem;
+      font-size: 1rem;
+      line-height: 2rem;
+      transition: opacity 0.05s  ease-in-out;
+      background: linear-gradient(to right, transparent , #FAFAFA);
+    }
+    &:hover .tab-btn-close {
+      opacity: 1;
+    }
+  }
+
   .unit-tab {
     &.activated {
       background-color: #eee;

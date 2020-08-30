@@ -2,14 +2,14 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2020-05-27 15:30:26
- * @LastEditTime: 2020-08-25 21:25:52
+ * @LastEditTime: 2020-08-28 20:15:10
  * @Description: file content
  */
 
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
-const {CleanWebpackPlugin} = require("clean-webpack-plugin")
+const { CleanWebpackPlugin } = require("clean-webpack-plugin")
 
 module.exports = {
     // mode: "production",
@@ -35,7 +35,8 @@ module.exports = {
             "@store": path.resolve("src/store"),
             "@api": path.resolve("src/api"),
             "src": path.resolve("src"),
-            "@img": path.resolve("public/img")
+            "@img": path.resolve("public/img"),
+            'public': path.resolve("public")
         }
     },
     module: {
@@ -82,14 +83,14 @@ module.exports = {
 
     plugins: [
         new HtmlWebpackPlugin({
-            inject:true,
-            chunks:['newtab'],
+            inject: true,
+            chunks: ['newtab'],
             filename: 'newtab.html',
             template: './template/newtab.html'
         }),
         new HtmlWebpackPlugin({
-            inject:true,
-            chunks:['popup'],
+            inject: true,
+            chunks: ['popup'],
             filename: 'popup.html',
             template: './template/newtab.html'
         }),

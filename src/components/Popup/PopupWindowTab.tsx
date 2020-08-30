@@ -8,6 +8,7 @@ import './index.scss'
 import classNames = require('classnames')
 
 import defaultIcon from '@img/defaultIcon.svg'
+import IconFont from '../IconFont'
 
 const PopupWindowTab = memo(function PopupWindowTab(props: {
   tab: Tab & CustomProps
@@ -52,8 +53,6 @@ const PopupWindowTab = memo(function PopupWindowTab(props: {
       } else {
         openTab(tab)
       }
-      console.log('tab clicked', tab)
-
       e.stopPropagation()
     },
     [refresh]
@@ -131,13 +130,17 @@ const PopupWindowTab = memo(function PopupWindowTab(props: {
 
   return (
     <li
-      className={classNames('unit-tab', {
+      className={classNames('unit-tab-wrapper', {
         selected: tab.userSelected,
         activated: tab.active,
         dragable,
         dragover: isDragover,
       })}
       onClick={onClick}
+      onMouseUpCapture={(e) => {
+        console.log('onMouseUpCapture', e.clientX, e.clientY, e.button)
+      }}
+      onContextMenu={(e) => e.preventDefault()}
       onMouseDown={(e) => {
         e.stopPropagation()
 
@@ -181,8 +184,19 @@ const PopupWindowTab = memo(function PopupWindowTab(props: {
         hiddenDropDiv()
       }}
       draggable="true">
-      <img src={tab.favIconUrl !== '' ? tab.favIconUrl : defaultIcon} />
-      {tab.title}
+      <div className="unit-tab">
+        <img src={tab.favIconUrl !== '' ? tab.favIconUrl : defaultIcon} />
+        {tab.title}
+      </div>
+      <div className="tab-btn-close">
+        <IconFont
+          type="icon-close"
+          onClick={(e: MouseEvent) => {
+            closeTab(tab.id)
+            e.stopPropagation()
+          }}
+        />
+      </div>
     </li>
   )
 })

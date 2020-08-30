@@ -1,7 +1,16 @@
-import { createFromIconfontCN } from '@ant-design/icons';
+import * as React from 'react'
+import 'public/asset/iconfont.js'
 
-const IconFont = createFromIconfontCN({
-  scriptUrl: '//at.alicdn.com/t/font_8d5l8fzk5b87iudi.js',
-})
+const IconFont = (props: {
+  type: string
+  onClick: (...args: unknown[]) => unknown
+}): JSX.Element => {
+  const { type, onClick } = props
+  return (
+    <svg className="icon-font" aria-hidden="true" onClick={onClick}>
+      <use xlinkHref={`#${type}`} />
+    </svg>
+  )
+}
 
 export default IconFont
