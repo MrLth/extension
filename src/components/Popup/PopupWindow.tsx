@@ -8,7 +8,7 @@ import { Tab, CustomProps } from '@api/type'
 import PopupWindowTab from './PopupWindowTab'
 import classNames = require('classnames')
 import { RecordDispatch } from '@store/record/type'
-import { useWindowSize } from 'src/hooks'
+// import { useWindowSize } from 'src/hooks'
 // import classNames = require('classnames')
 
 const PopupWindow = memo(function PopupWindow(props: {

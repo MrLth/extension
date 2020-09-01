@@ -41,14 +41,14 @@
     }
   }
 
-  .unit-tab {
+  .unit-tab-wrapper {
     &.activated {
       background-color: #eee;
     }
   }
 
   .tab-group {
-    .unit-tab {
+    .unit-tab-wrapper {
       height: 1.75rem;
       line-height: 1.75rem;
       background-image: url('~@img/tabGroupBg.svg');
@@ -75,14 +75,14 @@
     }
   }
   .focused {
-    .unit-tab {
+    .unit-tab-wrapper {
       &.activated {
         color: #0050b3;
         background-color: #e6f7ff;
       }
     }
     .tab-group {
-      .unit-tab {
+      .unit-tab-wrapper {
         &.activated {
           background-image: url('~@img/tabGroupBgActivated.svg');
           &:first-of-type {
