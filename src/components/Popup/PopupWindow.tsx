@@ -32,6 +32,7 @@ const PopupWindow = memo(function PopupWindow(props: {
   discardTab: (windowId: number | string, tabId: number) => void
   recordDispatch: RecordDispatch
   canvasEl: React.MutableRefObject<HTMLCanvasElement>
+  updPopupFramePosition: (top:number, left:number)=>void
 }) {
   const {
     tabs,
@@ -50,6 +51,7 @@ const PopupWindow = memo(function PopupWindow(props: {
     discardTab,
     recordDispatch,
     canvasEl,
+    updPopupFramePosition
   } = props
   const tabArr = []
 
@@ -80,6 +82,7 @@ const PopupWindow = memo(function PopupWindow(props: {
             discardTab={discardTab}
             recordDispatch={recordDispatch}
             canvasEl={canvasEl}
+            updPopupFramePosition={updPopupFramePosition}
           />
         )
         i++
@@ -104,6 +107,7 @@ const PopupWindow = memo(function PopupWindow(props: {
         discardTab={discardTab}
         recordDispatch={recordDispatch}
         canvasEl={canvasEl}
+        updPopupFramePosition={updPopupFramePosition}
       />
     )
 

@@ -24,7 +24,7 @@ import {
     searchTab,
     batchUpdTabIndex,
     referOldWindows,
-    dereferOldWindows,
+    dereferOldWindows
 } from '@api/handleTabs'
 // import { PopupState } from './store/popup/type'
 // import { AppState } from "./store"
@@ -42,7 +42,7 @@ import PopupFrame from '../PopupFrame'
 
 import { useConcent } from 'concent'
 
-const setup = () => {
+const setup = (ctx:any) => {
     return {
         closeTab: (tabId: number) => {
             chrome.tabs.remove(tabId)
@@ -51,13 +51,24 @@ const setup = () => {
             chrome.tabs.update(tab.id, { active: true })
             chrome.windows.update(tab.windowId, { focused: true })
         },
+        // popupFrame
+        updPopupFramePosition: (top: number, left: number) => {
+            ctx.setState({ popupFramePosition: { top, left } })
+        }
     }
 }
 
+const initState = {
+    popupFramePosition: {
+        top: 0,
+        left: 0
+    }
+}
 export default function Popup(): JSX.Element {
     const {
-        settings: { closeTab, openTab },
-    } = useConcent({ setup })
+        state: { popupFramePosition },
+        settings: { closeTab, openTab, updPopupFramePosition }
+    } = useConcent({ setup, state: initState })
 
     const [windows, setWindows] = useState<Windows>({})
 
@@ -312,7 +323,7 @@ export default function Popup(): JSX.Element {
         startIndex: -1,
         endWindow: -1,
         endIndex: -1,
-        status: false,
+        status: false
     })
     const mousedownCb = useCallback((startWindow: number, startIndex: number, status: boolean) => {
         isSelect.current = true
@@ -321,7 +332,7 @@ export default function Popup(): JSX.Element {
             ...selectObj.current,
             startWindow,
             startIndex,
-            status: status,
+            status: status
         }
     }, [])
 
@@ -394,7 +405,7 @@ export default function Popup(): JSX.Element {
 
             const dropInfoFix = {
                 ...dropInfo.current,
-                index: dropInfo.current.index + 1,
+                index: dropInfo.current.index + 1
             }
 
             if (selectTabs.length) {
@@ -439,7 +450,7 @@ export default function Popup(): JSX.Element {
 
     const dropInfo = useRef({
         windowId: -1,
-        index: -1,
+        index: -1
     })
     const dragOverCb = useCallback(
         (li: HTMLElement, isInsertBefore: boolean, windowId: number, tabIndex: number) => {
@@ -552,7 +563,7 @@ export default function Popup(): JSX.Element {
                         title: tab.title,
                         host: tab.userHost,
                         route: tab.userRoute,
-                        para: tab.userPara,
+                        para: tab.userPara
                     })
             })
         })
@@ -635,7 +646,7 @@ export default function Popup(): JSX.Element {
                             sortUrl: tab.userHost.split('.').reverse().join('') + tab.userRoute,
                             url: tab.url,
                             id: tab.id,
-                            windowId: tab.windowId,
+                            windowId: tab.windowId
                         })
                     else {
                         const url = tab.userProtocol
@@ -645,7 +656,7 @@ export default function Popup(): JSX.Element {
                             sortUrl: url,
                             url: tab.url,
                             id: tab.id,
-                            windowId: tab.windowId,
+                            windowId: tab.windowId
                         })
                     }
                 })
@@ -716,11 +727,12 @@ export default function Popup(): JSX.Element {
 
     const btnGroup = (
         <>
-            <div className="btn-group-wrapper">
+            <div className='btn-group-wrapper'>
                 <button
                     onClick={() => {
                         updateWindowsObj()
-                    }}>
+                    }}
+                >
                     refresh
                 </button>
                 <button onClick={printTabs}>print tabs</button>
@@ -729,13 +741,15 @@ export default function Popup(): JSX.Element {
                 <button
                     onClick={() => {
                         printUrl(true)
-                    }}>
+                    }}
+                >
                     Print printUrl merge
                 </button>
                 <button
                     onClick={() => {
                         printUrl(false)
-                    }}>
+                    }}
+                >
                     Print printUrl
                 </button>
                 <button onClick={handleTabsFunc}>handleTabsFunc</button>
@@ -743,7 +757,7 @@ export default function Popup(): JSX.Element {
                 <button onClick={updateWindowAttach}>updateWindowAttach</button>
                 <button onClick={printFaviconsUpd}>printFaviconsUpd</button>
             </div>
-            <div className="btn-group-wrapper">
+            <div className='btn-group-wrapper'>
                 <BtnGroup
                     createWindow={createWindow}
                     createWindowOnDropCb={createWindowOnDropCb}
@@ -758,11 +772,12 @@ export default function Popup(): JSX.Element {
         </>
     )
 
+    console.log('popup render')
     return (
         <>
-            <div className="test">{btnGroup}</div>
-            <div className="tab">
-                <div className="side-title">TAB</div>
+            <div className='test'>{btnGroup}</div>
+            <div className='tab'>
+                <div className='side-title'>TAB</div>
                 {Object.keys(renderWindows).map((key: keyof typeof renderWindows) => {
                     return (
                         <PopupWindow
@@ -783,12 +798,13 @@ export default function Popup(): JSX.Element {
                             discardTab={discardTab}
                             recordDispatch={recordDispatch}
                             canvasEl={canvasEl}
+                            updPopupFramePosition={updPopupFramePosition}
                         />
                     )
                 })}
                 <DropDiv isHidden={isHidden} dropCb={dropCb} />
                 <canvas ref={canvasEl}></canvas>
-                <PopupFrame />
+                <PopupFrame top={popupFramePosition.top} left={popupFramePosition.left}/>
             </div>
         </>
     )

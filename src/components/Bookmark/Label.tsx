@@ -2,7 +2,7 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2020-06-19 16:25:32
- * @LastEditTime: 2020-08-27 20:29:55
+ * @LastEditTime: 2020-09-01 22:20:33
  * @Description: file content
  */
 import * as React from 'react'
@@ -19,6 +19,7 @@ const Label = memo(function Label(props: {
   faviconUpdDispatch: FaviconUpdDispatch
 }): JSX.Element {
   const { node, faviconUpdDispatch, faviconStorage } = props
+
 
   const host = new URL(node.url).host
   const [imgSrc, setImgSrc] = useState(`chrome://favicon/size/18@2x/${node.url}`)
