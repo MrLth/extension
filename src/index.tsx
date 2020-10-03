@@ -2,8 +2,8 @@
 // import { useContext, useEffect } from "react";
 // import * as ReactDOM from "react-dom";
 
-// import { recordActionInit } from "@store/record/actions";
-// import { faviconStorageActionAdd } from "@store/bookmark/actions";
+// import { recordActionInit } from "store/record/actions";
+// import { faviconStorageActionAdd } from "store/bookmark/actions";
 // import { RecordProvider, RecordContext } from "./store";
 
 // import Record from './view/Record'

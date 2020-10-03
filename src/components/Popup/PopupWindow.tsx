@@ -4,11 +4,11 @@ import * as React from 'react'
 
 import './index.scss'
 
-import { Tab, CustomProps } from '@api/type'
+import { Tab, CustomProps } from 'api/type'
 import PopupWindowTab from './PopupWindowTab'
 import classNames = require('classnames')
-import { RecordDispatch } from '@store/record/type'
-// import { useWindowSize } from 'src/hooks'
+import { RecordDispatch } from 'store/record/type'
+// import { useWindowSize } from 'hooks'
 // import classNames = require('classnames')
 
 const PopupWindow = memo(function PopupWindow(props: {

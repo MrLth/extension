@@ -1,9 +1,11 @@
-.popup-frame{
+.popup-frame {
     position: absolute;
     top: 100px;
     left: 100px;
-    width: 150px;
+    width: 120px;
     padding: 0.5rem;
     height: 2rem;
     background-color: #faa;
+    will-change: top, left;
+    transition: top 0.3s ease-in-out, left 0.3s ease-in-out;
 }

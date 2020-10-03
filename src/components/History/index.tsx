@@ -1,8 +1,8 @@
 import * as React from 'react'
 import { useContext, useEffect, useMemo, useCallback, useState } from 'react'
 
-import { RecordContext } from '@store'
-import { debound } from '@api'
+import { RecordContext } from 'store'
+import { debound } from 'api'
 import { HistorySortedObj } from './type'
 import { sortNativeHistory } from './api'
 

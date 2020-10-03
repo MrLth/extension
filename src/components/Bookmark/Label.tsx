@@ -2,16 +2,16 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2020-06-19 16:25:32
- * @LastEditTime: 2020-09-01 22:20:33
+ * @LastEditTime: 2020-10-03 15:48:40
  * @Description: file content
  */
 import * as React from 'react'
-import { BookmarkTreeNode, FaviconStorageObj } from '@store/bookmark/type'
+import { BookmarkTreeNode, FaviconStorageObj } from 'store/bookmark/type'
 import { useState, useContext, useEffect, memo } from 'react'
-import { faviconUdpActionAdd } from '@store/bookmark/actions'
-import { FaviconUpdDispatch } from '@store/record/type'
-import { RecordContext } from '@store'
-import { isLocal } from '@api'
+import { faviconUdpActionAdd } from 'store/bookmark/actions'
+import { FaviconUpdDispatch } from 'store/record/type'
+import { RecordContext } from 'store'
+import { isLocal } from 'api'
 
 const Label = memo(function Label(props: {
   node: BookmarkTreeNode

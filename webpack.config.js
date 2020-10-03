@@ -2,7 +2,7 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2020-05-27 15:30:26
- * @LastEditTime: 2020-08-28 20:15:10
+ * @LastEditTime: 2020-10-03 15:59:41
  * @Description: file content
  */
 
@@ -32,11 +32,15 @@ module.exports = {
         // Add '.ts' and '.tsx' as resolvable extensions.
         extensions: [".ts", ".tsx", ".js"],
         alias: {
-            "@store": path.resolve("src/store"),
-            "@api": path.resolve("src/api"),
-            "src": path.resolve("src"),
             "@img": path.resolve("public/img"),
-            'public': path.resolve("public")
+            'public': path.resolve("public"),
+            'components': path.resolve("src/components"),
+            'api': path.resolve("src/api"),
+            'models': path.resolve("src/models"),
+            'common':path.resolve("src/common"),
+            'types':path.resolve("src/types"),
+            'store':path.resolve("src/store"),
+            'src':path.resolve("src")
         }
     },
     module: {

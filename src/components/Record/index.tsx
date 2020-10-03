@@ -1,9 +1,9 @@
 import * as React from 'react'
 import { useContext, useEffect, useMemo, useCallback, useState } from 'react'
-import { RecordContext } from '@store'
-// import { recordActionInit } from '@store/record/actions'
-import { debound } from '@api'
-import { RecordUrl } from '@store/record/type'
+import { RecordContext } from 'store'
+// import { recordActionInit } from 'store/record/actions'
+import { debound } from 'api'
+import { RecordUrl } from 'store/record/type'
 
 const Record = (): JSX.Element => {
     const { urls } = useContext(RecordContext)

@@ -1,4 +1,4 @@
-import { FaviconUdpAction, FaviconUpdItem, FaviconStorageObj, FaviconStorageAction } from "@store/bookmark/type"
+import { FaviconUdpAction, FaviconUpdItem, FaviconStorageObj, FaviconStorageAction } from "store/bookmark/type"
 
 /*
  * @Author: mrlthf11

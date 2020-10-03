@@ -7,7 +7,7 @@
  */
 import { ACTION } from './actions'
 
-import { Tab, TabsAction, CustomProps, Windows } from '@api/type'
+import { Tab, TabsAction, CustomProps, Windows } from 'api/type'
 
 export function groupTabsReducer (
 	state: Windows = {},

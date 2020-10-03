@@ -3,8 +3,8 @@ import { useEffect, useState, useMemo, useRef, useCallback, useContext } from 'r
 // import { connect } from "react-redux"
 // import classNames = require('classnames')
 
-import { debound, deboundFixed } from '@api'
-import { Tab, CustomProps, Windows, SelectObj, WindowsAttach } from '@api/type'
+import { debound, deboundFixed } from 'api'
+import { Tab, CustomProps, Windows, SelectObj, WindowsAttach } from 'api/type'
 import {
     splitUrl,
     selectTabs,
@@ -25,24 +25,36 @@ import {
     batchUpdTabIndex,
     referOldWindows,
     dereferOldWindows
-} from '@api/handleTabs'
+} from 'api/handleTabs'
 // import { PopupState } from './store/popup/type'
 // import { AppState } from "./store"
 
 import PopupWindow from './PopupWindow'
 import BtnGroup from './BtnGroup'
 import DropDiv from './DropDiv'
-import { RecordContext } from '@store'
-import { recordActionAdds } from '@store/record/actions'
-import { RecordUrl } from '@store/record/type'
+import { RecordContext } from 'store'
+import { recordActionAdds } from 'store/record/actions'
+import { RecordUrl } from 'store/record/type'
 
-import 'src/common/index.scss'
+import 'common/index.scss'
 import './index.scss'
 import PopupFrame from '../PopupFrame'
 
-import { useConcent } from 'concent'
+import { NoMap, SettingsType, useConcent } from 'concent'
+import { CtxDeS } from 'types/concent'
 
-const setup = (ctx:any) => {
+
+const initState = () => ({
+    popupFramePosition: {
+        top: 0,
+        left: 0
+    }
+})
+
+type St = ReturnType<typeof initState>
+type CtxPre = CtxDeS<Record<string, unknown>, St>
+
+const setup = (ctx: CtxPre) => {
     return {
         closeTab: (tabId: number) => {
             chrome.tabs.remove(tabId)
@@ -58,17 +70,13 @@ const setup = (ctx:any) => {
     }
 }
 
-const initState = {
-    popupFramePosition: {
-        top: 0,
-        left: 0
-    }
-}
+type Ctx = CtxDeS<Record<string, unknown>, St, SettingsType<typeof setup>>
+
 export default function Popup(): JSX.Element {
-    const {
-        state: { popupFramePosition },
-        settings: { closeTab, openTab, updPopupFramePosition }
-    } = useConcent({ setup, state: initState })
+    const ctx = useConcent<Record<string, unknown>, Ctx, NoMap>({ setup, state: initState() })
+    const { popupFramePosition } = ctx.state
+    const { closeTab, openTab, updPopupFramePosition } = ctx.settings
+
 
     const [windows, setWindows] = useState<Windows>({})
 
@@ -155,11 +163,11 @@ export default function Popup(): JSX.Element {
 
             const cb = isWindowClosing
                 ? (windows: Windows) => {
-                      return removeWindow(windows, windowId)
-                  }
+                    return removeWindow(windows, windowId)
+                }
                 : (windows: Windows) => {
-                      return removeTab(windows, windowId, tabId)
-                  }
+                    return removeTab(windows, windowId, tabId)
+                }
             handleTabsQueue.current.push(cb)
             handleTabsFunc()
         }
@@ -804,7 +812,7 @@ export default function Popup(): JSX.Element {
                 })}
                 <DropDiv isHidden={isHidden} dropCb={dropCb} />
                 <canvas ref={canvasEl}></canvas>
-                <PopupFrame top={popupFramePosition.top} left={popupFramePosition.left}/>
+                <PopupFrame top={popupFramePosition.top} left={popupFramePosition.left} />
             </div>
         </>
     )

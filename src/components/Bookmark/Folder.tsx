@@ -1,12 +1,12 @@
 import * as React from 'react'
 import { useEffect, useMemo, useState, useCallback, useRef } from 'react'
 
-import { BookmarkTreeNode, FaviconStorageObj } from '@store/bookmark/type'
-import { useForceRender } from 'src/hooks'
+import { BookmarkTreeNode, FaviconStorageObj } from 'store/bookmark/type'
+import { useForceRender } from 'hooks'
 import Label from './Label'
 import classNames = require('classnames')
 
-import { FaviconUpdDispatch } from '@store/record/type'
+import { FaviconUpdDispatch } from 'store/record/type'
 
 const Folder = (props: {
   node: BookmarkTreeNode

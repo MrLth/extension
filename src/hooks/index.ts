@@ -1,5 +1,5 @@
 import { useState, useRef, useMemo, useEffect } from 'react'
-import { deboundFixed } from '@api'
+import { deboundFixed } from 'api'
 
 /*
  * @Author: mrlthf11

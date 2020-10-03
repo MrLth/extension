@@ -5,20 +5,20 @@ import * as ReactDOM from 'react-dom'
 import Bookmark from '../../components/Bookmark'
 import Popup from '../../components/Popup'
 
-import { RecordProvider, RecordContext } from 'src/store'
-import { recordActionInit } from '@store/record/actions'
-import { faviconStorageActionAdd } from '@store/bookmark/actions'
+import { RecordProvider, RecordContext } from 'store'
+import { recordActionInit } from 'store/record/actions'
+import { faviconStorageActionAdd } from 'store/bookmark/actions'
 
 import 'src/index.css'
 import './index.scss'
-import 'src/components/Popup/index.scss'
+import 'components/Popup/index.scss'
 
 import { deboundFixed } from '../../api'
-import DropDiv from 'src/components/Popup/DropDiv'
+import DropDiv from 'components/Popup/DropDiv'
 
 import { useConcent } from 'concent'
-// import '@store/run'
-import 'src/modules'
+// import 'store/run'
+import './runConcent'
 
 const randomNum = (minNum: number, maxNum: number) =>
     Number(Math.random() * (maxNum - minNum + 1) + minNum)

@@ -1,10 +1,10 @@
 import * as React from 'react'
 import { useEffect, useReducer, useContext, useMemo } from 'react'
-import { BookmarksReducer } from '@store/bookmark/reducers'
-import { bookmarkActionInit } from '@store/bookmark/actions'
+import { BookmarksReducer } from 'store/bookmark/reducers'
+import { bookmarkActionInit } from 'store/bookmark/actions'
 import Folder from './Folder'
 import Label from './Label'
-import { RecordContext } from '@store'
+import { RecordContext } from 'store'
 
 import './index.scss'
 
