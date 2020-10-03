@@ -16,20 +16,20 @@ const PopupWindowTab = memo(function PopupWindowTab(props: {
     windowId: number | string
     index: number
     openTab: (tab: Tab & CustomProps) => void
-    mousedownCb: (startWindow: number, startIndex: number, status: boolean) => void
-    mouseupCb: (endWindow: number, endIndex: number) => void
-    dragOverCb: (
-        li: HTMLElement,
-        isInsertBefore: boolean,
-        windowId: number,
-        tabIndex: number
-    ) => void
+    // mousedownCb: (startWindow: number, startIndex: number, status: boolean) => void
+    // mouseupCb: (endWindow: number, endIndex: number) => void
+    // dragOverCb: (
+        // li: HTMLElement,
+        // isInsertBefore: boolean,
+        // windowId: number,
+        // tabIndex: number
+    // ) => void
     closeTab: (tabId: number) => void
-    hiddenDropDiv: () => void
+    // hiddenDropDiv: () => void
     duplicateTab: (tabId: number) => void
     discardTab: (windowId: number | string, tabId: number) => void
     recordDispatch: RecordDispatch
-    canvasEl: React.MutableRefObject<HTMLCanvasElement>
+    // canvasEl: React.MutableRefObject<HTMLCanvasElement>
     updPopupFramePosition: (top: number, left: number) => void
 }) {
     const {
@@ -37,15 +37,15 @@ const PopupWindowTab = memo(function PopupWindowTab(props: {
         windowId,
         index,
         openTab,
-        mousedownCb,
-        mouseupCb,
-        dragOverCb,
+        // mousedownCb,
+        // mouseupCb,
+        // dragOverCb,
         closeTab,
-        hiddenDropDiv,
-        duplicateTab,
+        // hiddenDropDiv,
+        // duplicateTab,
         discardTab,
         recordDispatch,
-        canvasEl,
+        // canvasEl,
         updPopupFramePosition
     } = props
 
@@ -94,7 +94,7 @@ const PopupWindowTab = memo(function PopupWindowTab(props: {
             const { clientY } = e
             // console.log('top/bottom', clientY < y + height / 2);
 
-            dragOverCb(li, clientY < y + height / 2, +windowId, index)
+            // dragOverCb(li, clientY < y + height / 2, +windowId, index)
         }, 333),
         [windowId, index]
     )
@@ -172,14 +172,14 @@ const PopupWindowTab = memo(function PopupWindowTab(props: {
                 refDragObj.current.timerId = setTimeout(() => {
                     setDragable(true)
                 }, refDragObj.current.delay)
-                mousedownCb(tab.windowId, tab.index, !Boolean(tab.userSelected))
+                // mousedownCb(tab.windowId, tab.index, !Boolean(tab.userSelected))
                 // e.preventDefault()
             }}
             onMouseLeave={() => {
                 clearTimeout(refDragObj.current.timerId)
             }}
             onMouseUp={(e) => {
-                mouseupCb(tab.windowId, tab.index)
+                // mouseupCb(tab.windowId, tab.index)
                 clearTimeout(refDragObj.current.timerId)
                 setDragable(false)
                 e.stopPropagation()
@@ -189,7 +189,7 @@ const PopupWindowTab = memo(function PopupWindowTab(props: {
                 else {
                     e.dataTransfer.effectAllowed = 'move'
                     e.dataTransfer.setData('text/plain', JSON.stringify(tab))
-                    e.dataTransfer.setDragImage(canvasEl.current, 25, 25)
+                    // e.dataTransfer.setDragImage(canvasEl.current, 25, 25)
                 }
             }}
             onDragEnd={() => {
@@ -205,7 +205,7 @@ const PopupWindowTab = memo(function PopupWindowTab(props: {
                 handleDragOver(e)
             }}
             onDrop={() => {
-                hiddenDropDiv()
+                // hiddenDropDiv()
             }}
             draggable='true'
         >

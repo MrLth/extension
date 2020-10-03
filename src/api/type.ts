@@ -2,7 +2,7 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2020-05-29 18:00:07
- * @LastEditTime: 2020-06-23 21:09:58
+ * @LastEditTime: 2020-10-03 18:03:39
  * @Description: 整个项目会用到的接口和类型定义
  */
 export interface Windows {
@@ -25,7 +25,6 @@ export interface TabsObj {
     [n: number]: Tab & CustomProps
 }
 
-export import Tab = chrome.tabs.Tab
 
 export interface Action {
     type: string | number
@@ -44,6 +43,14 @@ export interface CustomProps {
     userPara?: string
 }
 
+export interface Tab extends chrome.tabs.Tab{
+    userSelected?: boolean
+    userProtocol?: string
+    userHost?: string
+    userRoute?: string
+    userPara?: string
+}
+
 export interface SelectObj {
     startWindow: number
     startIndex: number
@@ -54,3 +61,7 @@ export interface SelectObj {
 }
 
 export type WindowState = 'normal' | 'minimized' | 'maximized' | 'fullscreen' | 'docked'
+
+export interface Fn {
+    (...arg:unknown[]): unknown;
+}

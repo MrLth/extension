@@ -15,12 +15,12 @@ const PopupWindow = memo(function PopupWindow(props: {
   tabs: Array<Tab & CustomProps>
   windowId: string | number
   openTab: (tab: Tab & CustomProps) => void
-  mousedownCb: (startWindow: number, startIndex: number, status: boolean) => void
-  mouseupCb: (endWindow: number, endIndex: number) => void
-  dragOverCb: (li: HTMLElement, isInsertBefore: boolean, windowId: number, tabIndex: number) => void
+  // mousedownCb: (startWindow: number, startIndex: number, status: boolean) => void
+  // mouseupCb: (endWindow: number, endIndex: number) => void
+  // dragOverCb: (li: HTMLElement, isInsertBefore: boolean, windowId: number, tabIndex: number) => void
   closeWindow: (windowId: number) => void
   closeTab: (tabId: number) => void
-  hiddenDropDiv: () => void
+  // hiddenDropDiv: () => void
   selectWindow: (windowIdKey: string | number) => void
   attachInfo: chrome.windows.Window
   changeWindowAttach: (
@@ -31,26 +31,26 @@ const PopupWindow = memo(function PopupWindow(props: {
   duplicateTab: (tabId: number) => void
   discardTab: (windowId: number | string, tabId: number) => void
   recordDispatch: RecordDispatch
-  canvasEl: React.MutableRefObject<HTMLCanvasElement>
+  // canvasEl: React.MutableRefObject<HTMLCanvasElement>
   updPopupFramePosition: (top:number, left:number)=>void
 }) {
   const {
     tabs,
     openTab,
     windowId,
-    mousedownCb,
-    mouseupCb,
-    dragOverCb,
+    // mousedownCb,
+    // mouseupCb,
+    // dragOverCb,
     closeTab,
     closeWindow,
-    hiddenDropDiv,
+    // hiddenDropDiv,
     selectWindow,
     attachInfo,
     changeWindowAttach,
     duplicateTab,
     discardTab,
     recordDispatch,
-    canvasEl,
+    // canvasEl,
     updPopupFramePosition
   } = props
   const tabArr = []
@@ -73,15 +73,15 @@ const PopupWindow = memo(function PopupWindow(props: {
             windowId={windowId}
             index={i}
             openTab={openTab}
-            mousedownCb={mousedownCb}
-            mouseupCb={mouseupCb}
-            dragOverCb={dragOverCb}
+            // mousedownCb={mousedownCb}
+            // mouseupCb={mouseupCb}
+            // dragOverCb={dragOverCb}
             closeTab={closeTab}
-            hiddenDropDiv={hiddenDropDiv}
+            // hiddenDropDiv={hiddenDropDiv}
             duplicateTab={duplicateTab}
             discardTab={discardTab}
             recordDispatch={recordDispatch}
-            canvasEl={canvasEl}
+            // canvasEl={canvasEl}
             updPopupFramePosition={updPopupFramePosition}
           />
         )
@@ -98,15 +98,15 @@ const PopupWindow = memo(function PopupWindow(props: {
         windowId={windowId}
         index={i}
         openTab={openTab}
-        mousedownCb={mousedownCb}
-        mouseupCb={mouseupCb}
-        dragOverCb={dragOverCb}
+        // mousedownCb={mousedownCb}
+        // mouseupCb={mouseupCb}
+        // dragOverCb={dragOverCb}
         closeTab={closeTab}
-        hiddenDropDiv={hiddenDropDiv}
+        // hiddenDropDiv={hiddenDropDiv}
         duplicateTab={duplicateTab}
         discardTab={discardTab}
         recordDispatch={recordDispatch}
-        canvasEl={canvasEl}
+        // canvasEl={canvasEl}
         updPopupFramePosition={updPopupFramePosition}
       />
     )
