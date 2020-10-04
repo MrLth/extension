@@ -2,7 +2,7 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2020-05-27 15:30:26
- * @LastEditTime: 2020-10-03 15:59:41
+ * @LastEditTime: 2020-10-04 18:36:51
  * @Description: file content
  */
 
@@ -37,10 +37,10 @@ module.exports = {
             'components': path.resolve("src/components"),
             'api': path.resolve("src/api"),
             'models': path.resolve("src/models"),
-            'common':path.resolve("src/common"),
-            'types':path.resolve("src/types"),
-            'store':path.resolve("src/store"),
-            'src':path.resolve("src")
+            'common': path.resolve("src/common"),
+            'types': path.resolve("src/types"),
+            'store': path.resolve("src/store"),
+            'src': path.resolve("src")
         }
     },
     module: {
@@ -61,18 +61,21 @@ module.exports = {
                 loader: "source-map-loader"
             },
             {
-                test: /\.css$/,
+                test: /\.s?css$/,
                 use: [
-                    "style-loader", // 将 JS 字符串生成为 style 节点
-                    "css-loader" // 将 CSS 转化成 CommonJS 模块
-                ]
-            },
-            {
-                test: /\.scss$/,
-                use: [
-                    "style-loader", // 将 JS 字符串生成为 style 节点
-                    "css-loader", // 将 CSS 转化成 CommonJS 模块
-                    "sass-loader" // 将 Sass 编译成 CSS，默认使用 Node Sass
+                    {
+                        loader: 'style-loader'
+                    }, {
+                        loader: 'css-loader',
+                        options: {
+                            modules: {
+                                auto: /\.(local|module|m)\.s?css$/,
+                                localIdentName: '[folder]__[local]__[hash:base64:5]',
+                            }
+                        }
+                    }, {
+                        loader: 'sass-loader'
+                    }
                 ]
             },
             {

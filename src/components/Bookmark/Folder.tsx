@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState, useCallback, useRef } from 'react'
 import { BookmarkTreeNode, FaviconStorageObj } from 'store/bookmark/type'
 import { useForceRender } from 'hooks'
 import Label from './Label'
-import classNames = require('classnames')
+import classNames from 'classnames'
 
 import { FaviconUpdDispatch } from 'store/record/type'
 

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useState, memo } from 'react';
-import classNames = require('classnames');
+import classNames from 'classnames'
 
 import './index.scss';
 

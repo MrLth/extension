@@ -3,7 +3,7 @@ import { useEffect, useState, useMemo, useCallback, useRef, useContext } from 'r
 import * as ReactDOM from 'react-dom'
 
 import Bookmark from '../../components/Bookmark'
-import Popup from '../../components/Popup'
+import Popup from '../../components/Tab'
 
 import { RecordProvider, RecordContext } from 'store'
 import { recordActionInit } from 'store/record/actions'
@@ -11,10 +11,10 @@ import { faviconStorageActionAdd } from 'store/bookmark/actions'
 
 import 'src/index.css'
 import './index.scss'
-import 'components/Popup/index.scss'
+import 'components/Tab/index.scss'
 
 import { deboundFixed } from '../../api'
-import DropDiv from 'components/Popup/DropDiv'
+import DropDiv from 'components/Tab/DropDiv'
 
 import { useConcent } from 'concent'
 // import 'store/run'

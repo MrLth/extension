@@ -2,7 +2,7 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2020-05-29 17:30:01
- * @LastEditTime: 2020-06-22 21:34:13
+ * @LastEditTime: 2020-10-04 19:52:23
  * @Description: 整个项目会用到的方法和api
  */
 export const isLocal = (hostname: string): boolean =>
@@ -53,4 +53,28 @@ export function deboundFixed(
             timer = setTimeout(cb, delay)
         }
     }
+}
+
+export const moduleClassnames = (module:Record<string, string>, ...para:(string|Record<string, boolean>)[]):string => {
+    const len = para.length - 1
+    const lastClassName = para[len]
+    const classNames = [] as string[]
+    const pushToClassNames = (className:keyof typeof module) => {
+        if (typeof className === 'string')
+            classNames.push(className)
+    }
+
+    for (let i = 0; i < len; i++) {
+        pushToClassNames(module[para[i] as string])
+    }
+
+    if (typeof lastClassName === 'string') {
+        pushToClassNames(module[lastClassName])
+    } else if (typeof lastClassName === 'object' && lastClassName !== null) {
+        Object.entries(lastClassName).forEach(([k, v]) => {
+            if (v) pushToClassNames(module[k])
+        })
+    }
+
+    return classNames.join(' ')
 }

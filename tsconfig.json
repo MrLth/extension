@@ -4,13 +4,15 @@
         "sourceMap": true,
         "incremental": true,
         "noImplicitAny": true,
-        "module": "commonjs",
+        "module": "esnext",
+        "moduleResolution": "node",
         "target": "ES2017",
         "jsx": "react",
         "types": [
             //(various types, e.g. jquery, core-js),
             "chrome"
         ],
-        "baseUrl": "src"
+        "baseUrl": "src",
+        "plugins": [{ "name": "typescript-plugin-css-modules" }]
     }
 }

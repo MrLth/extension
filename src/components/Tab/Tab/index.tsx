@@ -4,11 +4,10 @@ import { throttle } from 'api'
 import { CustomProps, Tab } from 'api/type'
 import { recordActionAdd } from 'store/record/actions'
 import { RecordDispatch } from 'store/record/type'
-import './index.scss'
-import classNames = require('classnames')
+import classNames from 'classnames'
 
 import defaultIcon from '@img/defaultIcon.svg'
-import IconFont from '../IconFont'
+import IconFont from '../../IconFont'
 import { useConcent } from 'concent'
 
 const PopupWindowTab = memo(function PopupWindowTab(props: {
@@ -16,20 +15,10 @@ const PopupWindowTab = memo(function PopupWindowTab(props: {
     windowId: number | string
     index: number
     openTab: (tab: Tab & CustomProps) => void
-    // mousedownCb: (startWindow: number, startIndex: number, status: boolean) => void
-    // mouseupCb: (endWindow: number, endIndex: number) => void
-    // dragOverCb: (
-        // li: HTMLElement,
-        // isInsertBefore: boolean,
-        // windowId: number,
-        // tabIndex: number
-    // ) => void
     closeTab: (tabId: number) => void
-    // hiddenDropDiv: () => void
     duplicateTab: (tabId: number) => void
     discardTab: (windowId: number | string, tabId: number) => void
     recordDispatch: RecordDispatch
-    // canvasEl: React.MutableRefObject<HTMLCanvasElement>
     updPopupFramePosition: (top: number, left: number) => void
 }) {
     const {

@@ -1,0 +1,103 @@
+.tab {
+  width: 300px;
+  height: 100vh;
+  float: right;
+  // background-color: #faa;
+  box-shadow: 12px 0px 48px 0px rgba(0, 0, 0, 0.3);
+  background: rgba(250, 250, 250, 1);
+  .tab-window-title {
+    padding-top: 0.15rem;
+    height: 2.1rem;
+    line-height: 2.1rem;
+    margin-left: 1rem;
+    font-size: 0.875rem;
+    color: #8c8c8c;
+  }
+  .focused {
+    .tab-window-title {
+      color: #595959;
+    }
+  }
+
+  .unit-tab-wrapper {
+    // display: flex;
+    position: relative;
+    // justify-content: space-between;
+    .tab-btn-close {
+      // margin-right: -1.6rem;
+      // display: none;
+      opacity: 0;
+      position: absolute;
+      right: 0;
+      top: 0;
+      padding: 0 0.3rem 0 1rem;
+      font-size: 1rem;
+      line-height: 2rem;
+      transition: opacity 0.05s  ease-in-out;
+      background: linear-gradient(to right, transparent , #FAFAFA);
+    }
+    &:hover .tab-btn-close {
+      opacity: 1;
+    }
+  }
+
+  .unit-tab-wrapper {
+    &.activated {
+      background-color: #eee;
+    }
+  }
+
+  .tab-group {
+    .unit-tab-wrapper {
+      height: 1.75rem;
+      line-height: 1.75rem;
+      background-image: url('~@img/tabGroupBg.svg');
+      background-repeat: repeat-y;
+      background-size: 1.5rem 1.75rem;
+      background-position: 0.8rem 0rem;
+      &:first-of-type {
+        background-image: url('~@img/tabGroupBgFirst.svg');
+        background-position-y: -0.15rem;
+        background-size: 1.5rem 2rem;
+      }
+      &:last-of-type {
+        background-image: url('~@img/tabGroupBgLast.svg');
+      }
+      &.activated {
+        background-image: url('~@img/tabGroupBgActivatedNotFocus.svg');
+        &:first-of-type {
+          background-image: url('~@img/tabGroupBgFirstActivatedNotFocus.svg');
+        }
+        &:last-of-type {
+          background-image: url('~@img/tabGroupBgLastActivatedNotFocus.svg');
+        }
+      }
+    }
+  }
+  .focused {
+    .unit-tab-wrapper {
+      &.activated {
+        color: #0050b3;
+        background-color: #e6f7ff;
+      }
+    }
+    .tab-group {
+      .unit-tab-wrapper {
+        &.activated {
+          background-image: url('~@img/tabGroupBgActivated.svg');
+          &:first-of-type {
+            background-image: url('~@img/tabGroupBgFirstActivated.svg');
+          }
+          &:last-of-type {
+            background-image: url('~@img/tabGroupBgLastActivated.svg');
+          }
+        }
+      }
+    }
+  }
+}
+
+.test {
+  float: left;
+  width: 500px;
+}

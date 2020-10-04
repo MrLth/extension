@@ -2,25 +2,20 @@ import { memo } from 'react'
 
 import * as React from 'react'
 
-import './index.scss'
-
 import { Tab, CustomProps } from 'api/type'
-import PopupWindowTab from './PopupWindowTab'
-import classNames = require('classnames')
+import PopupWindowTab from '../Tab'
 import { RecordDispatch } from 'store/record/type'
-// import { useWindowSize } from 'hooks'
-// import classNames = require('classnames')
+
+import c from './index.module.scss'
+import { moduleClassnames } from 'api'
+const cn = moduleClassnames.bind(null, c)
 
 const PopupWindow = memo(function PopupWindow(props: {
   tabs: Array<Tab & CustomProps>
   windowId: string | number
   openTab: (tab: Tab & CustomProps) => void
-  // mousedownCb: (startWindow: number, startIndex: number, status: boolean) => void
-  // mouseupCb: (endWindow: number, endIndex: number) => void
-  // dragOverCb: (li: HTMLElement, isInsertBefore: boolean, windowId: number, tabIndex: number) => void
   closeWindow: (windowId: number) => void
   closeTab: (tabId: number) => void
-  // hiddenDropDiv: () => void
   selectWindow: (windowIdKey: string | number) => void
   attachInfo: chrome.windows.Window
   changeWindowAttach: (
@@ -31,26 +26,20 @@ const PopupWindow = memo(function PopupWindow(props: {
   duplicateTab: (tabId: number) => void
   discardTab: (windowId: number | string, tabId: number) => void
   recordDispatch: RecordDispatch
-  // canvasEl: React.MutableRefObject<HTMLCanvasElement>
-  updPopupFramePosition: (top:number, left:number)=>void
+  updPopupFramePosition: (top: number, left: number) => void
 }) {
   const {
     tabs,
     openTab,
     windowId,
-    // mousedownCb,
-    // mouseupCb,
-    // dragOverCb,
     closeTab,
     closeWindow,
-    // hiddenDropDiv,
     selectWindow,
     attachInfo,
     changeWindowAttach,
     duplicateTab,
     discardTab,
     recordDispatch,
-    // canvasEl,
     updPopupFramePosition
   } = props
   const tabArr = []
@@ -115,16 +104,16 @@ const PopupWindow = memo(function PopupWindow(props: {
       tempArr.length === 1 ? (
         tempArr
       ) : (
-        <div className="tab-group" key={key}>
-          {tempArr}
-        </div>
-      )
+          <div className="tab-group" key={key}>
+            {tempArr}
+          </div>
+        )
     )
   }
 
   const jsx1 = (
     <>
-      <div className="btn-wrapper">
+      <div className={c["btn-wrapper"]}>
         <button
           onClick={(e) => {
             selectWindow(windowId)
@@ -141,14 +130,14 @@ const PopupWindow = memo(function PopupWindow(props: {
             恢复
           </button>
         ) : (
-          <button
-            onClick={(e) => {
-              changeWindowAttach(parseInt(windowId as string), { state: 'minimized' })
-              e.stopPropagation()
-            }}>
-            最小化
-          </button>
-        )}
+            <button
+              onClick={(e) => {
+                changeWindowAttach(parseInt(windowId as string), { state: 'minimized' })
+                e.stopPropagation()
+              }}>
+              最小化
+            </button>
+          )}
         <button
           onClick={(e) => {
             closeWindow(+windowId)
@@ -161,11 +150,11 @@ const PopupWindow = memo(function PopupWindow(props: {
   )
   return (
     <ul
-      className={classNames('window', {
+      className={cn('window', {
         focused: attachInfo && attachInfo.focused,
         'is-not-normal-window': attachInfo && attachInfo.type != 'normal',
       })}>
-      <div className="tab-window-title">window # {windowId}</div>
+      <div className={cn("tab-window-title")}>window # {windowId}</div>
       {tabArr}
     </ul>
   )
