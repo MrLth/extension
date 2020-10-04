@@ -18,7 +18,7 @@ import DropDiv from 'components/Tab/DropDiv'
 
 import { useConcent } from 'concent'
 // import 'store/run'
-import './runConcent'
+import '../runConcent'
 
 const randomNum = (minNum: number, maxNum: number) =>
     Number(Math.random() * (maxNum - minNum + 1) + minNum)
@@ -270,5 +270,5 @@ ReactDOM.render(
     <RecordProvider>
         <App />
     </RecordProvider>,
-    document.getElementById('newtab')
+    document.getElementById('root')
 )

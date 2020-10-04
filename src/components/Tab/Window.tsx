@@ -3,14 +3,14 @@ import { memo } from 'react'
 import * as React from 'react'
 
 import { Tab, CustomProps } from 'api/type'
-import PopupWindowTab from '../Tab'
+import Label from './Label'
 import { RecordDispatch } from 'store/record/type'
 
 import c from './index.module.scss'
 import { moduleClassnames } from 'api'
 const cn = moduleClassnames.bind(null, c)
 
-const PopupWindow = memo(function PopupWindow(props: {
+const Window = memo(function PopupWindow(props: {
   tabs: Array<Tab & CustomProps>
   windowId: string | number
   openTab: (tab: Tab & CustomProps) => void
@@ -56,7 +56,7 @@ const PopupWindow = memo(function PopupWindow(props: {
     if (nextTab.userHost === tab.userHost) {
       do {
         tempArr.push(
-          <PopupWindowTab
+          <Label
             tab={tab}
             key={tab.id}
             windowId={windowId}
@@ -81,7 +81,7 @@ const PopupWindow = memo(function PopupWindow(props: {
     }
 
     tempArr.push(
-      <PopupWindowTab
+      <Label
         tab={tab}
         key={tab.id}
         windowId={windowId}
@@ -104,7 +104,7 @@ const PopupWindow = memo(function PopupWindow(props: {
       tempArr.length === 1 ? (
         tempArr
       ) : (
-          <div className="tab-group" key={key}>
+          <div className={c["tab-group"]} key={key}>
             {tempArr}
           </div>
         )
@@ -148,16 +148,17 @@ const PopupWindow = memo(function PopupWindow(props: {
       </div>
     </>
   )
+
+  console.log('attachInfo && attachInfo.focused', attachInfo && attachInfo.focused)
   return (
     <ul
       className={cn('window', {
-        focused: attachInfo && attachInfo.focused,
-        'is-not-normal-window': attachInfo && attachInfo.type != 'normal',
+        'focused': attachInfo && attachInfo.focused
       })}>
-      <div className={cn("tab-window-title")}>window # {windowId}</div>
+      <div className={cn("window-title")}>window # {windowId}</div>
       {tabArr}
     </ul>
   )
 })
 
-export default PopupWindow
+export default Window

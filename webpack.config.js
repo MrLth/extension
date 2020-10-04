@@ -2,7 +2,7 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2020-05-27 15:30:26
- * @LastEditTime: 2020-10-04 18:36:51
+ * @LastEditTime: 2020-10-04 21:05:08
  * @Description: file content
  */
 
@@ -16,7 +16,7 @@ module.exports = {
     mode: "development",
     entry: {
         newtab: './src/extension/newtab/index.tsx',
-        popup: './src/extension/popup.tsx',
+        popup: './src/extension/popup/index.tsx',
         // content: './src/extension/newtab/content.ts',
         // background: './src/extension/newtab/background.ts'
     },

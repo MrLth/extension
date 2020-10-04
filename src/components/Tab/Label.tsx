@@ -4,11 +4,14 @@ import { throttle } from 'api'
 import { CustomProps, Tab } from 'api/type'
 import { recordActionAdd } from 'store/record/actions'
 import { RecordDispatch } from 'store/record/type'
-import classNames from 'classnames'
 
 import defaultIcon from '@img/defaultIcon.svg'
-import IconFont from '../../IconFont'
+import IconFont from '../IconFont'
 import { useConcent } from 'concent'
+
+import c from './index.module.scss'
+import { moduleClassnames } from 'api'
+const cn = moduleClassnames.bind(null, c)
 
 const PopupWindowTab = memo(function PopupWindowTab(props: {
     tab: Tab & CustomProps
@@ -140,7 +143,7 @@ const PopupWindowTab = memo(function PopupWindowTab(props: {
 
     return (
         <li
-            className={classNames('unit-tab-wrapper', {
+            className={cn('label', {
                 selected: tab.userSelected,
                 activated: tab.active,
                 dragable,
@@ -198,7 +201,7 @@ const PopupWindowTab = memo(function PopupWindowTab(props: {
             }}
             draggable='true'
         >
-            <div className='unit-tab'>
+            <div className={c['unit-tab']}>
                 <img
                     src={
                         tab.favIconUrl !== ''
@@ -208,7 +211,7 @@ const PopupWindowTab = memo(function PopupWindowTab(props: {
                 />
                 {tab.title}
             </div>
-            <div className='tab-btn-close'>
+            <div className={c['btn-close']}>
                 <IconFont
                     type='icon-close'
                     onClick={(e: MouseEvent) => {

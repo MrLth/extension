@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { useEffect, useState, useMemo, useRef, useCallback, useContext } from 'react'
+import {  useContext } from 'react'
 // import { connect } from "react-redux"
 // import classNames = require('classnames')
 
@@ -28,7 +28,6 @@ import {
 } from 'api/handleTabs'
 // import { PopupState } from './store/popup/type'
 // import { AppState } from "./store"
-import scss from './index.module.scss'
 
 
 import Window from './Window'
@@ -38,11 +37,10 @@ import { RecordContext } from 'store'
 import { recordActionAdds } from 'store/record/actions'
 import { RecordUrl } from 'store/record/type'
 
-import 'common/index.scss'
-import './index.scss'
 
 import PopupFrame from '../PopupFrame'
 
+import c from './index.module.scss'
 
 
 import { NoMap, SettingsType, useConcent } from 'concent'
@@ -559,12 +557,12 @@ export default function Popup(): JSX.Element {
         </>
     )
 
-    // console.log('popup render')
+    console.log('popup render', c)
     return (
         <>
-            <div className={scss['test']}>{btnGroup}</div>
-            <div className={scss['tab']}>
-                <div className={scss['side-title']}>TAB</div>
+            <div className={c['test']}>{btnGroup}</div>
+            <div className={c['content']}>
+                <div className={c['title']}>TAB</div>
                 {Object.keys(renderWindows).map((key: keyof typeof renderWindows) => {
                     return (
                         <Window

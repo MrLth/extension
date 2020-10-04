@@ -19,6 +19,7 @@
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
+
   img {
     height: 1.125rem;
     width: 1.125rem;
@@ -27,9 +28,3 @@
   }
 }
 
-.icon-font{
-  width: 1em; height: 1em;
-       vertical-align: -0.15em;
-       fill: currentColor;
-       overflow: hidden;
-}
