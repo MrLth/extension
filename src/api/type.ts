@@ -2,28 +2,12 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2020-05-29 18:00:07
- * @LastEditTime: 2020-10-04 18:49:35
+ * @LastEditTime: 2020-10-05 14:24:34
  * @Description: 整个项目会用到的接口和类型定义
  */
-export interface Windows {
-    [s: string]: Array<Tab & CustomProps>
-    [n: number]: Array<Tab & CustomProps>
-}
+export type Windows = Record<string|number, Tab[]>
 
-export interface WindowsAttach {
-    [n: number]: chrome.windows.Window
-    [s: string]: chrome.windows.Window
-}
-
-export interface UpdateWindowQueueObj {
-    [nIndex: number]: number
-    [sIndex: string]: number
-}
-
-export interface TabsObj {
-    [s: string]: Tab & CustomProps
-    [n: number]: Tab & CustomProps
-}
+export type WindowsAttach = Record<string|number, chrome.windows.Window>
 
 
 export interface Action {
@@ -35,13 +19,6 @@ export interface TabsAction extends Action {
     payload: Tab[]
 }
 
-export interface CustomProps {
-    userSelected?: boolean
-    userProtocol?: string
-    userHost?: string
-    userRoute?: string
-    userPara?: string
-}
 
 export interface Tab extends chrome.tabs.Tab{
     userSelected?: boolean

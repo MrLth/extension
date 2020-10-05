@@ -2,16 +2,11 @@ import * as React from 'react'
 import { useEffect, useState, useMemo, useCallback, useRef, useContext } from 'react'
 import * as ReactDOM from 'react-dom'
 
-import Bookmark from '../../components/Bookmark'
-import Popup from '../../components/Tab'
-
-import { RecordProvider, RecordContext } from 'store'
-import { recordActionInit } from 'store/record/actions'
-import { faviconStorageActionAdd } from 'store/bookmark/actions'
+// import Bookmark from '../../components/Bookmark'
+import Tab from '../../components/Tab'
 
 import 'src/index.css'
 import './index.scss'
-import 'components/Tab/index.scss'
 
 import { deboundFixed } from '../../api'
 import DropDiv from 'components/Tab/DropDiv'
@@ -37,7 +32,6 @@ const minWidthIndex = (arr: number[]) => {
 const SIDE_WIDTH_THRESHOLD = [870, 1120]
 
 function App() {
-    const { dispatch, faviconStorage, faviconStorageDispatch } = useContext(RecordContext)
 
     const { setState } = useConcent('$$global')
 
@@ -51,7 +45,7 @@ function App() {
             })
         }, 300)
         window.addEventListener('resize', windowResizeListener)
-        return ()=>{
+        return () => {
             window.removeEventListener('resize', windowResizeListener)
         }
     }, [])
@@ -239,7 +233,7 @@ function App() {
         // </div>
         <>
             <div className='popup-wrapper'>
-                <Popup />
+                <Tab />
             </div>
         </>
         // <div className="container" style={containerStyle}>
@@ -267,8 +261,6 @@ function App() {
 }
 
 ReactDOM.render(
-    <RecordProvider>
-        <App />
-    </RecordProvider>,
+    <App />,
     document.getElementById('root')
 )

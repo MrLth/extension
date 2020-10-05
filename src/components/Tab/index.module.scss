@@ -1,11 +1,31 @@
 .title {
+  display: flex;
+  justify-content: space-between;
   height: 2.8125rem;
   line-height: 2.8125rem;
-  padding-left: 1.5625rem;
   border-bottom: 1px #efefef solid;
+
   font-size: 0.875rem;
   font-family: PingFangSC-Regular, PingFang SC;
   background-color: #fff;
+  div:first-child{
+    padding-left:1.5625rem;
+
+  }
+  div:last-child{
+    padding-right:1rem;
+
+    font-size: 1.125rem;
+    svg{
+      cursor: pointer;
+      margin-left: 0.5rem;
+      color: #8c8c8c;
+      transition: color 0.25s ease-in-out;
+      &:hover{
+        color: #000;
+      }
+    }
+  }
 }
 
 .content {
@@ -132,9 +152,4 @@
       }
     }
   }
-}
-
-.test {
-  float: left;
-  width: 500px;
 }

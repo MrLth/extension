@@ -5,7 +5,7 @@ import c from './index.module.scss'
 
 const IconFont = (props: {
   type: string
-  onClick: (...args: unknown[]) => unknown
+  onClick?: (...args: unknown[]) => unknown
 }): JSX.Element => {
   const { type, onClick } = props
   return (

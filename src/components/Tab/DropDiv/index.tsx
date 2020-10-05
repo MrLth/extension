@@ -4,9 +4,9 @@ import classNames from 'classnames'
 
 import './index.scss';
 
-import { Tab, CustomProps } from 'api/type';
+import { Tab } from 'api/type';
 
-const DropDiv = memo(function DropDiv(props: { isHidden: boolean; dropCb: (dragTab: Tab & CustomProps) => void }) {
+const DropDiv = memo(function DropDiv(props: { isHidden: boolean; dropCb: (dragTab: Tab) => void }) {
 	const { isHidden, dropCb } = props
 	const [dropDivDragOver, setDropDivDragOver] = useState(false)
 

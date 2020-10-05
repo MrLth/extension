@@ -1,57 +1,31 @@
-import * as React from 'react'
-import {  useContext } from 'react'
-// import { connect } from "react-redux"
-// import classNames = require('classnames')
-
-import { debound, deboundFixed } from 'api'
-import { Tab, CustomProps, Windows, SelectObj, WindowsAttach, Fn } from 'api/type'
-import {
-    splitUrl,
-    selectTabs,
-    minimalUpdate,
-    groupTabsByWindowId,
-    addTab,
-    updTab,
-    removeWindow,
-    removeTab,
-    moveTab,
-    avtiveTab,
-    detachTab,
-    attachTab,
-    createNewWindows,
-    groupWindowsByWindowId,
-    getSelectedTab,
-    searchTab,
-    batchUpdTabIndex,
-    referOldWindows,
-    dereferOldWindows
-} from 'api/handleTabs'
-// import { PopupState } from './store/popup/type'
-// import { AppState } from "./store"
-
-
-import Window from './Window'
-import BtnGroup from './BtnGroup'
-import DropDiv from './DropDiv'
-import { RecordContext } from 'store'
-import { recordActionAdds } from 'store/record/actions'
-import { RecordUrl } from 'store/record/type'
-
-
-import PopupFrame from '../PopupFrame'
-
-import c from './index.module.scss'
-
-
+import React from 'react'
 import { NoMap, SettingsType, useConcent } from 'concent'
+//#region Import Type
+import { Tab, Windows, WindowsAttach, Fn } from 'api/type'
 import { CtxDeS } from 'types/concent'
+//#endregion
+//#region Import Function
+import { debound, deboundFixed } from 'api'
+import ht from 'components/Tab/handleTabs'
+//#endregion
+//#region Import Components
+import Window from './Window'
+import PopupFrame, { PopupFrameProps, PopupOption } from '../PopupFrame'
+//#endregion
+//#region Import Style
+import c from './index.module.scss'
+import IconFont from 'components/IconFont'
+//#endregion
 
 
+const MAX_REFRESH_THRESHOLD = 16
 
 const initState = () => ({
-    popupFramePosition: {
+    popupFrameProps: {
+        isShow: false,
         top: 0,
-        left: 0
+        left: 0,
+        options: [] as PopupOption[]
     },
     windowsObj: {} as Windows,
     windowsAttach: {} as WindowsAttach,
@@ -59,10 +33,8 @@ const initState = () => ({
     isSearching: false
 })
 
-type St = ReturnType<typeof initState>
-type CtxPre = CtxDeS<Record<string, unknown>, St>
-
-const MAX_REFRESH_THRESHOLD = 16
+type State = ReturnType<typeof initState>
+type CtxPre = CtxDeS<Record<string, unknown>, State>
 
 const setup = (ctx: CtxPre) => {
     const { setState, state, effect } = ctx
@@ -81,23 +53,23 @@ const setup = (ctx: CtxPre) => {
                 return
             }
             // 默认依次处理queue
-            referOldWindows(state.windowsObj)
-            let newWindows = createNewWindows(state.windowsObj)
+            ht.referOldWindows(state.windowsObj)
+            let newWindows = ht.createNewWindows(state.windowsObj)
             for (const fn of handleTabs.queue) {
                 newWindows = fn(newWindows)
             }
             handleTabs.queue = []
-            dereferOldWindows()
+            ht.dereferOldWindows()
 
-            newWindows = batchUpdTabIndex(newWindows)
+            newWindows = ht.batchUpdTabIndex(newWindows)
 
             setState({ windowsObj: newWindows })
         }, 200),
         refreshWindowsObj(cb?: Fn) {
-            chrome.tabs.query({}, (newTabs: Array<Tab & CustomProps>) => {
-                const newObj = groupTabsByWindowId(newTabs)
+            chrome.tabs.query({}, (newTabs: Tab[]) => {
+                const newObj = ht.groupTabsByWindowId(newTabs)
 
-                Object.keys(state.windowsObj).length && minimalUpdate(state.windowsObj, newObj)
+                Object.keys(state.windowsObj).length && ht.minimalUpdate(state.windowsObj, newObj)
 
                 setState({ windowsObj: newObj })
 
@@ -112,7 +84,7 @@ const setup = (ctx: CtxPre) => {
         const onCreatedListener = (tab: chrome.tabs.Tab) => {
             if (common.isEventSleep) return
             handleTabs.queue.push((windows) => {
-                return addTab(windows, tab.windowId, splitUrl(tab), tab.index)
+                return ht.addTab(windows, tab.windowId, ht.splitUrl(tab), tab.index)
             })
             handleTabs.fn()
         }
@@ -125,7 +97,7 @@ const setup = (ctx: CtxPre) => {
             if (changeInfo?.discarded) return
 
             handleTabs.queue.push((windows) => {
-                return updTab(windows, tab.windowId, splitUrl(tab), tabId)
+                return ht.updTab(windows, tab.windowId, ht.splitUrl(tab), tabId)
             })
             handleTabs.fn()
         }
@@ -136,10 +108,10 @@ const setup = (ctx: CtxPre) => {
             if (common.isEventSleep) return
             const cb = isWindowClosing
                 ? (windows: Windows) => {
-                    return removeWindow(windows, windowId)
+                    return ht.removeWindow(windows, windowId)
                 }
                 : (windows: Windows) => {
-                    return removeTab(windows, windowId, tabId)
+                    return ht.removeTab(windows, windowId, tabId)
                 }
             handleTabs.queue.push(cb)
             handleTabs.fn()
@@ -151,7 +123,7 @@ const setup = (ctx: CtxPre) => {
             if (common.isEventSleep) return
 
             handleTabs.queue.push((windows) => {
-                return moveTab(windows, windowId, fromIndex, toIndex)
+                return ht.moveTab(windows, windowId, fromIndex, toIndex)
             })
             handleTabs.fn()
         }
@@ -159,7 +131,7 @@ const setup = (ctx: CtxPre) => {
             if (common.isEventSleep) return
 
             handleTabs.queue.push((windows) => {
-                return avtiveTab(windows, windowId, tabId)
+                return ht.avtiveTab(windows, windowId, tabId)
             })
             handleTabs.fn()
         }
@@ -170,7 +142,7 @@ const setup = (ctx: CtxPre) => {
             if (common.isEventSleep) return
 
             handleTabs.queue.push((windows) => {
-                return detachTab(windows, oldWindowId, tabId, oldPosition)
+                return ht.detachTab(windows, oldWindowId, tabId, oldPosition)
             })
             handleTabs.fn()
 
@@ -182,7 +154,7 @@ const setup = (ctx: CtxPre) => {
             if (common.isEventSleep) return
 
             handleTabs.queue.push((windows) => {
-                return attachTab(windows, newWindowId, tabId, newPosition)
+                return ht.attachTab(windows, newWindowId, tabId, newPosition)
             })
             handleTabs.fn()
         }
@@ -212,7 +184,7 @@ const setup = (ctx: CtxPre) => {
     const windowsAttach = {
         upd() {
             chrome.windows.getAll((windowsInfo) => {
-                setState({ windowAttach: groupWindowsByWindowId(windowsInfo) })
+                setState({ windowAttach: ht.groupWindowsByWindowId(windowsInfo) })
             })
         }
     }
@@ -268,8 +240,8 @@ const setup = (ctx: CtxPre) => {
             chrome.windows.update(tab.windowId, { focused: true })
         },
         // popupFrame
-        updPopupFramePosition: (top: number, left: number) => {
-            setState({ popupFramePosition: { top, left } })
+        updPopupFrameProps: (obj: PopupFrameProps) => {
+            setState({ popupFrameProps: obj })
         },
         printWindowAttach: () => {
             console.log('window Attach', state.windowsAttach)
@@ -292,7 +264,7 @@ const setup = (ctx: CtxPre) => {
             chrome.windows.create()
         },
         closeSelectedTab: () => {
-            const [selectedTabs] = getSelectedTab(state.windowsObj)
+            const [selectedTabs] = ht.getSelectedTab(state.windowsObj)
 
             common.isEventSleep = true
 
@@ -305,7 +277,7 @@ const setup = (ctx: CtxPre) => {
             })
         },
         discardSelectedTab: () => {
-            const [selectedTabs] = getSelectedTab(state.windowsObj)
+            const [selectedTabs] = ht.getSelectedTab(state.windowsObj)
 
 
             common.isEventSleep = true
@@ -341,23 +313,23 @@ const setup = (ctx: CtxPre) => {
                 setState({ windowsFiltered: {}, isSearching: false })
             } else {
                 state.isSearching = false
-                setState({ windowsFiltered: searchTab(state.windowsObj, text.toUpperCase()), isSearching: false })
+                setState({ windowsFiltered: ht.searchTab(state.windowsObj, text.toUpperCase()), isSearching: false })
             }
         },
         recordSelectedTab: () => {
-            const selectedTabs = [] as Array<RecordUrl>
-            Object.values(state.windowsObj).map((tabs) => {
-                tabs.map((tab) => {
-                    tab.userSelected &&
-                        selectedTabs.push({
-                            url: tab.url,
-                            title: tab.title,
-                            host: tab.userHost,
-                            route: tab.userRoute,
-                            para: tab.userPara
-                        })
-                })
-            })
+            // const selectedTabs = [] as Array<RecordUrl>
+            // Object.values(state.windowsObj).map((tabs) => {
+            //     tabs.map((tab) => {
+            //         tab.userSelected &&
+            //             selectedTabs.push({
+            //                 url: tab.url,
+            //                 title: tab.title,
+            //                 host: tab.userHost,
+            //                 route: tab.userRoute,
+            //                 para: tab.userPara
+            //             })
+            //     })
+            // })
 
             // FIXME:
             // recordDispatch(recordActionAdds(selectedTabs))
@@ -392,7 +364,7 @@ const setup = (ctx: CtxPre) => {
                 if (!tab) return
 
                 handleTabs.queue.push((windows) => {
-                    return updTab(windows, windowId, splitUrl(tab), tabId)
+                    return ht.updTab(windows, windowId, ht.splitUrl(tab), tabId)
                 })
                 handleTabs.fn()
             })
@@ -495,102 +467,40 @@ const setup = (ctx: CtxPre) => {
     }
 }
 
-type Ctx = CtxDeS<Record<string, unknown>, St, SettingsType<typeof setup>>
+export type Settings = SettingsType<typeof setup>
+type Ctx = CtxDeS<Record<string, unknown>, State, Settings>
 
-export default function Popup(): JSX.Element {
-    const ctx = useConcent<Record<string, unknown>, Ctx, NoMap>({ setup, state: initState })
-    const { popupFramePosition } = ctx.state
-    const state = ctx.state
-    const cb = ctx.settings
-    const { closeTab, openTab, updPopupFramePosition } = ctx.settings
+const TabComponent = (): JSX.Element => {
+    const { state, settings } = useConcent<Record<string, unknown>, Ctx, NoMap>({ setup, state: initState })
 
     const renderWindows = state.isSearching ? state.windowsFiltered : state.windowsObj
 
-    const { dispatch: recordDispatch } = useContext(RecordContext)
 
-    console.log('🌀 Popup Render')
-
-    const btnGroup = (
-        <>
-            <div className='btn-group-wrapper'>
-                <button
-                    onClick={() => {
-                        cb.updateWindowsObj()
-                    }}
-                >
-                    refresh
-                </button>
-                <button onClick={cb.printTabs}>print tabs</button>
-                {/* <button onClick={printDropDiv}>Print dropDiv</button> */}
-                {/* <button onClick={printDropInfo}>Print dropInfo</button> */}
-                <button
-                    onClick={() => {
-                        cb.printUrl(true)
-                    }}
-                >
-                    Print printUrl merge
-                </button>
-                <button
-                    onClick={() => {
-                        cb.printUrl(false)
-                    }}
-                >
-                    Print printUrl
-                </button>
-                <button onClick={cb.handleTabsFunc}>handleTabsFunc</button>
-                <button onClick={cb.printWindowAttach}>printWindowAttach</button>
-                <button onClick={cb.updateWindowAttach}>updateWindowAttach</button>
-                {/* <button onClick={cb.printFaviconsUpd}>printFaviconsUpd</button> */}
-            </div>
-            <div className='btn-group-wrapper'>
-                <BtnGroup
-                    createWindow={cb.createWindow}
-                    // createWindowOnDropCb={createWindowOnDropCb}
-                    // isSelect={isSelect.current}
-                    cancelSelected={cb.cancelSelected}
-                    closeSelectedTab={cb.closeSelectedTab}
-                    discardSelectedTab={cb.discardSelectedTab}
-                    searchTabCb={cb.searchTabCb}
-                    recordSelectedTab={cb.recordSelectedTab}
-                />
-            </div>
-        </>
-    )
-
-    console.log('popup render', c)
     return (
         <>
-            <div className={c['test']}>{btnGroup}</div>
-            <div className={c['content']}>
-                <div className={c['title']}>TAB</div>
+            <div className={c['content']} style={{ minHeight: `${4.9125 + 2 * 7}rem` }}>
+                <div className={c['title']}>
+                    <div>TAB</div>
+                    <div>
+                        <IconFont type='icongit-merge-line' onClick={() => settings.printUrl(true)}></IconFont>
+                        <IconFont type='iconadd' onClick={settings.createWindow}></IconFont>
+                    </div>
+                </div>
                 {Object.keys(renderWindows).map((key: keyof typeof renderWindows) => {
                     return (
                         <Window
-                            tabs={renderWindows[key]}
-                            openTab={openTab}
-                            windowId={key}
                             key={key}
-                            // mousedownCb={mousedownCb}
-                            // mouseupCb={mouseupCb}
-                            // dragOverCb={dragOverCb}
-                            closeWindow={cb.closeWindow}
-                            closeTab={closeTab}
-                            // hiddenDropDiv={hiddenDropDiv}
-                            selectWindow={cb.selectWindow}
+                            tabs={renderWindows[key]}
+                            windowId={key}
                             attachInfo={state.windowsAttach[key]}
-                            changeWindowAttach={cb.changeWindowAttach}
-                            duplicateTab={cb.duplicateTab}
-                            discardTab={cb.discardTab}
-                            recordDispatch={recordDispatch}
-                            // canvasEl={canvasEl}
-                            updPopupFramePosition={updPopupFramePosition}
+                            settings={settings}
                         />
                     )
                 })}
-                {/* <DropDiv isHidden={isHidden} dropCb={dropCb} /> */}
-                {/* <canvas ref={canvasEl}></canvas> */}
-                <PopupFrame top={popupFramePosition.top} left={popupFramePosition.left} />
+                <PopupFrame {...state.popupFrameProps} />
             </div>
         </>
     )
 }
+
+export default TabComponent
