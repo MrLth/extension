@@ -1,8 +1,8 @@
 import React from 'react'
 import { NoMap, SettingsType, useConcent } from 'concent'
 //#region Import Type
-import { Tab, Windows, WindowsAttach, Fn } from 'api/type'
-import { CtxDeS } from 'types/concent'
+import { Tab, Windows, WindowsAttach, Fn, EmptyObject } from 'api/type'
+import { CtxSConn, ItemsType, RootState } from 'types/concent'
 //#endregion
 //#region Import Function
 import { debound, deboundFixed } from 'api'
@@ -15,6 +15,7 @@ import PopupFrame, { PopupFrameProps, PopupOption } from '../PopupFrame'
 //#region Import Style
 import c from './index.module.scss'
 import IconFont from 'components/IconFont'
+import { Recording } from 'models/record/state'
 //#endregion
 
 
@@ -33,11 +34,15 @@ const initState = () => ({
     isSearching: false
 })
 
+const connect = ['record'] as const;
+type Conn = ItemsType<typeof connect>;
 type State = ReturnType<typeof initState>
-type CtxPre = CtxDeS<Record<string, unknown>, State>
+type CtxPre = CtxSConn<EmptyObject, State, Conn>
 
 const setup = (ctx: CtxPre) => {
-    const { setState, state, effect } = ctx
+    const { setState, state, effect, setModuleState } = ctx
+    const { record } = ctx.connectedState
+
     const common = {
         isEventSleep: true,
 
@@ -178,8 +183,13 @@ const setup = (ctx: CtxPre) => {
             chrome.tabs.onAttached.removeListener(onAttachedListener)
         }
         //#endregion
-    })
+    }, [])
 
+    const ref = record.recording
+    effect(() => {
+
+        console.log('connectedState record changed!!!', record.recording, record.recording === ref)
+    }, ['record/recording'])
 
     const windowsAttach = {
         upd() {
@@ -228,7 +238,7 @@ const setup = (ctx: CtxPre) => {
             chrome.windows.onFocusChanged.removeListener(onFocusChangedListener)
         }
         //#endregion
-    })
+    }, [])
 
     // Setting
     return {
@@ -463,15 +473,33 @@ const setup = (ctx: CtxPre) => {
             // updateWindowsObj()
             // isEventSleep.current = false
         },
+        recordAllTab: () => {
+            const newRecording: Recording = {
+                urls: [],
+                recordTime: new Date()
+            }
+
+            Object.values(state.windowsObj).forEach((tabs) => {
+                // concat不会改变原数组，所以这里使用push
+                Array.prototype.push.apply(newRecording.urls, tabs.map(v => ({
+                    title: v.title,
+                    url: v.url
+                })))
+            })
+
+            // 就算不改变数组引用，也会触发更新，毕竟手动setState
+            record.recording.unshift(newRecording)
+            setModuleState<RootState, 'record'>('record', { recording: record.recording })
+        }
         //#endregion
     }
 }
 
 export type Settings = SettingsType<typeof setup>
-type Ctx = CtxDeS<Record<string, unknown>, State, Settings>
+type Ctx = CtxSConn<EmptyObject, State, Conn, Settings>
 
 const TabComponent = (): JSX.Element => {
-    const { state, settings } = useConcent<Record<string, unknown>, Ctx, NoMap>({ setup, state: initState })
+    const { state, settings } = useConcent<EmptyObject, Ctx, NoMap>({ setup, state: initState, connect })
 
     const renderWindows = state.isSearching ? state.windowsFiltered : state.windowsObj
 
@@ -482,6 +510,7 @@ const TabComponent = (): JSX.Element => {
                 <div className={c['title']}>
                     <div>TAB</div>
                     <div>
+                        <IconFont type='iconjump_to_top' onClick={() => settings.recordAllTab()}></IconFont>
                         <IconFont type='icongit-merge-line' onClick={() => settings.printUrl(true)}></IconFont>
                         <IconFont type='iconadd' onClick={settings.createWindow}></IconFont>
                     </div>

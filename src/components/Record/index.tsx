@@ -1,43 +1,44 @@
-// import * as React from 'react'
-// import { useContext, useEffect, useMemo, useCallback, useState } from 'react'
-// import { RecordContext } from 'store'
-// // import { recordActionInit } from 'store/record/actions'
-// import { debound } from 'api'
-// import { RecordUrl } from 'store/record/type'
+import React from 'react'
+import { NoMap, SettingsType, useConcent } from 'concent'
+//#region Type Import
+import { EmptyObject } from 'api/type'
+import { CtxMSConn, ItemsType } from 'types/concent';
+//#endregion
+//#region Import Style
+import c from './index.module.scss'
+import IconFont from 'components/IconFont'
+import { Recording } from 'models/record/state'
+//#endregion
 
-// const Record = (): JSX.Element => {
-//     const { urls } = useContext(RecordContext)
+const moduleName = 'record'
+const connect = [] as const
 
-//     const [isSaved, setIsSaved] = useState(false)
-//     const saveUrlsToStorage = useCallback((debound((state: RecordUrl[]) => {
-//         chrome.storage.local.set({ urls: state }, () => {
-//             setIsSaved(true)
-//         })
-//     }, 3000)), [])
-//     useEffect(() => {
-//         setIsSaved(false)
-//         saveUrlsToStorage(urls)
-//     }, [urls])
+const initState = () => ({
 
-//     const jsxUrls = useMemo(() => {
-//         return urls.map((item) =>
-//             <li key={item.url}>
-//                 <div>{item.title}</div>
-//                 <div> {item.url} </div>
-//             </li>
-//         )
-//     }, [urls])
+})
+//#region Type Statement
+type Module = typeof moduleName
+type Conn = ItemsType<typeof connect>
+type State = ReturnType<typeof initState>
+type CtxPre = CtxMSConn<EmptyObject, Module, State, Conn>
+//#endregion
+const setup = (ctx: CtxPre) => {
+    return {
 
+    }
+}
+//#region Type Statement
+type Settings = SettingsType<typeof setup>
+type Ctx = CtxMSConn<EmptyObject, Module, State, Conn, Settings>
+//#endregion
+const Record = () => {
+    const { state, settings } = useConcent<EmptyObject, Ctx, NoMap>({ module: moduleName, setup, state: initState, connect })
 
-//     // console.log('🌀 Record Render')
-//     return (
-//         <>
-//             <div>{isSaved ? '已保存' : ''}</div>
-//             <ul>
-//                 {jsxUrls}
-//             </ul>
-//         </>
-//     )
-// }
+    return <div className={c['content']}>
+        {state.recording.map(record =>
+            record.urls.map(v => <div key={v.url}>{v.title}</div>)
+        )}
+    </div>
+}
 
-// export default Record
+export default Record

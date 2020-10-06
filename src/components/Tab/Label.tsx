@@ -16,6 +16,13 @@ interface Props {
     settings: Settings
 }
 
+const getLabelDom = (dom: HTMLElement): HTMLElement => {
+    if (dom === document.body)
+        return null
+    if (dom.tagName.toLowerCase() == 'li')
+        return dom
+    return getLabelDom(dom.parentElement)
+}
 
 const Label = (props: Props) => {
     const { tab, settings } = props
@@ -33,7 +40,7 @@ const Label = (props: Props) => {
             onMouseUpCapture={(e) => {
                 e.preventDefault()
                 if (e.button === 2) {
-                    const dom = e.target as HTMLElement
+                    const dom = getLabelDom(e.target as HTMLElement)
                     const { bottom, left, right, top } = dom.getBoundingClientRect()
                     settings.updPopupFrameProps(
                         {

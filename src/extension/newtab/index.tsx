@@ -14,6 +14,7 @@ import DropDiv from 'components/Tab/DropDiv'
 import { useConcent } from 'concent'
 // import 'store/run'
 import '../runConcent'
+import Record from 'components/Record'
 
 const randomNum = (minNum: number, maxNum: number) =>
     Number(Math.random() * (maxNum - minNum + 1) + minNum)
@@ -232,6 +233,7 @@ function App() {
         //   <Bookmark />
         // </div>
         <>
+            <Record/>
             <div className='popup-wrapper'>
                 <Tab />
             </div>

@@ -5,8 +5,9 @@ import { moduleClassnames } from 'api'
 const cn = moduleClassnames.bind(null, c)
 //#endregion
 
-import { useConcent } from 'concent'
-import { Fn } from 'api/type'
+import { NoMap, useConcent } from 'concent'
+import { EmptyObject, Fn } from 'api/type'
+import { CtxM } from 'types/concent'
 
 const width = 120
 const itemHeight = 32
@@ -29,35 +30,36 @@ export interface PopupFrameProps {
     options?: PopupOption[] | (() => PopupOption[])
 }
 
-const PopupFrame = (props: PopupFrameProps): JSX.Element => {
-    if (!props.isShow) return null
+type Ctx = CtxM<EmptyObject, "$$global">
 
-    const { targetTop, isShow } = props
-    let { top, left, options, minLeft, maxRight, minTop, maxBottom } = props
+const PopupFrame = ({ targetTop, isShow, top, left, options, minLeft = 0, maxRight, minTop = 0, maxBottom }: PopupFrameProps): JSX.Element => {
+    if (!isShow) return null
+
     const {
         globalState: { windowSize }
-    } = useConcent('$$global')
+    } = useConcent<EmptyObject, Ctx, NoMap>({ module: '$$global' })
 
     if (typeof options === 'function')
         options = options()
 
-    minLeft = minLeft ?? 0
-    maxRight = maxRight ?? windowSize.width
-    minTop = minTop ?? 0
-    maxBottom = maxBottom ?? windowSize.height
+    maxRight = maxRight === undefined
+        ? windowSize.width
+        : Math.min(windowSize.width, maxRight)
+    maxBottom = maxBottom === undefined
+        ? windowSize.height
+        : Math.min(windowSize.height, maxBottom)
 
     left = left + width > maxRight ? maxRight - width : left
     left = left < minLeft ? minLeft : left
 
     const height = itemHeight * options.length
 
+    top = top < minTop ? minTop : top
     if (top + height > maxBottom) {
         options.reverse()
         top = targetTop !== undefined ? targetTop - height : maxBottom - height
     }
-    top = top < minTop ? minTop : top
 
-    console.log('top, left, windowSize', top, left, windowSize)
 
     return (
         <ul className={c['content']} style={{ top, left, display: isShow ? 'block' : 'none' }}>
