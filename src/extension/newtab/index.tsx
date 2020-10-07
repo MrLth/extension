@@ -263,6 +263,8 @@ function App() {
 }
 
 ReactDOM.render(
-    <App />,
+    <div style={{display:'flex', justifyContent:'flex-end'}}>
+        <App />
+    </div>,
     document.getElementById('root')
 )

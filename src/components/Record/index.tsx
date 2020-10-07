@@ -8,6 +8,7 @@ import { CtxMSConn, ItemsType } from 'types/concent';
 import c from './index.module.scss'
 import IconFont from 'components/IconFont'
 import { Recording } from 'models/record/state'
+import RecordList from './RecordList';
 //#endregion
 
 const moduleName = 'record'
@@ -23,6 +24,11 @@ type State = ReturnType<typeof initState>
 type CtxPre = CtxMSConn<EmptyObject, Module, State, Conn>
 //#endregion
 const setup = (ctx: CtxPre) => {
+    const {effect,reducer} = ctx
+    effect(()=>{
+        reducer.record.init()
+    },[])
+
     return {
 
     }
@@ -35,8 +41,14 @@ const Record = () => {
     const { state, settings } = useConcent<EmptyObject, Ctx, NoMap>({ module: moduleName, setup, state: initState, connect })
 
     return <div className={c['content']}>
-        {state.recording.map(record =>
-            record.urls.map(v => <div key={v.url}>{v.title}</div>)
+        <div className={c['title']}>
+            <div>Record</div>
+            <div>
+                <IconFont type='iconadd' onClick={()=>{}}></IconFont>
+            </div>
+        </div>
+        {state.recording.map(v =>
+            <RecordList key={v.recordTime.valueOf()} recording={v}/>
         )}
     </div>
 }

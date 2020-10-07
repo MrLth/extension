@@ -487,9 +487,7 @@ const setup = (ctx: CtxPre) => {
                 })))
             })
 
-            // 就算不改变数组引用，也会触发更新，毕竟手动setState
-            record.recording.unshift(newRecording)
-            setModuleState<RootState, 'record'>('record', { recording: record.recording })
+            ctx.reducer.record.updRecoding(newRecording)
         }
         //#endregion
     }
@@ -506,7 +504,7 @@ const TabComponent = (): JSX.Element => {
 
     return (
         <>
-            <div className={c['content']} style={{ minHeight: `${4.9125 + 2 * 7}rem` }}>
+            <div className={c['content']}>
                 <div className={c['title']}>
                     <div>TAB</div>
                     <div>
@@ -526,8 +524,8 @@ const TabComponent = (): JSX.Element => {
                         />
                     )
                 })}
-                <PopupFrame {...state.popupFrameProps} />
             </div>
+            <PopupFrame {...state.popupFrameProps} />
         </>
     )
 }

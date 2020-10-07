@@ -1,5 +1,16 @@
-.content{
-    position: absolute;
-    right: 300px;
-    top: 0;
+@import 'common/index';
+
+.content {
+	@extend %card;
+	.record-title {
+		@extend %sub-title;
+	}
+}
+
+.title {
+	@extend %title;
+}
+
+.label {
+    @extend %label;
 }

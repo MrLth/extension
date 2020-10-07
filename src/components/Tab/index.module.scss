@@ -1,155 +1,83 @@
+@import 'common/index';
+
 .title {
-  display: flex;
-  justify-content: space-between;
-  height: 2.8125rem;
-  line-height: 2.8125rem;
-  border-bottom: 1px #efefef solid;
-
-  font-size: 0.875rem;
-  font-family: PingFangSC-Regular, PingFang SC;
-  background-color: #fff;
-  div:first-child{
-    padding-left:1.5625rem;
-
-  }
-  div:last-child{
-    padding-right:1rem;
-
-    font-size: 1.125rem;
-    svg{
-      cursor: pointer;
-      margin-left: 0.5rem;
-      color: #8c8c8c;
-      transition: color 0.25s ease-in-out;
-      &:hover{
-        color: #000;
-      }
-    }
-  }
+	@extend %title;
 }
 
 .content {
-  width: 300px;
-  height: 100vh;
-  float: right;
-  // background-color: #faa;
-  box-shadow: 12px 0px 48px 0px rgba(0, 0, 0, 0.3);
-  background: rgba(250, 250, 250, 1);
+	@extend %card;
+	box-shadow: none;
+	border-left: 1px #efefef solid;
 
-  .window-title {
-    padding-top: 0.15rem;
-    height: 2.1rem;
-    line-height: 2.1rem;
-    margin-left: 1rem;
-    font-size: 0.875rem;
-    color: #8c8c8c;
-  }
+	.window-title {
+		@extend %sub-title;
+	}
 
-  .focused {
-    .window-title {
-      color: #595959;
-    }
-  }
+	.label {
+		@extend %label;
+	}
 
-  .label {
-    // display: flex;
-    position: relative;
+	.label {
+		&.activated {
+			background-color: #eee;
+		}
+	}
 
-    // justify-content: space-between;
-    .unit-tab {
-      height: 2rem;
-      line-height: 2rem;
-      padding-left: 1rem;
-      overflow: hidden;
-      white-space: nowrap;
-      text-overflow: ellipsis;
-      img {
-        height: 1.125rem;
-        width: 1.125rem;
-        margin-right: 0.875rem;
-        vertical-align: sub;
-      }
-    }
-    .btn-close {
-      // margin-right: -1.6rem;
-      // display: none;
-      opacity: 0;
-      position: absolute;
-      right: 0;
-      top: 0;
-      padding: 0 0.3rem 0 1rem;
-      font-size: 1rem;
-      line-height: 2rem;
-      transition: opacity 0.05s ease-in-out;
-      background: linear-gradient(to right, transparent, #FAFAFA);
-    }
+	.tab-group {
+		.label {
+			height: 1.75rem;
+			line-height: 1.75rem;
+			background-image: url('~@img/tabGroupBg.svg');
+			background-repeat: repeat-y;
+			background-size: 1.5rem 1.75rem;
+			background-position: 0.8rem 0rem;
 
-    &:hover .btn-close {
-      opacity: 1;
-    }
-  }
+			&:first-of-type {
+				background-image: url('~@img/tabGroupBgFirst.svg');
+				background-position-y: -0.15rem;
+				background-size: 1.5rem 2rem;
+			}
 
-  .label {
-    &.activated {
-      background-color: #eee;
-    }
-  }
+			&:last-of-type {
+				background-image: url('~@img/tabGroupBgLast.svg');
+			}
 
-  .tab-group {
-    .label {
-      height: 1.75rem;
-      line-height: 1.75rem;
-      background-image: url('~@img/tabGroupBg.svg');
-      background-repeat: repeat-y;
-      background-size: 1.5rem 1.75rem;
-      background-position: 0.8rem 0rem;
+			&.activated {
+				background-image: url('~@img/tabGroupBgActivatedNotFocus.svg');
 
-      &:first-of-type {
-        background-image: url('~@img/tabGroupBgFirst.svg');
-        background-position-y: -0.15rem;
-        background-size: 1.5rem 2rem;
-      }
+				&:first-of-type {
+					background-image: url('~@img/tabGroupBgFirstActivatedNotFocus.svg');
+				}
 
-      &:last-of-type {
-        background-image: url('~@img/tabGroupBgLast.svg');
-      }
+				&:last-of-type {
+					background-image: url('~@img/tabGroupBgLastActivatedNotFocus.svg');
+				}
+			}
+		}
+	}
 
-      &.activated {
-        background-image: url('~@img/tabGroupBgActivatedNotFocus.svg');
+	.focused {
+		.label {
+			&.activated {
+				color: #0050b3;
+				background-color: #e6f7ff;
+			}
+		}
 
-        &:first-of-type {
-          background-image: url('~@img/tabGroupBgFirstActivatedNotFocus.svg');
-        }
+		.tab-group {
+			.label {
+				&.activated {
+					background-image: url('~@img/tabGroupBgActivated.svg');
 
-        &:last-of-type {
-          background-image: url('~@img/tabGroupBgLastActivatedNotFocus.svg');
-        }
-      }
-    }
-  }
+					&:first-of-type {
+						background-image: url('~@img/tabGroupBgFirstActivated.svg');
+					}
 
-  .focused {
-    .label {
-      &.activated {
-        color: #0050b3;
-        background-color: #e6f7ff;
-      }
-    }
-
-    .tab-group {
-      .label {
-        &.activated {
-          background-image: url('~@img/tabGroupBgActivated.svg');
-
-          &:first-of-type {
-            background-image: url('~@img/tabGroupBgFirstActivated.svg');
-          }
-
-          &:last-of-type {
-            background-image: url('~@img/tabGroupBgLastActivated.svg');
-          }
-        }
-      }
-    }
-  }
+					&:last-of-type {
+						background-image: url('~@img/tabGroupBgLastActivated.svg');
+					}
+				}
+			}
+		}
+	}
 }

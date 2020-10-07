@@ -10,3 +10,7 @@ declare module "*.module.scss" {
     export default classes
 }
 
+declare module 'date-format'
+declare module 'javascript-time-ago'
+declare module 'javascript-time-ago/locale/zh'
+

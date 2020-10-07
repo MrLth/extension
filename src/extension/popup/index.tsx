@@ -28,7 +28,7 @@ const App = () => {
     }, [])
     return (
         <>
-            <div className='popup-wrapper'>
+            <div className='popup-wrapper' style={{ minHeight: `${4.9125 + 2 * 7}rem`, minWidth: 300 }}>
                 <Tab />
             </div>
         </>

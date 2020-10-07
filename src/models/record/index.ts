@@ -6,4 +6,5 @@
  * @Description: file content
  */
 import state from './state'
-export default { state }
+import reducer from './reducer'
+export default { state, reducer }

@@ -5,7 +5,7 @@
  * @LastEditTime: 2020-10-06 16:52:28
  * @Description: file content
  */
-interface RecordUrl {
+export interface RecordUrl {
 	title: string
 	url: string
 }
