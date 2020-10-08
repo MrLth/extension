@@ -7,4 +7,5 @@
  */
 import state from './state'
 import reducer from './reducer'
-export default { state, reducer }
+import lifecycle from './lifecycle'
+export default { state, reducer, lifecycle }

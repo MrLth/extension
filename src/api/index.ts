@@ -1,3 +1,4 @@
+import Record from 'components/Record'
 import { Fn } from './type'
 
 /*
@@ -7,6 +8,14 @@ import { Fn } from './type'
  * @LastEditTime: 2020-10-04 19:52:23
  * @Description: 整个项目会用到的方法和api
  */
+
+const DATE_LOCAL_PLACEHOLDER = 'TIMESTAMP'
+
+export const type = (obj: any) =>
+	typeof obj !== 'object'
+		? typeof obj
+		: Object.prototype.toString.call(obj).slice(8, -1).toLowerCase()
+
 export const isLocal = (hostname: string): boolean =>
 	/^((127\.0\.0\.1)|(localhost)|(10\.\d{1,3}\.\d{1,3}\.\d{1,3})|(172\.((1[6-9])|(2\d)|(3[01]))\.\d{1,3}\.\d{1,3})|(192\.168\.\d{1,3}\.\d{1,3}))(:\d{0,5})?$/.test(
 		hostname
@@ -89,20 +98,66 @@ export const moduleClassnames = (
 	return classNames.join(' ')
 }
 interface ReadFromLocalCbs {
-	format?: Fn
-	validate?: Fn
+	format?: (...args: unknown[]) => string
+	validate?: (...args: unknown[]) => boolean
 }
 export const readFromLocal = (
 	key: string,
 	{ format, validate }: ReadFromLocalCbs = {}
 ) => {
-	const localInfo = localStorage.getItem(key)
-	if (localInfo === null) return false // 未保存
+	const fixDateType = (data: any) => {
+		if (typeof data === 'string' && data.endsWith(DATE_LOCAL_PLACEHOLDER)) {
+			console.log('isDate', data)
 
-	const formatted = format?.(localInfo) ?? localInfo
+			return new Date(parseInt(data))
+		}
+		if (data === null || typeof data !== 'object') {
+			return data
+		}
 
+		return Object.entries(data).reduce(
+			(acc, [k, v]) => {
+				acc[k] = fixDateType(v)
+				return acc
+			},
+			type(data) === 'array' ? [] : ({} as Record<string | number, any>)
+		)
+	}
+
+	let info = localStorage.getItem(key)
+	// 未保存
+	if (info === null) return false
+	if (typeof format === 'function') {
+		info = format(info)
+	}
+	info = fixDateType(info)
 	// 有效性验证
-	if (validate?.(formatted) === false) return false // 数据失效
+	if (typeof validate === 'function') {
+		if (validate(info) === false) return false
+	}
 
-	return formatted
+	return info
+}
+
+export const saveToLocal = (key: string, info: unknown, preTreat?: Fn) => {
+	const fixDateType = (data: any) => {
+		if (data === null || typeof data !== 'object') {
+			return data
+		}
+		if (type(data) === 'date') return data.valueOf() + DATE_LOCAL_PLACEHOLDER
+
+		return Object.entries(data).reduce(
+			(acc, [k, v]) => {
+				acc[k] = fixDateType(v)
+				return acc
+			},
+			type(data) === 'array' ? [] : ({} as Record<string | number, any>)
+		)
+	}
+	info = fixDateType(info)
+
+	if (typeof preTreat === 'function') {
+		info = preTreat(info)
+	}
+	localStorage.setItem(key, JSON.stringify(info))
 }
