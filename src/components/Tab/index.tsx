@@ -185,12 +185,6 @@ const setup = (ctx: CtxPre) => {
         //#endregion
     }, [])
 
-    const ref = record.recording
-    effect(() => {
-
-        console.log('connectedState record changed!!!', record.recording, record.recording === ref)
-    }, ['record/recording'])
-
     const windowsAttach = {
         upd() {
             chrome.windows.getAll((windowsInfo) => {

@@ -1,5 +1,4 @@
-import { debound, readFromLocal, saveToLocal } from 'api'
-import { reducer } from 'concent'
+import { deboundFixed, readFromLocal, saveToLocal } from 'api'
 import recordState, { Recording } from './state'
 
 export type RecordState = typeof recordState
@@ -13,13 +12,12 @@ function save(_new: any, state: RecordState) {
 	isSaved = true
 }
 
-const saveDelay = debound((state: RecordState) => {
+const saveDelay = deboundFixed((state: RecordState) => {
 	save({}, state)
-}, 10000)
+}, 5000)
 
 function init() {
 	const local = readFromLocal(LOCAL_KEY, { format: JSON.parse })
-	console.log('local', typeof local, local)
 	return local !== false ? local : {}
 }
 

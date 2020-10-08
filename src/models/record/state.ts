@@ -16,5 +16,5 @@ export interface Recording {
 }
 
 export default {
-	recording: [{ urls: [], recordTime: new Date() }] as Recording[],
+	recording: [] as Recording[],
 }

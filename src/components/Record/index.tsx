@@ -41,9 +41,7 @@ const setup = (ctx: CtxPre) => {
     }, [])
 
     return {
-        save: () => {
-            reducer.record.save(null)
-        }
+        
     }
 }
 //#region Type Statement
@@ -57,7 +55,7 @@ const Record = () => {
         <div className={c['title']}>
             <div>Record</div>
             <div>
-                <IconFont type='iconadd' onClick={settings.save}></IconFont>
+                <IconFont type='iconadd' onClick={()=>{}}></IconFont>
             </div>
         </div>
         {state.recording.map(v =>

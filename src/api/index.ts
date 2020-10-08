@@ -107,8 +107,6 @@ export const readFromLocal = (
 ) => {
 	const fixDateType = (data: any) => {
 		if (typeof data === 'string' && data.endsWith(DATE_LOCAL_PLACEHOLDER)) {
-			console.log('isDate', data)
-
 			return new Date(parseInt(data))
 		}
 		if (data === null || typeof data !== 'object') {
