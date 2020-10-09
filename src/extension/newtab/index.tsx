@@ -9,7 +9,6 @@ import 'src/index.css'
 import './index.scss'
 
 import { deboundFixed } from '../../api'
-import DropDiv from 'components/Tab/DropDiv'
 
 import { useConcent } from 'concent'
 // import 'store/run'
