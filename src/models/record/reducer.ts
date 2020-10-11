@@ -7,7 +7,7 @@ export type RecordState = typeof recordState
 const LOCAL_KEY = 'record'
 let isSaved = true
 
-async function save(_new: null, state: RecordState): void {
+async function save(_new: null, state: RecordState): Promise<void> {
 	if (isSaved) return
 	await saveToLocal(LOCAL_KEY, state)
 	isSaved = true
