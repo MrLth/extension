@@ -5,13 +5,13 @@ import { Fn } from './type'
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2020-05-29 17:30:01
- * @LastEditTime: 2020-10-04 19:52:23
+ * @LastEditTime: 2020-10-11 19:59:03
  * @Description: 整个项目会用到的方法和api
  */
 
 const DATE_LOCAL_PLACEHOLDER = 'TIMESTAMP'
 
-export const type = (obj: any) =>
+export const type = (obj: unknown): string =>
 	typeof obj !== 'object'
 		? typeof obj
 		: Object.prototype.toString.call(obj).slice(8, -1).toLowerCase()
@@ -98,14 +98,15 @@ export const moduleClassnames = (
 	return classNames.join(' ')
 }
 interface ReadFromLocalCbs {
-	format?: (...args: unknown[]) => string
+	format?: <T>(...args: unknown[]) => T
 	validate?: (...args: unknown[]) => boolean
 }
-export const readFromLocal = (
+export const readFromLocal = <T>(
 	key: string,
 	{ format, validate }: ReadFromLocalCbs = {}
-) => {
-	const fixDateType = (data: any) => {
+): T | Promise<T> => {
+	// chrome extension storage 和localStorage都无法存储Date类型
+	const fixDateType = (data: unknown) => {
 		if (typeof data === 'string' && data.endsWith(DATE_LOCAL_PLACEHOLDER)) {
 			return new Date(parseInt(data))
 		}
@@ -115,30 +116,45 @@ export const readFromLocal = (
 
 		return Object.entries(data).reduce(
 			(acc, [k, v]) => {
-				acc[k] = fixDateType(v)
+				acc[k as keyof typeof data] = fixDateType(v)
 				return acc
 			},
-			type(data) === 'array' ? [] : ({} as Record<string | number, any>)
+			type(data) === 'array' ? [] : ({} as Record<string | number, unknown>)
 		)
 	}
-
-	let info = localStorage.getItem(key)
+	//#region 优先从chrome extension storage读取
+	if (typeof chrome?.storage?.sync?.get === 'function') {
+		return new Promise((resolve) => {
+			chrome.storage.sync.get([key], (rst) => {
+				console.log('rst', rst)
+				resolve(fixDateType(rst[key]) as T)
+			})
+		})
+	}
+	//#endregion
+	//#region 无法从chrome extension storage读取时，改为从localStorage读取
+	let info: string | T = localStorage.getItem(key)
 	// 未保存
-	if (info === null) return false
+	if (info === null) return null
 	if (typeof format === 'function') {
 		info = format(info)
 	}
-	info = fixDateType(info)
+	info = fixDateType(info) as T
 	// 有效性验证
 	if (typeof validate === 'function') {
-		if (validate(info) === false) return false
+		if (validate(info) === false) return null
 	}
-
 	return info
+	//#endregion
 }
 
-export const saveToLocal = (key: string, info: unknown, preTreat?: Fn) => {
-	const fixDateType = (data: any) => {
+export const saveToLocal = (
+	key: string,
+	info: unknown,
+	preTreat?: Fn
+): void | Promise<unknown> => {
+	// chrome extension storage 一样无法存储Date类型
+	const fixDateType = (data: unknown) => {
 		if (data === null || typeof data !== 'object') {
 			return data
 		}
@@ -146,16 +162,25 @@ export const saveToLocal = (key: string, info: unknown, preTreat?: Fn) => {
 
 		return Object.entries(data).reduce(
 			(acc, [k, v]) => {
-				acc[k] = fixDateType(v)
+				acc[k as keyof typeof data] = fixDateType(v)
 				return acc
 			},
-			type(data) === 'array' ? [] : ({} as Record<string | number, any>)
+			type(data) === 'array' ? [] : ({} as Record<string | number, unknown>)
 		)
 	}
+	//#region 优先存储在chrome extension storage
+	if (typeof chrome?.storage?.sync?.set === 'function') {
+		return new Promise((resolve) => {
+			console.log({ [key]: info }, info)
+			chrome.storage.sync.set({ [key]: fixDateType(info) }, resolve)
+		})
+	}
+	//#endregion
+	//#region 无法存储在chrome extension storage时，改为从localStorage存储
 	info = fixDateType(info)
-
 	if (typeof preTreat === 'function') {
 		info = preTreat(info)
 	}
 	localStorage.setItem(key, JSON.stringify(info))
+	//#endregion
 }

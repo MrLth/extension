@@ -2,7 +2,7 @@ import React from 'react'
 import { NoMap, SettingsType, useConcent } from 'concent'
 //#region Import Type
 import { Tab, Windows, WindowsAttach, Fn, EmptyObject } from 'api/type'
-import { CtxSConn, ItemsType, RootState } from 'types/concent'
+import { CtxMSConn, ItemsType } from 'types/concent'
 //#endregion
 //#region Import Function
 import { debound, deboundFixed } from 'api'
@@ -21,6 +21,11 @@ import { Recording } from 'models/record/state'
 
 const MAX_REFRESH_THRESHOLD = 16
 
+
+
+const moduleName = 'tab'
+const connect = ['record'] as const
+
 const initState = () => ({
     popupFrameProps: {
         isShow: false,
@@ -28,20 +33,20 @@ const initState = () => ({
         left: 0,
         options: [] as PopupOption[]
     },
-    windowsObj: {} as Windows,
+    // windowsObj: {} as Windows,
     windowsAttach: {} as WindowsAttach,
     windowsFiltered: {} as Windows,
     isSearching: false
 })
-
-const connect = ['record'] as const;
-type Conn = ItemsType<typeof connect>;
+//#region Type Statement
+type Module = typeof moduleName
+type Conn = ItemsType<typeof connect>
 type State = ReturnType<typeof initState>
-type CtxPre = CtxSConn<EmptyObject, State, Conn>
-
+type CtxPre = CtxMSConn<EmptyObject, Module, State, Conn>
+//#endregion
 const setup = (ctx: CtxPre) => {
-    const { setState, state, effect, setModuleState } = ctx
-    const { record } = ctx.connectedState
+    const { setState, state, effect } = ctx
+    // const { record } = ctx.connectedState
 
     const common = {
         isEventSleep: true,
@@ -481,17 +486,17 @@ const setup = (ctx: CtxPre) => {
                 })))
             })
 
-            ctx.reducer.record.updRecoding(newRecording)
+            ctx.reducer.record.addRecord(newRecording)
         }
         //#endregion
     }
 }
-
+//#region Type Statement
 export type Settings = SettingsType<typeof setup>
-type Ctx = CtxSConn<EmptyObject, State, Conn, Settings>
-
+type Ctx = CtxMSConn<EmptyObject, Module, State, Conn, Settings>
+//#endregion
 const TabComponent = (): JSX.Element => {
-    const { state, settings } = useConcent<EmptyObject, Ctx, NoMap>({ setup, state: initState, connect })
+    const { state, settings } = useConcent<EmptyObject, Ctx, NoMap>({ module: moduleName, setup, state: initState, connect })
 
     const renderWindows = state.isSearching ? state.windowsFiltered : state.windowsObj
 

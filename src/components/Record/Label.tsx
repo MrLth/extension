@@ -9,17 +9,24 @@ const cn = moduleClassnames.bind(null, c)
 //#endregion
 import defaultIcon from '@img/defaultIcon.svg'
 import IconFont from 'components/IconFont'
+import { Settings } from '.'
 
 
 interface Props {
+    recordingIndexRef: React.MutableRefObject<number>
+    labelIndex: number
     recordUrl: RecordUrl
+    settings: Settings
 }
 
-const Label = ({ recordUrl }: Props) => {
+const Label = ({ recordingIndexRef, labelIndex, recordUrl, settings }: Props) => {
 
+    console.log('label rendered')
     return (
         <li className={cn('label')}>
-        <div className={c['unit-tab']}>
+            <div
+                className={c['unit-tab']}
+                onClick={() => settings.openLabel(recordUrl.url)}>
                 <img
                     src={
                         recordUrl.url !== ''
@@ -32,7 +39,10 @@ const Label = ({ recordUrl }: Props) => {
             <div className={c['btn-close']}>
                 <IconFont
                     type='iconclose'
-                    onClick={(e: MouseEvent) => {}}
+                    onClick={(e: MouseEvent) => {
+                        e.stopPropagation()
+                        settings.closeLabel({ recordingIndex: recordingIndexRef.current, labelIndex })
+                    }}
                 />
             </div>
         </li>

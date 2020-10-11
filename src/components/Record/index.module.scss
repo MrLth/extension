@@ -2,9 +2,32 @@
 
 .content {
 	@extend %card;
+	display: flex;
+	flex-direction: column;
+
 	.record-title {
+
 		@extend %sub-title;
+		position: relative;
+		display: flex;
+		justify-content: space-between;
+
+		.btn-close {
+			@extend %btn-close,
+			%sub-title;
+			color: #000;
+			font-size: 1rem;
+		}
+
+		&:hover .btn-close {
+			opacity: 1;
+		}
 	}
+}
+
+.list {
+	flex: 1;
+	overflow-y: scroll;
 }
 
 .title {
@@ -12,5 +35,5 @@
 }
 
 .label {
-    @extend %label;
+	@extend %label;
 }

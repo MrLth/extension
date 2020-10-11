@@ -2,7 +2,7 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2020-05-27 15:30:26
- * @LastEditTime: 2020-10-04 21:05:08
+ * @LastEditTime: 2020-10-11 16:42:50
  * @Description: file content
  */
 
@@ -36,6 +36,7 @@ module.exports = {
             'public': path.resolve("public"),
             'components': path.resolve("src/components"),
             'api': path.resolve("src/api"),
+            'hooks': path.resolve("src/hooks"),
             'models': path.resolve("src/models"),
             'common': path.resolve("src/common"),
             'types': path.resolve("src/types"),

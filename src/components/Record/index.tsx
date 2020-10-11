@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import { NoMap, SettingsType, useConcent } from 'concent'
 //#region Type Import
 import { EmptyObject } from 'api/type'
@@ -7,13 +7,24 @@ import { CtxMSConn, ItemsType } from 'types/concent';
 //#region Import Style
 import c from './index.module.scss'
 import IconFont from 'components/IconFont'
-import { Recording } from 'models/record/state'
 import RecordList from './RecordList';
+//#endregion
+//#region Time Ago Init
+import TimeAgo from 'javascript-time-ago'
+import zh from 'javascript-time-ago/locale/zh'
+TimeAgo.addLocale(zh)
+const timeAgo = new TimeAgo('zh')
 //#endregion
 
 const moduleName = 'record'
-const connect = [] as const
-
+const connect = ['tab'] as const
+//#region Type Defined
+interface TimeUpdItem {
+    timeFormatted: string,
+    setTimeFormatted: React.Dispatch<React.SetStateAction<string>>,
+    recordTime: Date
+}
+//#endregion
 const initState = () => ({
 
 })
@@ -25,6 +36,9 @@ type CtxPre = CtxMSConn<EmptyObject, Module, State, Conn>
 //#endregion
 const setup = (ctx: CtxPre) => {
     const { effect, reducer } = ctx
+    const { tab } = ctx.connectedState
+
+    // 数据初始化
     effect(() => {
         // 状态初始化，包括从本地读取记录
         reducer.record.init()
@@ -40,27 +54,82 @@ const setup = (ctx: CtxPre) => {
         }
     }, [])
 
-    return {
-        
+    // 时间更新
+    effect(() => {
+        let timerId: number
+        const updRecordTimeFormatted = () => {
+            timerId = setTimeout(() => {
+                updRecordTimeFormatted()
+                for (const v of settings.timeUpdQueue) {
+                    const timeFormatted = timeAgo.format(v.recordTime)
+                    if (timeFormatted !== v.timeFormatted) {
+                        v.setTimeFormatted(timeFormatted)
+                        v.timeFormatted = timeFormatted
+                    }
+                }
+            }, 10000)
+        }
+        updRecordTimeFormatted()
+        return () => {
+            clearTimeout(timerId)
+        }
+    })
+    const settings = {
+        closeLabel: reducer.record.closeLabel,
+        closeRecord: reducer.record.closeRecord,
+        openLabel: (url: string) => {
+            let tabInfo: {
+                id: number,
+                windowId: number
+            } = null
+            // 如果标签已经打开，则只需跳转，否则新建标签页打开
+            outerFor: for (const tabs of Object.values(tab.windowsObj)) {
+                for (const tab of tabs) {
+                    if (tab.url === url) {
+                        tabInfo = { id: tab.id, windowId: tab.windowId }
+                        break outerFor
+                    }
+                }
+            }
+            if (tabInfo !== null) {
+                chrome.tabs.update(tabInfo.id, { active: true })
+                chrome.windows.update(tabInfo.windowId, { focused: true })
+            } else {
+                window.open(url)
+            }
+
+        },
+        timeUpdQueue: [] as TimeUpdItem[],
+        timeAgo
     }
+
+    return settings
 }
 //#region Type Statement
-type Settings = SettingsType<typeof setup>
+export type Settings = SettingsType<typeof setup>
 type Ctx = CtxMSConn<EmptyObject, Module, State, Conn, Settings>
 //#endregion
-const Record = () => {
+const Record = (): JSX.Element => {
     const { state, settings } = useConcent<EmptyObject, Ctx, NoMap>({ module: moduleName, setup, state: initState, connect })
 
+    console.log('Record rendered')
     return <div className={c['content']}>
         <div className={c['title']}>
             <div>Record</div>
             <div>
-                <IconFont type='iconadd' onClick={()=>{}}></IconFont>
+                <IconFont type='iconadd'></IconFont>
             </div>
         </div>
-        {state.recording.map(v =>
-            <RecordList key={v.recordTime.valueOf()} recording={v} />
+        <div className={c['list']}>
+        {state.recording.map((v, i) =>
+            <RecordList
+                key={v.recordTime.valueOf()}
+                recordingIndex={i}
+                recording={v}
+                settings={settings}
+            />
         )}
+        </div>
     </div>
 }
 
