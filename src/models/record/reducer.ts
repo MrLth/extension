@@ -1,3 +1,10 @@
+/*
+ * @Author: mrlthf11
+ * @LastEditors: mrlthf11
+ * @Date: 2020-10-12 08:17:18
+ * @LastEditTime: 2020-10-13 17:38:18
+ * @Description: file content
+ */
 import { deboundFixed, readFromLocal, saveToLocal } from 'api'
 import recordState, { Recording } from './state'
 import { IActionCtxBase as IAC } from 'concent'

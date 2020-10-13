@@ -26,7 +26,6 @@ interface TimeUpdItem {
 }
 //#endregion
 const initState = () => ({
-
 })
 //#region Type Statement
 type Module = typeof moduleName
