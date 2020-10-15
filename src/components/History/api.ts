@@ -2,7 +2,7 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2020-10-09 16:09:49
- * @LastEditTime: 2020-10-13 17:27:03
+ * @LastEditTime: 2020-10-14 09:43:54
  * @Description: file content
  */
 export interface HistoryObj{

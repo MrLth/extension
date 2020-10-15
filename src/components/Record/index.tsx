@@ -120,14 +120,14 @@ const Record = (): JSX.Element => {
             </div>
         </div>
         <div className={c['list']}>
-        {state.recording.map((v, i) =>
-            <RecordList
-                key={v.recordTime.valueOf()}
-                recordingIndex={i}
-                recording={v}
-                settings={settings}
-            />
-        )}
+            {state.recording.map((v, i) =>
+                <RecordList
+                    key={v.recordTime.valueOf()}
+                    recordingIndex={i}
+                    recording={v}
+                    settings={settings}
+                />
+            )}
         </div>
     </div>
 }

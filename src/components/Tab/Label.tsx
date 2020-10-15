@@ -81,7 +81,7 @@ const Label = (props: Props) => {
             <div className={c['unit-tab']}>
                 <img
                     src={
-                        tab.favIconUrl !== ''
+                        tab.url !== ''
                             ? `chrome://favicon/size/18@2x/${tab.url}`
                             : defaultIcon
                     }
