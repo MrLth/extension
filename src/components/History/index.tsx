@@ -4,10 +4,11 @@ import { NoMap, SettingsType, useConcent } from 'concent'
 import * as React from 'react'
 import { CtxMSConn, ItemsType } from 'types/concent'
 
-import { sortNativeHistory } from './api'
+import { calcHeight, sortNativeHistory } from './api'
 import Domain from './Domain'
 //#region Import Style
 import c from './index.module.scss'
+import IconFont from 'components/IconFont'
 //#endregion
 
 const moduleName = 'history'
@@ -20,11 +21,25 @@ type Conn = ItemsType<typeof connect>
 type State = ReturnType<typeof initState>
 type CtxPre = CtxMSConn<EmptyObject, Module, State, Conn>
 //#endregion
+
+//#region 常量定义
+const ITEM_HEIGHT = 28
+//#endregion
+
+
 const setup = (ctx: CtxPre) => {
     const { effect, reducer } = ctx
     const { tab } = ctx.connectedState
 
-    // 监听事件
+    const dom = {
+        list: null as HTMLUListElement
+    }
+    const common = {
+        listHeight: 0,
+        listCount: 0
+    }
+
+    // 监听chrome history事件
     effect(() => {
         const onVisitedListener = (result: chrome.history.HistoryItem) => {
             console.log("visited history item: ", result);
@@ -44,10 +59,13 @@ const setup = (ctx: CtxPre) => {
 
     // 初始化historyObj
     effect(() => {
-        chrome.history.search({ text: '' }, (result) => {
-            reducer.history.initHistoryObj(sortNativeHistory(result))
+        chrome.history.search({ text: '', startTime: 0, maxResults: common.listCount}, (result) => {
+            const rstList = sortNativeHistory(result)
+            console.log('height', calcHeight(rstList))
+            reducer.history.initHistoryObj(rstList)
         })
     }, [])
+
 
     const settings = {
         openLabel: (url: string) => {
@@ -71,6 +89,21 @@ const setup = (ctx: CtxPre) => {
                 window.open(url)
             }
 
+        },
+        refList: {
+            set current(v: HTMLUListElement) {
+                console.log('setter called')
+                common.listHeight = v.clientHeight
+                common.listCount = Math.ceil(common.listHeight / ITEM_HEIGHT)
+                dom.list = v
+            },
+            get current() {
+                return dom.list
+            }
+        },
+        test() {
+            console.log('dom.content', dom.list)
+            return dom.list
         }
     }
     return settings
@@ -82,22 +115,24 @@ type Ctx = CtxMSConn<EmptyObject, Module, State, Conn, Settings>
 const History = (): JSX.Element => {
     const { state, settings } = useConcent<EmptyObject, Ctx, NoMap>({ module: moduleName, setup, state: initState, connect })
 
-    const { historyObj } = state
+    const { domainHistoryList } = state
 
-    console.log('historyObj', historyObj)
+    console.log('historyObj', domainHistoryList)
     return (
         <div className={c['content']}>
             <div className={c['title']}>
                 <div>History</div>
                 <div>
+                    <IconFont type='iconadd' onClick={() => console.log(settings.test().clientHeight)}></IconFont>
+
                 </div>
             </div>
-            <ul className={c['list']}>
+            <ul className={c['list']} ref={settings.refList} onScroll={()=>console.log('socll')}>
                 {
-                    Object.keys(historyObj).map((key) =>
-                        historyObj[key].length > 1
-                            ? <Domain key={key} domain={key} list={historyObj[key]} settings={settings} />
-                            : <Label key={key} item={historyObj[key][0]} settings={settings} />
+                    domainHistoryList.map((item) =>
+                        item.list.length > 1
+                            ? <Domain key={item.list[0].lastVisitTime} domain={item.domain} list={item.list} settings={settings} />
+                            : <Label key={item.list[0].lastVisitTime} item={item.list[0]} settings={settings} />
                     )
                 }
             </ul>

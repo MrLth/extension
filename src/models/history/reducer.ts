@@ -5,12 +5,12 @@
  * @LastEditTime: 2020-10-13 17:39:32
  * @Description: file content
  */
-import { HistoryObj } from 'components/History/api'
+import { DomainHistoryItem } from 'components/History/api'
 import state from './state'
 export type HistoryState = typeof state
 
-function initHistoryObj(historyObj: HistoryObj): HistoryState {
-	return { historyObj }
+function initHistoryObj(domainHistoryList: DomainHistoryItem[]): HistoryState {
+	return { domainHistoryList }
 }
 
 export default { initHistoryObj }
