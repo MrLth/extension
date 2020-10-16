@@ -2,7 +2,7 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2020-10-14 08:40:09
- * @LastEditTime: 2020-10-16 16:52:29
+ * @LastEditTime: 2020-10-16 20:15:44
  * @Description: file content
  */
 import React, { memo } from 'react'
@@ -35,11 +35,10 @@ function dateFormat(timeStamp: number): string {
 }
 interface Props {
     item: HistoryItem
+    timeStr: string
     settings: Settings
 }
-const Label = ({ item, settings }: Props) => {
-    console.log('item.visitTime', item.visitTime);
-
+const Label = ({ item, settings, timeStr }: Props) => {
     return (
         <li className={c['label']}>
             <div
@@ -56,11 +55,7 @@ const Label = ({ item, settings }: Props) => {
             </div>
             <div className={c['time']}>
                 {
-                    new Date().valueOf() - item.visitTime > 1000 * 60 * 60 * 3
-                        ? dateFormat(item.lastVisitTime)
-                        : timeAgo.format(item.lastVisitTime)
-                    /* {} */
-
+                    timeStr
                 }
             </div>
         </li>

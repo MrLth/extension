@@ -46,8 +46,6 @@ const setup = (ctx: CtxPre) => {
             if (common.isLoading) return
             common.isLoading = true
             chrome.history.search({ text: '', startTime, endTime, maxResults: 9999 }, (result) => {
-                console.log('search', result)
-
                 const rstList = sortNativeHistory(result)
                 const startTime = result[result.length - 1].lastVisitTime
 
@@ -132,7 +130,6 @@ const setup = (ctx: CtxPre) => {
         },
         refList: {
             set current(v: HTMLUListElement) {
-                console.log('setter called')
                 common.listHeight = v.clientHeight
                 common.listCount = Math.ceil(common.listHeight / ITEM_HEIGHT)
                 dom.list = v
@@ -151,8 +148,6 @@ const setup = (ctx: CtxPre) => {
 
 
             if (viewedHeight > state.historySectionList[state.historySectionList.length - 1].top) {
-                console.log('upd');
-
                 const list = state.historySectionList
                 const len = state.historySectionList.length
                 const theLastSection = list[len - 1]
@@ -182,7 +177,6 @@ type Ctx = CtxMSConn<EmptyObject, Module, State, Conn, Settings>
 //#endregion
 const History = (): JSX.Element => {
     const { state, settings } = useConcent<EmptyObject, Ctx, NoMap>({ module: moduleName, setup, state: initState, connect })
-    console.log('history render', state.historySectionList.length)
     return (
         <div className={c['content']}>
             <div className={c['title']}>
