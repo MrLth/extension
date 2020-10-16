@@ -32,7 +32,7 @@ function dateFormat(timeStamp: number): string {
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2020-10-14 08:40:09
- * @LastEditTime: 2020-10-16 23:06:18
+ * @LastEditTime: 2020-10-16 23:18:29
  * @Description: file content
  */
 interface Props {
@@ -90,7 +90,7 @@ const Section = ({ section, settings }: Props) => {
             })
         }
     }, [section.status])
-    console.log('time', section.startTime - section.endTime)
+    // console.log('time', new Date(section.startTime), new Date(section.endTime), section.startTime - section.endTime)
     return (
         <ul className={c['section']} style={{ top: section.top }}>
             {

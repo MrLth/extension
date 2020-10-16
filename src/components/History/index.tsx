@@ -47,13 +47,11 @@ const setup = (ctx: CtxPre) => {
             common.isLoading = true
             chrome.history.search({ text: '', startTime, endTime, maxResults: 9999 }, (result) => {
                 const rstList = sortNativeHistory(result)
-                const startTime = result[result.length - 1].lastVisitTime
 
                 reducer.history.updSection({
                     index,
                     list: rstList,
                     height: calcHeight(rstList),
-                    startTime,
                     status: 'completed'
                 })
                 if (state.historySectionList[index + 1]?.status === 'loading') {
@@ -155,6 +153,7 @@ const setup = (ctx: CtxPre) => {
                 const startTime = theLastSection.startTime - 1000 * 60 * 60 * 24
                 const endTime = theLastSection.startTime
 
+                console.log(new Date(startTime), new Date(endTime))
                 reducer.history.pushNewSection({
                     index: len,
                     top: theLastSection.top + theLastSection.height,
@@ -165,7 +164,7 @@ const setup = (ctx: CtxPre) => {
                     endTime
                 })
 
-                fn.loadSection(len, startTime, endTime)
+                fn.loadSection(len, startTime, endTime - 1000)
             }
         }
     }
