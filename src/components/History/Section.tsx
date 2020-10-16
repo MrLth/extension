@@ -32,7 +32,7 @@ function dateFormat(timeStamp: number): string {
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2020-10-14 08:40:09
- * @LastEditTime: 2020-10-16 21:24:10
+ * @LastEditTime: 2020-10-16 23:06:18
  * @Description: file content
  */
 interface Props {
@@ -80,20 +80,17 @@ const Section = ({ section, settings }: Props) => {
     useEffect(() => {
         for (const label of updQueue) {
             chrome.history.getVisits({ url: label.url }, (rst) => {
-                console.log('rst id', rst[0].id);
 
                 rst.length > 0 && visits.set(rst[0].id, rst)
                 refCount.current--
                 if (refCount.current === 0) {
-                    console.log('all refresh')
                     refresh()
                 }
 
             })
         }
     }, [section.status])
-
-    console.log('render')
+    console.log('time', section.startTime - section.endTime)
     return (
         <ul className={c['section']} style={{ top: section.top }}>
             {
@@ -105,18 +102,11 @@ const Section = ({ section, settings }: Props) => {
                         if (typeof firstLabel.visitTime === 'number') {
                             const list = visits.get(firstLabel.id)
                             if (Array.isArray(list)) {
-                                firstLabel.visitTime = list.filter(v => v.visitTime >= section.startTime && v.visitTime <= section.endTime)[0].visitTime
+                                const filter = list.filter(v => v.visitTime >= section.startTime && v.visitTime <= section.endTime)
+                                // console.log('filter list', filter, list.length, filter.length === 0 && list.map(v => ([v.visitTime, v.visitTime >= section.startTime && v.visitTime <= section.endTime])), section.startTime, section.endTime)
+                                firstLabel.visitTime = list.filter(v => v.visitTime >= section.startTime && v.visitTime <= section.endTime).pop()?.visitTime
 
-                                console.log('filter list',firstLabel.title, list.filter(v => v.visitTime >= section.startTime && v.visitTime <= section.endTime))
 
-                                timeStr = new Date().valueOf() - firstLabel.visitTime > 1000 * 60 * 60 * 3
-                                    ? dateFormat(firstLabel.visitTime)
-                                    : timeAgo.format(firstLabel.visitTime)
-                                if (timeStr !== prevTimeStr) {
-                                    prevTimeStr = timeStr
-                                } else {
-                                    timeStr = ''
-                                }
                             } else {
                                 firstLabel.visitTime = firstLabel.lastVisitTime
                             }
@@ -128,7 +118,18 @@ const Section = ({ section, settings }: Props) => {
                     } else {
                         firstLabel.visitTime = firstLabel.lastVisitTime
                     }
+                    if (typeof firstLabel.visitTime === 'number') {
+                        timeStr = new Date().valueOf() - firstLabel.visitTime > 1000 * 60 * 60 * 3
+                            ? dateFormat(firstLabel.visitTime)
+                            : timeAgo.format(firstLabel.visitTime)
+                        if (timeStr !== prevTimeStr) {
+                            prevTimeStr = timeStr
+                        } else {
+                            timeStr = ''
+                        }
+                    }
 
+                    // console.log('timeStr', timeStr)
                     return item.list.length > 1
                         ? <Domain key={item.list[0].lastVisitTime} list={item.list} timeStr={timeStr} settings={settings} />
                         : <Label key={item.list[0].lastVisitTime} item={item.list[0]} timeStr={timeStr} settings={settings} />
