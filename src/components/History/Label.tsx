@@ -2,7 +2,7 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2020-10-14 08:40:09
- * @LastEditTime: 2020-10-14 14:28:03
+ * @LastEditTime: 2020-10-16 16:52:29
  * @Description: file content
  */
 import React, { memo } from 'react'
@@ -18,12 +18,28 @@ import c from './index.module.scss'
 import defaultIcon from '@img/defaultIcon.svg'
 // import IconFont from 'components/IconFont'
 import { Settings } from '.'
+import { HistoryItem } from './api'
 
+
+function dateFormat(timeStamp: number): string {
+    const date = new Date(timeStamp)
+    const minutes = date.getMinutes()
+    let hours = date.getHours()
+    let minutesStr = '00'
+    if (minutes > 46) {
+        hours += 1
+    } else if (minutes > 16) {
+        minutesStr = '30'
+    }
+    return hours + ':' + minutesStr
+}
 interface Props {
-    item: chrome.history.HistoryItem
+    item: HistoryItem
     settings: Settings
 }
 const Label = ({ item, settings }: Props) => {
+    console.log('item.visitTime', item.visitTime);
+
     return (
         <li className={c['label']}>
             <div
@@ -39,7 +55,13 @@ const Label = ({ item, settings }: Props) => {
                 {item.title}
             </div>
             <div className={c['time']}>
-                {timeAgo.format(item.lastVisitTime)}
+                {
+                    new Date().valueOf() - item.visitTime > 1000 * 60 * 60 * 3
+                        ? dateFormat(item.lastVisitTime)
+                        : timeAgo.format(item.lastVisitTime)
+                    /* {} */
+
+                }
             </div>
         </li>
 

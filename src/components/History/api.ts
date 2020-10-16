@@ -2,11 +2,11 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2020-10-09 16:09:49
- * @LastEditTime: 2020-10-15 16:45:37
+ * @LastEditTime: 2020-10-16 16:53:43
  * @Description: file content
  */
 
-const DOMAIN_MERGE_TIME_INTERVAL = 1000 * 60 * 60 // 一个小时
+const DOMAIN_MERGE_TIME_INTERVAL = 1000 * 60 * 30 // 半个小时
 
 export function findLastIndex<T>(
 	array: Array<T>,
@@ -18,9 +18,13 @@ export function findLastIndex<T>(
 	}
 	return -1
 }
+
+export interface HistoryItem extends chrome.history.HistoryItem {
+	visitTime?: number
+}
 export interface DomainHistoryItem {
 	domain: string
-	list: chrome.history.HistoryItem[]
+	list: HistoryItem[]
 }
 export function sortNativeHistory(
 	nativeHistory: chrome.history.HistoryItem[]

@@ -2,15 +2,27 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2020-10-13 17:35:56
- * @LastEditTime: 2020-10-13 17:39:32
+ * @LastEditTime: 2020-10-16 15:50:21
  * @Description: file content
  */
-import { DomainHistoryItem } from 'components/History/api'
-import state from './state'
+import state, { HistorySection } from './state'
 export type HistoryState = typeof state
 
-function initHistoryObj(domainHistoryList: DomainHistoryItem[]): HistoryState {
-	return { domainHistoryList }
+
+function pushNewSection(
+	section: HistorySection,
+	state: HistoryState
+): Partial<HistoryState> {
+	state.historySectionList.push(section)
+	return state
 }
 
-export default { initHistoryObj }
+function updSection(
+	sectionSegment: Partial<HistorySection>,
+	state: HistoryState
+): Partial<HistoryState> {
+	Object.assign(state.historySectionList[sectionSegment.index], sectionSegment)
+	return state
+}
+
+export default {  pushNewSection, updSection }

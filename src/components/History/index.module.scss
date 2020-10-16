@@ -33,6 +33,11 @@
 	flex: 1;
 	overflow-y: auto;
 	padding: 0.75rem 0;
+	position: relative;
+	.section{
+		position: absolute;
+		width: 100%;
+	}
 }
 
 .label {
@@ -48,6 +53,8 @@
 		line-height: 2rem;
 	}
 }
+
+
 
 .domain {
 	padding:0.25rem 0;

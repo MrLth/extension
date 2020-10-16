@@ -4,9 +4,19 @@ import { DomainHistoryItem } from 'components/History/api'
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2020-09-01 21:26:41
- * @LastEditTime: 2020-10-15 15:35:06
+ * @LastEditTime: 2020-10-16 15:54:04
  * @Description: file content
  */
+export interface HistorySection {
+	index: number
+	top: number
+	height: number
+	list: DomainHistoryItem[]
+	status: 'loading' | 'completed'
+	startTime: number
+	endTime: number
+}
+
 export default {
-	domainHistoryList: [] as DomainHistoryItem[],
+	historySectionList: [] as HistorySection[],
 }

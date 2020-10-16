@@ -9,6 +9,8 @@ import Domain from './Domain'
 //#region Import Style
 import c from './index.module.scss'
 import IconFont from 'components/IconFont'
+import { HistorySection } from 'models/history/state'
+import Section from './Section'
 //#endregion
 
 const moduleName = 'history'
@@ -28,7 +30,7 @@ const ITEM_HEIGHT = 28
 
 
 const setup = (ctx: CtxPre) => {
-    const { effect, reducer } = ctx
+    const { effect, reducer, state } = ctx
     const { tab } = ctx.connectedState
 
     const dom = {
@@ -36,7 +38,33 @@ const setup = (ctx: CtxPre) => {
     }
     const common = {
         listHeight: 0,
-        listCount: 0
+        listCount: 0,
+        isLoading: false
+    }
+    const fn = {
+        loadSection(index: number, startTime: number, endTime: number) {
+            if (common.isLoading) return
+            common.isLoading = true
+            chrome.history.search({ text: '', startTime, endTime, maxResults: 9999 }, (result) => {
+                console.log('search', result)
+
+                const rstList = sortNativeHistory(result)
+                const startTime = result[result.length - 1].lastVisitTime
+
+                reducer.history.updSection({
+                    index,
+                    list: rstList,
+                    height: calcHeight(rstList),
+                    startTime,
+                    status: 'completed'
+                })
+                if (state.historySectionList[index + 1]?.status === 'loading') {
+                    fn.loadSection(index + 1, startTime - 1000 * 60 * 60 * 24, startTime)
+                } else {
+                    common.isLoading = false
+                }
+            })
+        }
     }
 
     // 监听chrome history事件
@@ -59,10 +87,22 @@ const setup = (ctx: CtxPre) => {
 
     // 初始化historyObj
     effect(() => {
-        chrome.history.search({ text: '', startTime: 0, maxResults: common.listCount}, (result) => {
+        const startTime = new Date().setHours(0, 0, 0, 0) - 1000 * 60 * 60 * 24
+        const endTime = new Date().setHours(23, 59, 59, 999)
+        chrome.history.search({ text: '', startTime }, (result) => {
             const rstList = sortNativeHistory(result)
-            console.log('height', calcHeight(rstList))
-            reducer.history.initHistoryObj(rstList)
+
+            const section: HistorySection = {
+                index: 0,
+                top: 12,
+                height: calcHeight(rstList),
+                list: rstList,
+                status: 'completed',
+                startTime,
+                endTime
+            }
+
+            reducer.history.pushNewSection(section)
         })
     }, [])
 
@@ -104,6 +144,34 @@ const setup = (ctx: CtxPre) => {
         test() {
             console.log('dom.content', dom.list)
             return dom.list
+        },
+        scrollCb(e: React.UIEvent<HTMLUListElement, UIEvent>) {
+            e.stopPropagation()
+            const viewedHeight = dom.list.scrollTop + common.listHeight
+
+
+            if (viewedHeight > state.historySectionList[state.historySectionList.length - 1].top) {
+                console.log('upd');
+
+                const list = state.historySectionList
+                const len = state.historySectionList.length
+                const theLastSection = list[len - 1]
+
+                const startTime = theLastSection.startTime - 1000 * 60 * 60 * 24
+                const endTime = theLastSection.startTime
+
+                reducer.history.pushNewSection({
+                    index: len,
+                    top: theLastSection.top + theLastSection.height,
+                    height: common.listHeight,
+                    list: [],
+                    status: 'loading',
+                    startTime,
+                    endTime
+                })
+
+                fn.loadSection(len, startTime, endTime)
+            }
         }
     }
     return settings
@@ -114,10 +182,7 @@ type Ctx = CtxMSConn<EmptyObject, Module, State, Conn, Settings>
 //#endregion
 const History = (): JSX.Element => {
     const { state, settings } = useConcent<EmptyObject, Ctx, NoMap>({ module: moduleName, setup, state: initState, connect })
-
-    const { domainHistoryList } = state
-
-    console.log('historyObj', domainHistoryList)
+    console.log('history render', state.historySectionList.length)
     return (
         <div className={c['content']}>
             <div className={c['title']}>
@@ -127,12 +192,10 @@ const History = (): JSX.Element => {
 
                 </div>
             </div>
-            <ul className={c['list']} ref={settings.refList} onScroll={()=>console.log('socll')}>
+            <ul className={c['list']} ref={settings.refList} onScroll={settings.scrollCb} style={{ position: 'relative' }}>
                 {
-                    domainHistoryList.map((item) =>
-                        item.list.length > 1
-                            ? <Domain key={item.list[0].lastVisitTime} domain={item.domain} list={item.list} settings={settings} />
-                            : <Label key={item.list[0].lastVisitTime} item={item.list[0]} settings={settings} />
+                    state.historySectionList.map(section =>
+                        <Section key={section.index} status={section.status} section={section} settings={settings} />
                     )
                 }
             </ul>

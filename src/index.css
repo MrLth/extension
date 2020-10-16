@@ -102,6 +102,7 @@
 
   ::-webkit-scrollbar-thumb {
     background-color: #efefef;
+    border-radius: 4px;
     /* min-height: 28px; */
   }
 
