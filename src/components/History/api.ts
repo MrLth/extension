@@ -2,7 +2,7 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2020-10-09 16:09:49
- * @LastEditTime: 2020-10-16 16:53:43
+ * @LastEditTime: 2020-10-17 16:03:44
  * @Description: file content
  */
 
@@ -56,7 +56,7 @@ export function sortNativeHistory(
 }
 
 export function calcHeight(list: DomainHistoryItem[]): number {
-	let h = 0
+	let h = 36
 	for (const item of list) {
 		const len = item.list.length
 		h += len > 1 ? 8 + len * 28 : 32

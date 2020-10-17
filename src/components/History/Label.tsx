@@ -2,7 +2,7 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2020-10-14 08:40:09
- * @LastEditTime: 2020-10-16 20:15:44
+ * @LastEditTime: 2020-10-17 15:54:50
  * @Description: file content
  */
 import React, { memo } from 'react'
@@ -53,11 +53,14 @@ const Label = ({ item, settings, timeStr }: Props) => {
                 />
                 {item.title}
             </div>
-            <div className={c['time']}>
-                {
-                    timeStr
-                }
-            </div>
+            {
+                timeStr !== '' &&
+                <div className={c['time']}>
+                    {
+                        timeStr
+                    }
+                </div>
+            }
         </li>
 
     )

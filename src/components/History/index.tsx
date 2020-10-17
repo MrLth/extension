@@ -83,23 +83,31 @@ const setup = (ctx: CtxPre) => {
 
     // 初始化historyObj
     effect(() => {
-        const startTime = new Date().setHours(0, 0, 0, 0) - 1000 * 60 * 60 * 24
+        const initLoadSection = (top: number, startTime: number, endTime: number) => {
+            chrome.history.search({ text: '', startTime, endTime, maxResults: 9999 }, (result) => {
+                const rstList = sortNativeHistory(result)
+                const index = state.historySectionList.length
+                const height = calcHeight(rstList)
+                const section: HistorySection = {
+                    index,
+                    top,
+                    height,
+                    list: rstList,
+                    status: 'completed',
+                    startTime,
+                    endTime
+                }
+
+                reducer.history.pushNewSection(section)
+
+                if (top + height <= common.listHeight) {
+                    initLoadSection(top + height, startTime - 1000 * 60 * 60 * 24, startTime)
+                }
+            })
+        }
+        const startTime = new Date().setHours(0, 0, 0, 0)
         const endTime = new Date().setHours(23, 59, 59, 999)
-        chrome.history.search({ text: '', startTime }, (result) => {
-            const rstList = sortNativeHistory(result)
-
-            const section: HistorySection = {
-                index: 0,
-                top: 12,
-                height: calcHeight(rstList),
-                list: rstList,
-                status: 'completed',
-                startTime,
-                endTime
-            }
-
-            reducer.history.pushNewSection(section)
-        })
+        initLoadSection(0, startTime, endTime)
     }, [])
 
 
@@ -164,7 +172,7 @@ const setup = (ctx: CtxPre) => {
                     endTime
                 })
 
-                fn.loadSection(len, startTime, endTime - 1000)
+                fn.loadSection(len, startTime, endTime)
             }
         }
     }
