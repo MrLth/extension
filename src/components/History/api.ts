@@ -2,7 +2,7 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2020-10-09 16:09:49
- * @LastEditTime: 2020-10-17 16:03:44
+ * @LastEditTime: 2020-10-17 19:05:41
  * @Description: file content
  */
 
@@ -21,6 +21,7 @@ export function findLastIndex<T>(
 
 export interface HistoryItem extends chrome.history.HistoryItem {
 	visitTime?: number
+	isAddToQueue?: boolean
 }
 export interface DomainHistoryItem {
 	domain: string

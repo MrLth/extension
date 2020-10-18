@@ -59,7 +59,6 @@ const saveDelay = deboundFixed((state: RecordState) => {
 
 async function init(): Promise<{ recording: Recording[] }> {
 	const local = await readFromLocal<RecordState>(LOCAL_KEY, { format: JSON.parse })
-	console.log('local', local)
 	return local !== null ? local : { recording: [] }
 }
 

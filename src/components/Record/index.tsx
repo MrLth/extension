@@ -111,7 +111,6 @@ type Ctx = CtxMSConn<EmptyObject, Module, State, Conn, Settings>
 const Record = (): JSX.Element => {
     const { state, settings } = useConcent<EmptyObject, Ctx, NoMap>({ module: moduleName, setup, state: initState, connect })
 
-    console.log('Record rendered')
     return <div className={c['content']}>
         <div className={c['title']}>
             <div>Record</div>

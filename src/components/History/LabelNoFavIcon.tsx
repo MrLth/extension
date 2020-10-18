@@ -2,7 +2,7 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2020-10-14 08:40:09
- * @LastEditTime: 2020-10-14 14:07:19
+ * @LastEditTime: 2020-10-18 14:40:47
  * @Description: file content
  */
 import React, { memo } from 'react'
@@ -24,7 +24,7 @@ const LabelNoFavIcon = ({ item, settings }: Props) => {
                 className={c['unit-tab']}
                 onClick={() => settings.openLabel(item.url)}>
                 <img src={circleSvg}/>
-                {item.title}
+                {item.title === '' ? item.url : item.title}
             </div>
         </li>
 

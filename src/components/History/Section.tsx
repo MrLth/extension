@@ -1,7 +1,7 @@
 import { EmptyObject } from 'api/type'
 import { NoMap, SettingsType, useConcent } from 'concent'
 import { HistorySection } from 'models/history/state'
-import React, { memo, useEffect } from 'react'
+import React, { memo, useEffect, useRef } from 'react'
 import { CtxDeS } from 'types/concent'
 import Domain from './Domain'
 import { Settings } from '.'
@@ -15,6 +15,7 @@ import TimeAgo from 'javascript-time-ago'
 import en from 'javascript-time-ago/locale/en'
 TimeAgo.addLocale(en)
 const timeAgo = new TimeAgo('en')
+const timeAgoFormat = (n: number): string => timeAgo.format(n, 'twitter')
 //#endregion
 const ONE_DAY = 86400000
 
@@ -43,21 +44,18 @@ function dayFormat(timeStamp: number): string {
     }
 
     return String.prototype.padStart.call(date.getMonth() + 1, 2, '0') + '.' +
-        String.prototype.padStart.call(date.getDate(), 2, '0') + ' 周' + ['末','一','二','三','四','五','六'][date.getDay()]
+        String.prototype.padStart.call(date.getDate(), 2, '0') + ' 周' + ['末', '一', '二', '三', '四', '五', '六'][date.getDay()]
 
 }
 /*
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2020-10-14 08:40:09
- * @LastEditTime: 2020-10-17 16:30:29
+ * @LastEditTime: 2020-10-18 16:06:58
  * @Description: file content
  */
-interface Props {
-    status: 'loading' | 'completed'
-    section: HistorySection
-    settings: Settings
-}
+
+
 const initState = () => ({
     refreshCount: 0
 })
@@ -66,22 +64,44 @@ type State = ReturnType<typeof initState>
 type CtxPre = CtxDeS<EmptyObject, State>
 //#endregion
 const setup = (ctx: CtxPre) => {
-    // const visits = new Map()
-
-    // ctx.effect(() => {
-    //     for (const label of settings.updQueue) {
-    //         chrome.history.getVisits({ url: label.url }, (rst) => {
-    //             rst.length > 0 && visits.set(rst[0].id, rst)
-    //             console.log('visits', visits)
-    //         })
-    //     }
-    // }, [])
+    const updQueue = [] as HistoryItem[]
+    let updCount = 0
+    const visits = new Map<string, chrome.history.VisitItem[]>()
 
     const settings = {
-        updQueue: [] as HistoryItem[],
-        visits: new Map<string, chrome.history.VisitItem[]>(),
-        refCount: { current: 0 },
-        refresh: () => ctx.setState({ refreshCount: ctx.state.refreshCount + 1 })
+        setLabelVisitTime: (label: HistoryItem, section: HistorySection): void => {
+            if (label.visitCount === 1) {
+                label.visitTime = label.lastVisitTime
+                return
+            }
+
+            if (label.isAddToQueue === undefined) {
+                updQueue.push(label)
+                updCount++
+                label.isAddToQueue = true
+                return
+            }
+
+            const list = visits.get(label.id)
+            if (list === undefined) return
+
+            const visitTime = list.filter(v => v.visitTime >= section.startTime && v.visitTime <= section.endTime).pop()?.visitTime
+            if (visitTime === undefined) return
+
+            label.visitTime = visitTime
+        },
+        updVisitTime: () => {
+            for (const label of updQueue) {
+                chrome.history.getVisits({ url: label.url }, (rst) => {
+                    rst.length > 0 && visits.set(rst[0].id, rst)
+                    updCount--
+                    if (updCount === 0) {
+                        ctx.setState({ refreshCount: ctx.state.refreshCount + 1 })
+                    }
+                })
+            }
+        }
+
     }
     return settings
 }
@@ -89,69 +109,39 @@ const setup = (ctx: CtxPre) => {
 export type MySettings = SettingsType<typeof setup>
 type Ctx = CtxDeS<EmptyObject, State, MySettings>
 //#endregion
-const Section = ({ section, settings }: Props) => {
+interface Props {
+    status: 'loading' | 'completed'
+    section: HistorySection
+    endTime: number
+    top: number
+    settings: Settings
+}
+const Section = ({ section, settings, top }: Props) => {
     const ctx = useConcent<EmptyObject, Ctx, NoMap>({ setup, state: initState })
-    const { updQueue, visits, refCount, refresh } = ctx.settings
+    const { updVisitTime, setLabelVisitTime } = ctx.settings
+    const { refreshCount } = ctx.state
 
-    let prevTimeStr = ''
+    const refPrevTimeStr = useRef<string>()
+    refPrevTimeStr.current = ''
 
     useEffect(() => {
-        for (const label of updQueue) {
-            chrome.history.getVisits({ url: label.url }, (rst) => {
-
-                rst.length > 0 && visits.set(rst[0].id, rst)
-                refCount.current--
-                if (refCount.current === 0) {
-                    refresh()
-                }
-
-            })
+        if (section.status === 'completed') {
+            updVisitTime()
         }
     }, [section.status])
-    // console.log('time', new Date(section.startTime), new Date(section.endTime), section.startTime - section.endTime)
+
     return (
-        <ul className={c['section']} style={{ top: section.top }}>
+        <ul className={c['section']} style={{ top }}>
             <li className={c['date']}>{dayFormat(section.startTime)}</li>
             {
                 section.list.map((item) => {
+
                     const firstLabel = item.list[0]
+                    setLabelVisitTime(firstLabel, section)
 
-                    let timeStr = ''
-                    if (firstLabel.visitCount > 1) {
-                        if (typeof firstLabel.visitTime === 'number') {
-                            const list = visits.get(firstLabel.id)
-                            if (Array.isArray(list)) {
-                                const filter = list.filter(v => v.visitTime >= section.startTime && v.visitTime <= section.endTime)
-                                // console.log('filter list', filter, list.length, filter.length === 0 && list.map(v => ([v.visitTime, v.visitTime >= section.startTime && v.visitTime <= section.endTime])), section.startTime, section.endTime)
-                                firstLabel.visitTime = list.filter(v => v.visitTime >= section.startTime && v.visitTime <= section.endTime).pop()?.visitTime
-
-
-                            } else {
-                                firstLabel.visitTime = firstLabel.lastVisitTime
-                            }
-                        } else {
-                            updQueue.push(firstLabel)
-                            refCount.current++
-                            firstLabel.visitTime = firstLabel.lastVisitTime
-                        }
-                    } else {
-                        firstLabel.visitTime = firstLabel.lastVisitTime
-                    }
-                    if (typeof firstLabel.visitTime === 'number') {
-                        timeStr = new Date().valueOf() - firstLabel.visitTime > 1000 * 60 * 60 * 3
-                            ? timeFormat(firstLabel.visitTime)
-                            : timeAgo.format(firstLabel.visitTime, 'twitter')
-                        if (timeStr !== prevTimeStr) {
-                            prevTimeStr = timeStr
-                        } else {
-                            timeStr = ''
-                        }
-                    }
-
-                    // console.log('timeStr', timeStr)
                     return item.list.length > 1
-                        ? <Domain key={item.list[0].lastVisitTime} list={item.list} timeStr={timeStr} settings={settings} />
-                        : <Label key={item.list[0].lastVisitTime} item={item.list[0]} timeStr={timeStr} settings={settings} />
+                        ? <Domain key={firstLabel.id} list={item.list} refreshCount={refreshCount} settings={settings} refPrevTimeStr={refPrevTimeStr} />
+                        : <Label key={firstLabel.id} item={item.list[0]} refreshCount={refreshCount} settings={settings} refPrevTimeStr={refPrevTimeStr} />
                 })
             }
         </ul>

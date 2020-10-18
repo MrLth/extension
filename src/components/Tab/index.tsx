@@ -93,6 +93,9 @@ const setup = (ctx: CtxPre) => {
 
         const onCreatedListener = (tab: chrome.tabs.Tab) => {
             if (common.isEventSleep) return
+            if (tab.url === ''){
+                console.log('tab.url empty')
+                return}
             handleTabs.queue.push((windows) => {
                 return ht.addTab(windows, tab.windowId, ht.splitUrl(tab), tab.index)
             })

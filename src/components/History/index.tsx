@@ -1,18 +1,28 @@
 import { EmptyObject } from 'api/type'
-import Label from './Label'
 import { NoMap, SettingsType, useConcent } from 'concent'
 import * as React from 'react'
 import { CtxMSConn, ItemsType } from 'types/concent'
 
 import { calcHeight, sortNativeHistory } from './api'
-import Domain from './Domain'
 //#region Import Style
 import c from './index.module.scss'
 import IconFont from 'components/IconFont'
 import { HistorySection } from 'models/history/state'
 import Section from './Section'
 //#endregion
-
+//#region Time Ago Init
+import TimeAgo from 'javascript-time-ago'
+import en from 'javascript-time-ago/locale/en'
+TimeAgo.addLocale(en)
+const timeAgo = new TimeAgo('en')
+const timeAgoFormat = (n: number): string => timeAgo.format(n, 'twitter')
+//#endregion
+export interface TimeUpdItem {
+    timeFormatted: string,
+    setTimeFormatted: React.Dispatch<React.SetStateAction<string>>,
+    recordTime: number,
+    isRemoved: boolean
+}
 const moduleName = 'history'
 const connect = ['tab'] as const
 const initState = () => ({
@@ -27,7 +37,8 @@ type CtxPre = CtxMSConn<EmptyObject, Module, State, Conn>
 //#region 常量定义
 const ITEM_HEIGHT = 28
 //#endregion
-
+const HOUR = 3600000
+const DAY = 86400000
 
 const setup = (ctx: CtxPre) => {
     const { effect, reducer, state } = ctx
@@ -39,7 +50,8 @@ const setup = (ctx: CtxPre) => {
     const common = {
         listHeight: 0,
         listCount: 0,
-        isLoading: false
+        isLoading: false,
+        startTime: 0
     }
     const fn = {
         loadSection(index: number, startTime: number, endTime: number) {
@@ -60,17 +72,35 @@ const setup = (ctx: CtxPre) => {
                     common.isLoading = false
                 }
             })
+        },
+        updFirstSection() {
+            const endTime = new Date().valueOf()
+            chrome.history.search({ text: '', startTime: common.startTime, endTime, maxResults: 9999 }, (result) => {
+                const rstList = sortNativeHistory(result)
+                reducer.history.updSection({
+                    index:0,
+                    list: rstList,
+                    height: calcHeight(rstList),
+                    status: 'completed',
+                    endTime
+                })
+            })
         }
     }
 
     // 监听chrome history事件
     effect(() => {
-        const onVisitedListener = (result: chrome.history.HistoryItem) => {
-            console.log("visited history item: ", result);
+        const onVisitedListener = () => {
+            // console.log('section loading')
+            reducer.history.updSection({
+                index:0,
+                status: 'loading'
+            })
+            setTimeout(()=>fn.updFirstSection(), 1000)
         }
         const onVisitedRemoveListener = (removed: chrome.history.RemovedResult) => {
             console.log('visited removed item:', removed);
-
+            fn.updFirstSection()
         }
 
         chrome.history.onVisited.addListener(onVisitedListener)
@@ -106,10 +136,39 @@ const setup = (ctx: CtxPre) => {
             })
         }
         const startTime = new Date().setHours(0, 0, 0, 0)
-        const endTime = new Date().setHours(23, 59, 59, 999)
+        const endTime = startTime + DAY
+        common.startTime = startTime
         initLoadSection(0, startTime, endTime)
     }, [])
 
+    // 每秒更新一次时间
+    effect(() => {
+        let timerId: number
+        const updTimeFormatted = () => {
+            timerId = setTimeout(() => {
+                updTimeFormatted()
+                // console.log('time upd')
+                for (const [k, v] of settings.timeUpdMap) {
+                    if (v.isRemoved) {
+                        settings.timeUpdMap.delete(k)
+                        break
+                    }
+                    if (typeof v.setTimeFormatted !== 'function') {
+                        break
+                    }
+                    const timeFormatted = timeAgoFormat(v.recordTime)
+                    if (timeFormatted !== v.timeFormatted) {
+                        v.setTimeFormatted(timeFormatted)
+                        v.timeFormatted = timeFormatted
+                    }
+                }
+            }, 1000)
+        }
+        updTimeFormatted()
+        return () => {
+            clearTimeout(timerId)
+        }
+    })
 
     const settings = {
         openLabel: (url: string) => {
@@ -144,10 +203,6 @@ const setup = (ctx: CtxPre) => {
                 return dom.list
             }
         },
-        test() {
-            console.log('dom.content', dom.list)
-            return dom.list
-        },
         scrollCb(e: React.UIEvent<HTMLUListElement, UIEvent>) {
             e.stopPropagation()
             const viewedHeight = dom.list.scrollTop + common.listHeight
@@ -161,7 +216,6 @@ const setup = (ctx: CtxPre) => {
                 const startTime = theLastSection.startTime - 1000 * 60 * 60 * 24
                 const endTime = theLastSection.startTime
 
-                console.log(new Date(startTime), new Date(endTime))
                 reducer.history.pushNewSection({
                     index: len,
                     top: theLastSection.top + theLastSection.height,
@@ -174,7 +228,9 @@ const setup = (ctx: CtxPre) => {
 
                 fn.loadSection(len, startTime, endTime)
             }
-        }
+        },
+        timeUpdMap: new Map<number, TimeUpdItem>(),
+        timeAgoFormat
     }
     return settings
 }
@@ -184,19 +240,19 @@ type Ctx = CtxMSConn<EmptyObject, Module, State, Conn, Settings>
 //#endregion
 const History = (): JSX.Element => {
     const { state, settings } = useConcent<EmptyObject, Ctx, NoMap>({ module: moduleName, setup, state: initState, connect })
+    // console.log('history render')
     return (
         <div className={c['content']}>
             <div className={c['title']}>
                 <div>History</div>
                 <div>
-                    <IconFont type='iconadd' onClick={() => console.log(settings.test().clientHeight)}></IconFont>
-
+                    <IconFont type='iconadd' onClick={() => console.log(settings.timeUpdMap)}></IconFont>
                 </div>
             </div>
             <ul className={c['list']} ref={settings.refList} onScroll={settings.scrollCb} style={{ position: 'relative' }}>
                 {
                     state.historySectionList.map(section =>
-                        <Section key={section.index} status={section.status} section={section} settings={settings} />
+                        <Section key={section.index} endTime={section.endTime} top={section.top} status={section.status} section={section} settings={settings} />
                     )
                 }
             </ul>

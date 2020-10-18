@@ -35,7 +35,6 @@ const RecordList = ({ recordingIndex, recording, settings }: Props) => {
     }, [])
     //#endregion
 
-    console.log('RecordList Render')
     return (
         <ul
             className={cn()}>

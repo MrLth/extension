@@ -5,7 +5,7 @@ import { Fn } from './type'
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2020-05-29 17:30:01
- * @LastEditTime: 2020-10-11 19:59:03
+ * @LastEditTime: 2020-10-18 16:05:44
  * @Description: 整个项目会用到的方法和api
  */
 
@@ -126,7 +126,6 @@ export const readFromLocal = <T>(
 	if (typeof chrome?.storage?.sync?.get === 'function') {
 		return new Promise((resolve) => {
 			chrome.storage.sync.get([key], (rst) => {
-				console.log('rst', rst)
 				resolve(fixDateType(rst[key]) as T)
 			})
 		})
@@ -171,7 +170,6 @@ export const saveToLocal = (
 	//#region 优先存储在chrome extension storage
 	if (typeof chrome?.storage?.sync?.set === 'function') {
 		return new Promise((resolve) => {
-			console.log({ [key]: info }, info)
 			chrome.storage.sync.set({ [key]: fixDateType(info) }, resolve)
 		})
 	}

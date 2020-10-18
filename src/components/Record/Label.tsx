@@ -21,7 +21,6 @@ interface Props {
 
 const Label = ({ recordingIndexRef, labelIndex, recordUrl, settings }: Props) => {
 
-    console.log('label rendered')
     return (
         <li className={cn('label')}>
             <div
