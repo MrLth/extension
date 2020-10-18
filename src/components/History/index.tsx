@@ -37,7 +37,6 @@ type CtxPre = CtxMSConn<EmptyObject, Module, State, Conn>
 //#region 常量定义
 const ITEM_HEIGHT = 28
 //#endregion
-const HOUR = 3600000
 const DAY = 86400000
 
 const setup = (ctx: CtxPre) => {
@@ -67,7 +66,7 @@ const setup = (ctx: CtxPre) => {
                     status: 'completed'
                 })
                 if (state.historySectionList[index + 1]?.status === 'loading') {
-                    fn.loadSection(index + 1, startTime - 1000 * 60 * 60 * 24, startTime)
+                    fn.loadSection(index + 1, startTime - DAY, startTime)
                 } else {
                     common.isLoading = false
                 }
@@ -131,7 +130,7 @@ const setup = (ctx: CtxPre) => {
                 reducer.history.pushNewSection(section)
 
                 if (top + height <= common.listHeight) {
-                    initLoadSection(top + height, startTime - 1000 * 60 * 60 * 24, startTime)
+                    initLoadSection(top + height, startTime - DAY, startTime)
                 }
             })
         }
@@ -213,7 +212,7 @@ const setup = (ctx: CtxPre) => {
                 const len = state.historySectionList.length
                 const theLastSection = list[len - 1]
 
-                const startTime = theLastSection.startTime - 1000 * 60 * 60 * 24
+                const startTime = theLastSection.startTime - DAY
                 const endTime = theLastSection.startTime
 
                 reducer.history.pushNewSection({
