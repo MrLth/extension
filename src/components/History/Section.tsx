@@ -33,7 +33,7 @@ function dayFormat(timeStamp: number): string {
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2020-10-14 08:40:09
- * @LastEditTime: 2020-10-18 17:21:15
+ * @LastEditTime: 2020-10-18 22:49:44
  * @Description: file content
  */
 
@@ -76,6 +76,7 @@ const setup = (ctx: CtxPre) => {
             label.visitTime = visitItem.visitTime
         },
         updVisitTime: () => {
+            console.log('updQueue updated')
             for (const label of updQueue) {
                 chrome.history.getVisits({ url: label.url }, (rst) => {
                     rst.length > 0 && visits.set(rst[0].id, rst)
