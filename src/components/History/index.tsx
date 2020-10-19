@@ -13,16 +13,18 @@ import Section from './Section'
 //#region Time Ago Init
 import TimeAgo from 'javascript-time-ago'
 import en from 'javascript-time-ago/locale/en'
-import { debound } from 'api'
+import { debound, sortByKey } from 'api'
 TimeAgo.addLocale(en)
 const timeAgo = new TimeAgo('en')
 const timeAgoFormat = (n: number): string => timeAgo.format(n, 'twitter')
 //#endregion
+
+import format from 'date-format'
 export interface TimeUpdItem {
     timeFormatted: string,
     setTimeFormatted: React.Dispatch<React.SetStateAction<string>>,
     recordTime: number,
-    isRemoved: boolean
+    title: string
 }
 const moduleName = 'history'
 const connect = ['tab'] as const
@@ -149,10 +151,6 @@ const setup = (ctx: CtxPre) => {
                 updTimeFormatted()
                 // console.log('time upd')
                 for (const [k, v] of settings.timeUpdMap) {
-                    if (v.isRemoved) {
-                        settings.timeUpdMap.delete(k)
-                        break
-                    }
                     if (typeof v.setTimeFormatted !== 'function') {
                         break
                     }
@@ -230,7 +228,13 @@ const setup = (ctx: CtxPre) => {
             }
         },
         timeUpdMap: new Map<number, TimeUpdItem>(),
-        timeAgoFormat
+        timeAgoFormat,
+        test() {
+            console.log(state.historySectionList[0].list.map(v => [v.list[0].title, v.list[0].visitTime, v.list[0].visitTime && format('hh:mm:ss', new Date(v.list[0].visitTime)), v.list[0].url]))
+        },
+        test1() {
+            console.log(Array.from(settings.timeUpdMap).map(([k, v]) => v).sort(sortByKey<TimeUpdItem>('recordTime', true)).map(v => [v.title, format('hh:mm:ss', new Date(v.recordTime))]))
+        },
     }
     return settings
 }
@@ -246,7 +250,8 @@ const History = (): JSX.Element => {
             <div className={c['title']}>
                 <div>History</div>
                 <div>
-                    <IconFont type='iconadd' onClick={() => console.log(settings.timeUpdMap)}></IconFont>
+                    <IconFont type='iconadd' onClick={settings.test}></IconFont>
+                    <IconFont type='iconadd' onClick={settings.test1}></IconFont>
                 </div>
             </div>
             <ul className={c['list']} ref={settings.refList} onScroll={settings.scrollCb} style={{ position: 'relative' }}>

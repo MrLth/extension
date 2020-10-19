@@ -4,11 +4,12 @@ import { HistorySection } from 'models/history/state'
 import React, { memo, useEffect, useRef } from 'react'
 import { CtxDeS } from 'types/concent'
 import Domain from './Domain'
-import { Settings } from '.'
+import { Settings, TimeUpdItem } from '.'
 //#region Import Style
 import c from './index.module.scss'
 import Label from './Label'
 import { HistoryItem } from './api'
+import { sortByKey } from 'api'
 //#endregion
 
 const ONE_DAY = 86400000
@@ -33,11 +34,11 @@ function dayFormat(timeStamp: number): string {
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2020-10-14 08:40:09
- * @LastEditTime: 2020-10-18 22:49:44
+ * @LastEditTime: 2020-10-19 09:47:15
  * @Description: file content
  */
 
-interface VisitItem extends chrome.history.VisitItem{
+interface VisitItem extends chrome.history.VisitItem {
     isRead?: boolean
 }
 const initState = () => ({
@@ -49,7 +50,6 @@ type CtxPre = CtxDeS<EmptyObject, State>
 //#endregion
 const setup = (ctx: CtxPre) => {
     const updQueue = [] as HistoryItem[]
-    let updCount = 0
     const visits = new Map<string, VisitItem[]>()
 
     const settings = {
@@ -61,7 +61,6 @@ const setup = (ctx: CtxPre) => {
 
             if (label.isAddToQueue === undefined) {
                 updQueue.push(label)
-                updCount++
                 label.isAddToQueue = true
                 return
             }
@@ -69,7 +68,7 @@ const setup = (ctx: CtxPre) => {
             const list = visits.get(label.id)
             if (list === undefined) return
 
-            const visitItem =  list.filter(v => v.visitTime >= section.startTime && v.visitTime <= section.endTime && v.isRead !== true).pop()
+            const visitItem = list.filter(v => v.visitTime >= section.startTime && v.visitTime <= section.endTime && v.isRead !== true).pop()
             if (visitItem === undefined) return
 
             visitItem.isRead = true
@@ -77,6 +76,7 @@ const setup = (ctx: CtxPre) => {
         },
         updVisitTime: () => {
             console.log('updQueue updated')
+            let updCount = updQueue.length
             for (const label of updQueue) {
                 chrome.history.getVisits({ url: label.url }, (rst) => {
                     rst.length > 0 && visits.set(rst[0].id, rst)
@@ -86,6 +86,10 @@ const setup = (ctx: CtxPre) => {
                     }
                 })
             }
+        },
+        test() {
+            console.log(updQueue.sort(sortByKey<HistoryItem>('visitTime', true)))
+            console.log(visits)
         }
 
     }
@@ -104,7 +108,7 @@ interface Props {
 }
 const Section = ({ section, settings, top }: Props) => {
     const ctx = useConcent<EmptyObject, Ctx, NoMap>({ setup, state: initState })
-    const { updVisitTime, setLabelVisitTime } = ctx.settings
+    const { updVisitTime, setLabelVisitTime,test } = ctx.settings
     const { refreshCount } = ctx.state
 
     const refPrevTimeStr = useRef<string>()
@@ -118,7 +122,10 @@ const Section = ({ section, settings, top }: Props) => {
 
     return (
         <ul className={c['section']} style={{ top }}>
-            <li className={c['date']}>{dayFormat(section.startTime)}</li>
+            <li className={c['date']} onClick={()=>{
+                test()
+                console.log('section', section)
+            }}>{dayFormat(section.startTime)}</li>
             {
                 section.list.map((item) => {
 

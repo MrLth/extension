@@ -2,7 +2,7 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2020-10-14 08:40:09
- * @LastEditTime: 2020-10-18 16:04:19
+ * @LastEditTime: 2020-10-19 09:48:13
  * @Description: file content
  */
 import React, { memo, useEffect, useMemo, useRef, useState } from 'react'
@@ -67,7 +67,7 @@ const Label = ({ item, settings, refreshCount, refPrevTimeStr }: Props) => {
                     timeFormatted: rst,
                     setTimeFormatted,
                     recordTime: item.visitTime,
-                    isRemoved: false
+                    title: item.title
                 })
                 refVisitTime.current = item.visitTime
             }

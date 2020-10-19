@@ -5,7 +5,7 @@ import { Fn } from './type'
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2020-05-29 17:30:01
- * @LastEditTime: 2020-10-18 16:05:44
+ * @LastEditTime: 2020-10-19 09:09:45
  * @Description: 整个项目会用到的方法和api
  */
 
@@ -181,4 +181,10 @@ export const saveToLocal = (
 	}
 	localStorage.setItem(key, JSON.stringify(info))
 	//#endregion
+}
+
+export const sortByKey = <T>(key:keyof T, desc = false) => (a:T, b:T):number => {
+    if (a[key] < b[key]) { return desc ? 1 : -1 }
+    if (a[key] > b[key]) { return desc ? -1 : 1 }
+    return 0
 }
