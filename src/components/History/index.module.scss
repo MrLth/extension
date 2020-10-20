@@ -5,6 +5,10 @@
 	// width: 330px;
 	display: flex;
 	flex-direction: column;
+
+	box-shadow: none;
+	border-left: 1px #efefef solid;
+
 	.date{
 		@extend %sub-title;
 	}

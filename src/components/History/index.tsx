@@ -39,8 +39,8 @@ type CtxPre = CtxMSConn<EmptyObject, Module, State, Conn>
 
 //#region 常量定义
 const ITEM_HEIGHT = 28
-//#endregion
 const DAY = 86400000
+//#endregion
 
 const setup = (ctx: CtxPre) => {
     const { effect, reducer, state } = ctx

@@ -9,3 +9,4 @@ export { default as $$global } from "./global";
 export { default as record } from "./record";
 export { default as tab } from "./tab";
 export { default as history } from "./history";
+export { default as bookmark } from "./bookmark";

@@ -1,52 +1,52 @@
-// import * as React from 'react'
-// import { useEffect, useReducer, useContext, useMemo } from 'react'
-// import { BookmarksReducer } from 'store/bookmark/reducers'
-// import { bookmarkActionInit } from 'store/bookmark/actions'
-// import Folder from './Folder'
-// import Label from './Label'
-// import { RecordContext } from 'store'
+import React from 'react'
+import IconFont from 'components/IconFont'
+//#region Import Style
+import c from './index.module.scss'
+//#endregion
+import { CtxMSConn, ItemsType } from 'types/concent'
+import { EmptyObject } from 'api/type'
+import { NoMap, SettingsType, useConcent } from 'concent'
+import FolderList from './FolderList'
 
-// import './index.scss'
+const moduleName = 'bookmark'
+const connect = [] as const
+const initState = () => ({
+})
+//#region Type Statement
+type Module = typeof moduleName
+type Conn = ItemsType<typeof connect>
+type State = ReturnType<typeof initState>
+type CtxPre = CtxMSConn<EmptyObject, Module, State, Conn>
+//#endregion
+const setup = (ctx: CtxPre) => {
+    const { effect, reducer } = ctx
 
-// const Bookmark = (): JSX.Element => {
-//   const [tree, dispatch] = useReducer(BookmarksReducer, [])
-//   const { faviconStorage, faviconUpdDispatch } = useContext(RecordContext)
+    // 初始化获取 bookmarkTree
+    effect(() => {
+        chrome.bookmarks.getSubTree('1', (rst) => {
+            reducer.bookmark.initBookmarkTree(rst[0])
+        })
+    }, [])
+}
+//#region Type Statement
+export type Settings = SettingsType<typeof setup>
+type Ctx = CtxMSConn<EmptyObject, Module, State, Conn, Settings>
+//#endregion
+const Bookmark = (): JSX.Element => {
+    const { state, settings } = useConcent<EmptyObject, Ctx, NoMap>({ module: moduleName, setup, state: initState, connect })
 
-//   useEffect(() => {
-//     chrome.bookmarks.getTree((rst) => {
-//       const bookmarksTree = rst[0]?.children[0]?.children || []
+    return <div className={c['content']}>
+        <div className={c['title']}>
+            <div>History</div>
+            <div>
+            </div>
+        </div>
+        <div className={c['list-wrapper']}>
+            <FolderList folders={state.bookmarkTree?.folders}/>
+            <div className={c['bookmark-list']}></div>
+        </div>
 
-//       dispatch(bookmarkActionInit(bookmarksTree))
-//     })
-//   }, [])
+    </div>
+}
 
-//   const list = useMemo(
-//     () =>
-//       tree.map((node) => {
-//         return node.children ? (
-//           <Folder
-//             node={node}
-//             path={node.id}
-//             faviconStorage={faviconStorage}
-//             faviconUpdDispatch={faviconUpdDispatch}
-//           />
-//         ) : (
-//           <Label
-//             node={node}
-//             faviconStorage={faviconStorage}
-//             faviconUpdDispatch={faviconUpdDispatch}
-//           />
-//         )
-//       }),
-//     [tree, faviconStorage]
-//   )
-
-//   return (
-//     <div className='bookmark'>
-//       <div className='side-title'>BOOKMARK</div>
-//       <ul className='bookmark-list'>{list}</ul>
-//     </div>
-//   )
-// }
-
-// export default Bookmark
+export default Bookmark

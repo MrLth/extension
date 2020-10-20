@@ -1,0 +1,26 @@
+@import 'common/index';
+
+.content {
+	@extend %card;
+	width: auto;
+	display: flex;
+	flex-direction: column;
+
+	.list-wrapper {
+		display: flex;
+		.folder-list {
+			min-width: 150px;
+			height: 100%;
+	border-right: 1px #efefef solid;
+
+		}
+		.bookmark-list {
+			width: 300px;
+			height: 100%;
+		}
+	}
+}
+
+.title {
+	@extend %title;
+}

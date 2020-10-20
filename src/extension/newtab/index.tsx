@@ -15,6 +15,7 @@ import { useConcent } from 'concent'
 import '../runConcent'
 import Record from 'components/Record'
 import History from 'components/History'
+import Bookmark from 'components/Bookmark'
 
 const randomNum = (minNum: number, maxNum: number) =>
     Number(Math.random() * (maxNum - minNum + 1) + minNum)
@@ -233,8 +234,9 @@ function App() {
         //   <Bookmark />
         // </div>
         <>
+            <Bookmark />
             <History />
-            <Record />
+            {/* <Record /> */}
             <div className='popup-wrapper'>
                 <Tab />
             </div>
