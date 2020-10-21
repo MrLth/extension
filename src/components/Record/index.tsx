@@ -113,7 +113,7 @@ const Record = (): JSX.Element => {
 
     return <div className={c['content']}>
         <div className={c['title']}>
-            <div>Record</div>
+            <div>RECORD</div>
             <div>
                 <IconFont type='iconadd'></IconFont>
             </div>

@@ -8,15 +8,43 @@
 
 	.list-wrapper {
 		display: flex;
+		flex: 1;
+		height: 0;
 		.folder-list {
+			padding: 0.25rem 0;
 			min-width: 150px;
 			height: 100%;
-	border-right: 1px #efefef solid;
+			border-right: 1px #efefef solid;
+			overflow-y: auto;
 
+			.folder-name {
+				@extend %unit-tab;
+				padding-left: 0.875rem;
+				img {
+					margin-right: 0.75rem;
+				}
+			}
 		}
-		.bookmark-list {
-			width: 300px;
+		.bookmark-wrapper {
 			height: 100%;
+
+			overflow-y: auto;
+			.bookmark-list {
+				width: 300px;
+				position: relative;
+
+				.folder {
+					width: 100%;
+					.folder-title {
+						@extend %sub-title;
+					}
+				}
+
+				.label {
+					@extend %label;
+					width: 100%;
+				}
+			}
 		}
 	}
 }

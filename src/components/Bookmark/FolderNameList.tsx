@@ -1,6 +1,6 @@
 import { BookmarkTreeNode } from 'models/bookmark/state'
 import React from 'react'
-import Folder from './Folder'
+import FolderName from './FolderName'
 import c from './index.module.scss'
 
 
@@ -8,11 +8,11 @@ interface Props {
     folders: BookmarkTreeNode[]
 }
 const FolderList = ({ folders }: Props): JSX.Element => {
-    return <div className={c['folder-list']}>
+    return <ul className={c['folder-list']}>
         {
-            folders?.map(v => <Folder label={v} />)
+            folders?.map(v => <FolderName key={v.id} label={v} />)
         }
-    </div>
+    </ul>
 }
 
 export default FolderList

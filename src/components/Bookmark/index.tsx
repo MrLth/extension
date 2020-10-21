@@ -6,7 +6,8 @@ import c from './index.module.scss'
 import { CtxMSConn, ItemsType } from 'types/concent'
 import { EmptyObject } from 'api/type'
 import { NoMap, SettingsType, useConcent } from 'concent'
-import FolderList from './FolderList'
+import FolderNameList from './FolderNameList'
+import BookmarkList from './BookmarkList'
 
 const moduleName = 'bookmark'
 const connect = [] as const
@@ -21,12 +22,42 @@ type CtxPre = CtxMSConn<EmptyObject, Module, State, Conn>
 const setup = (ctx: CtxPre) => {
     const { effect, reducer } = ctx
 
+    const common = {
+        listHeight: 0
+    }
+    const dom = {
+        list: null as HTMLUListElement,
+        wrapper: null as HTMLDivElement
+    }
+
     // 初始化获取 bookmarkTree
     effect(() => {
         chrome.bookmarks.getSubTree('1', (rst) => {
-            reducer.bookmark.initBookmarkTree(rst[0])
+            reducer.bookmark.initBookmarkTree({ rootNode: rst[0], listHeight: common.listHeight })
         })
     }, [])
+
+    const settings = {
+        refList: {
+            set current(v: HTMLUListElement) {
+                dom.wrapper = v.parentElement as HTMLDivElement
+                common.listHeight = dom.wrapper.clientHeight
+                dom.list = v
+            },
+            get current() {
+                return dom.list
+            }
+        },
+        scrollCb(e: React.UIEvent<HTMLDivElement, UIEvent>){
+            e.stopPropagation()
+            const top = dom.wrapper.scrollTop
+            const bottom = top + common.listHeight
+            console.log('scrollCb')
+            reducer.bookmark.updIsRender({top, bottom})
+        }
+    }
+
+    return settings
 }
 //#region Type Statement
 export type Settings = SettingsType<typeof setup>
@@ -35,17 +66,17 @@ type Ctx = CtxMSConn<EmptyObject, Module, State, Conn, Settings>
 const Bookmark = (): JSX.Element => {
     const { state, settings } = useConcent<EmptyObject, Ctx, NoMap>({ module: moduleName, setup, state: initState, connect })
 
+    console.log('BookMark rendered')
     return <div className={c['content']}>
         <div className={c['title']}>
-            <div>History</div>
+            <div>BOOKMARK</div>
             <div>
             </div>
         </div>
         <div className={c['list-wrapper']}>
-            <FolderList folders={state.bookmarkTree?.folders}/>
-            <div className={c['bookmark-list']}></div>
+            <FolderNameList folders={state.bookmarkTree?.folders} />
+            <BookmarkList ref={settings.refList} rootNode={state.bookmarkTree} settings={settings} />
         </div>
-
     </div>
 }
 

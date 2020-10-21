@@ -248,7 +248,7 @@ const History = (): JSX.Element => {
     return (
         <div className={c['content']}>
             <div className={c['title']}>
-                <div>History</div>
+                <div>HISTORY</div>
                 <div>
                     <IconFont type='iconadd' onClick={settings.test}></IconFont>
                     <IconFont type='iconadd' onClick={settings.test1}></IconFont>
