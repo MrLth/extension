@@ -236,7 +236,7 @@ function App() {
         <>
             <Bookmark />
             <History />
-            {/* <Record /> */}
+            <Record />
             <div className='popup-wrapper'>
                 <Tab />
             </div>

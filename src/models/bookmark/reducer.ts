@@ -77,23 +77,27 @@ function updIsRender(
 	{ top, bottom }: UpdIsRenderPayload,
 	state: BookmarkState
 ) {
-	const folders = state.bookmarkTree.folders
+	const folders = state.bookmarkTree.folders,
+	foldersLen = folders.length
+
 	// init时至少会显示两个folder, 既然已经显示了就没有必要再执行了
 	if (folders.length < 3) return
-	let si = folders.findIndex((v) => v.top > top),
+	let si = folders.findIndex((v) => v.top >= top),
 		ei = 0,
 		isRefresh = false
 
-	for (let i = si, len = folders.length; i < len; i++) {
+	if (si === -1) return // 正常情况下，是不存在si===-1的
+
+	for (let i = si; i < foldersLen; i++) {
+		ei = i
 		if (folders[i].top > bottom) {
-			ei = i
 			break
 		}
 	}
 
 	// 更新需要显示的node的isRender
 	for (
-		let i = Math.max(si - 1, 0), len = Math.min(ei + 1, folders.length);
+		let i = Math.max(si - 1, 0), len = Math.min(ei + 1, foldersLen);
 		i < len;
 		i++
 	) {

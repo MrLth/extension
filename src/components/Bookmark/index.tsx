@@ -1,5 +1,7 @@
 import React from 'react'
 import IconFont from 'components/IconFont'
+import _ from 'lodash'
+
 //#region Import Style
 import c from './index.module.scss'
 //#endregion
@@ -8,6 +10,10 @@ import { EmptyObject } from 'api/type'
 import { NoMap, SettingsType, useConcent } from 'concent'
 import FolderNameList from './FolderNameList'
 import BookmarkList from './BookmarkList'
+import { BookmarkTreeNode } from 'models/bookmark/state'
+
+const CARD_TITLE_HEIGHT = 45
+const CARD_TITLE_OFFSET = 6
 
 const moduleName = 'bookmark'
 const connect = [] as const
@@ -48,13 +54,34 @@ const setup = (ctx: CtxPre) => {
                 return dom.list
             }
         },
-        scrollCb(e: React.UIEvent<HTMLDivElement, UIEvent>){
+        scrollCb(e: React.UIEvent<HTMLDivElement, UIEvent>) {
             e.stopPropagation()
             const top = dom.wrapper.scrollTop
             const bottom = top + common.listHeight
             console.log('scrollCb')
-            reducer.bookmark.updIsRender({top, bottom})
-        }
+            reducer.bookmark.updIsRender({ top, bottom })
+        },
+        scrollToShow(e: React.MouseEvent<HTMLLIElement, MouseEvent>, node: BookmarkTreeNode) {
+            e.stopPropagation()
+
+            const li = e.target as HTMLLIElement
+
+            const getFolder = (node: BookmarkTreeNode): BookmarkTreeNode =>
+                'top' in node
+                    ? node
+                    : 'parent' in node
+                        ? getFolder(node.parent)
+                        : null
+
+            const folder = getFolder(node)
+            if (folder === null) return
+
+
+            dom.wrapper.scrollTo({
+                top: folder.top - li.getBoundingClientRect().top + CARD_TITLE_HEIGHT + 32,
+            })
+        },
+        openTab: reducer.$$global.openTab
     }
 
     return settings
@@ -74,7 +101,7 @@ const Bookmark = (): JSX.Element => {
             </div>
         </div>
         <div className={c['list-wrapper']}>
-            <FolderNameList folders={state.bookmarkTree?.folders} />
+            <FolderNameList folders={state.bookmarkTree?.folders} settings={settings} />
             <BookmarkList ref={settings.refList} rootNode={state.bookmarkTree} settings={settings} />
         </div>
     </div>

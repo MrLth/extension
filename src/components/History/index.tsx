@@ -169,28 +169,7 @@ const setup = (ctx: CtxPre) => {
     })
 
     const settings = {
-        openLabel: (url: string) => {
-            let tabInfo: {
-                id: number,
-                windowId: number
-            } = null
-            // 如果标签已经打开，则只需跳转，否则新建标签页打开
-            outerFor: for (const tabs of Object.values(tab.windowsObj)) {
-                for (const tab of tabs) {
-                    if (tab.url === url) {
-                        tabInfo = { id: tab.id, windowId: tab.windowId }
-                        break outerFor
-                    }
-                }
-            }
-            if (tabInfo !== null) {
-                chrome.tabs.update(tabInfo.id, { active: true })
-                chrome.windows.update(tabInfo.windowId, { focused: true })
-            } else {
-                window.open(url)
-            }
-
-        },
+        openLabel: reducer.$$global.openTab,
         refList: {
             set current(v: HTMLUListElement) {
                 common.listHeight = v.clientHeight
@@ -250,18 +229,22 @@ const History = (): JSX.Element => {
             <div className={c['title']}>
                 <div>HISTORY</div>
                 <div>
-                    <IconFont type='iconadd' onClick={settings.test}></IconFont>
-                    <IconFont type='iconadd' onClick={settings.test1}></IconFont>
+                    {/* <IconFont type='iconadd' onClick={settings.test}></IconFont> */}
+                    {/* <IconFont type='iconadd' onClick={settings.test1}></IconFont> */}
                 </div>
             </div>
-            <ul className={c['list']} ref={settings.refList} onScroll={settings.scrollCb} style={{ position: 'relative' }}>
+            <ul
+                ref={settings.refList}
+                className={c['list']}
+                style={{ position: 'relative' }}
+                onScroll={settings.scrollCb}
+            >
                 {
                     state.historySectionList.map(section =>
                         <Section key={section.index} endTime={section.endTime} top={section.top} status={section.status} section={section} settings={settings} />
                     )
                 }
             </ul>
-
         </div>
     )
 }

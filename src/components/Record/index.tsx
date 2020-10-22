@@ -76,28 +76,7 @@ const setup = (ctx: CtxPre) => {
     const settings = {
         closeLabel: reducer.record.closeLabel,
         closeRecord: reducer.record.closeRecord,
-        openLabel: (url: string) => {
-            let tabInfo: {
-                id: number,
-                windowId: number
-            } = null
-            // 如果标签已经打开，则只需跳转，否则新建标签页打开
-            outerFor: for (const tabs of Object.values(tab.windowsObj)) {
-                for (const tab of tabs) {
-                    if (tab.url === url) {
-                        tabInfo = { id: tab.id, windowId: tab.windowId }
-                        break outerFor
-                    }
-                }
-            }
-            if (tabInfo !== null) {
-                chrome.tabs.update(tabInfo.id, { active: true })
-                chrome.windows.update(tabInfo.windowId, { focused: true })
-            } else {
-                window.open(url)
-            }
-
-        },
+        openLabel: reducer.$$global.openTab,
         timeUpdQueue: [] as TimeUpdItem[],
         timeAgo
     }
@@ -115,7 +94,7 @@ const Record = (): JSX.Element => {
         <div className={c['title']}>
             <div>RECORD</div>
             <div>
-                <IconFont type='iconadd'></IconFont>
+                {/* <IconFont type='iconadd'></IconFont> */}
             </div>
         </div>
         <div className={c['list']}>

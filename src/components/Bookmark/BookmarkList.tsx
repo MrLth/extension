@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { forwardRef } from 'react'
 import { BookmarkTreeNode } from 'models/bookmark/state'
 import c from './index.module.scss'
 import Folder from './Folder'
@@ -38,11 +38,11 @@ const BookmarkList = ({ rootNode, settings }: Props, ref: React.Ref<HTMLUListEle
         >
             {
                 rootNode?.children.map(v => 'children' in v
-                    ? v.isRender ? <Folder key={v.id} node={v} /> : null
-                    : <Label key={v.id} node={v} />)
+                    ? v.isRender ? <Folder key={v.id} node={v} settings={settings}/> : null
+                    : <Label key={v.id} node={v} settings={settings}/>)
             }
         </ul>
     </div>
 }
 
-export default React.forwardRef(BookmarkList)
+export default forwardRef(BookmarkList)

@@ -2,12 +2,18 @@ import { BookmarkTreeNode } from 'models/bookmark/state'
 import React from 'react'
 import c from './index.module.scss'
 import defaultIcon from '@img/defaultIcon.svg'
+import { Settings } from '.'
 
 interface Props {
     node: BookmarkTreeNode
+    settings: Settings
 }
-const Label = ({ node }: Props): JSX.Element => {
-    return <li className={c['label']} style={node.top ?{ position: 'absolute', top: node.top }:{}}>
+const Label = ({ node,settings }: Props): JSX.Element => {
+    return <li 
+    className={c['label']} 
+    style={node.top ?{ position: 'absolute', top: node.top }:{}}
+    onClick={()=>settings.openTab(node.url)}
+    >
         <div className={c['unit-tab']}>
             <img
                 src={
