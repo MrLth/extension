@@ -27,7 +27,7 @@ const FolderName = ({ node, settings }: Props): JSX.Element => {
                 {node.title}
             </li>
             {
-                node.folders.map(v => <FolderName node={v} settings={settings} />)
+                node.folders.map(v => <FolderName key={v.id} node={v} settings={settings} />)
             }
         </>
         : <li

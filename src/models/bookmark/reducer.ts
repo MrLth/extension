@@ -2,7 +2,7 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2020-10-13 17:35:56
- * @LastEditTime: 2020-10-18 14:33:59
+ * @LastEditTime: 2020-10-24 11:44:08
  * @Description: file content
  */
 import state, { BookmarkTreeNode } from './state'
@@ -15,46 +15,52 @@ interface InitPayload {
 	rootNode: BookmarkTreeNode
 	listHeight: number
 }
-function initBookmarkTree(
-	{ rootNode, listHeight }: InitPayload,
-	state: BookmarkState
-): Partial<BookmarkState> {
+function initBookmarkTree({
+	rootNode,
+	listHeight,
+}: InitPayload): // state: BookmarkState
+Partial<BookmarkState> {
 	if (rootNode === undefined) return
 
 	const setNodeProps = (node: BookmarkTreeNode, depth: number): number => {
 		let height = 0
+		node.depth = depth
 		if ('children' in node) {
 			height += FOLDER_TITLE_HEIGHT
 			node.folders = []
-			node.depth = depth
 			for (const child of node.children) {
 				if ('children' in child) {
 					node.folders.push(child)
 					child.parent = node
-					height += setNodeProps(child, depth + 1)
-				} else {
-					height += LABEL_HEIGHT
 				}
+				height += setNodeProps(child, depth + 1)
 			}
-			node.height = height
-			return height
+		}else{
+			height = LABEL_HEIGHT
 		}
 
-		return LABEL_HEIGHT // 正常情况下，永远也不会被执行
+		node.height = height
+		return height
 	}
 
-	const setNodeTop = (children: BookmarkTreeNode[]): void => {
-		if (children.length === 0) return
-		children[0].top = 0
-		for (let i = 1, len = children.length; i < len; i++) {
-			children[i].top = children[i - 1].top + children[i - 1].height
-			if ('children' in children[i] === false) {
-				children[i].height = LABEL_HEIGHT
+	const setChildrenTop = (children: BookmarkTreeNode[], top: number): void => {
+		for (let i = 0, len = children.length; i < len; i++) {
+			const child = children[i]
+			const childTop = i === 0 ? top : children[i - 1].top + children[i - 1].height
+
+			child.top = childTop
+
+			if ('children' in child === false) {
+				continue
+			}
+
+			if (child.folders.length !== 0) {
+				setChildrenTop(child.children, childTop + FOLDER_TITLE_HEIGHT)
 			}
 		}
 	}
 
-	const initIsRender = (children: BookmarkTreeNode[], listHeight: number) => {
+	const initRenderSate = (children: BookmarkTreeNode[], listHeight: number) => {
 		for (const node of children) {
 			node.isRender = true
 			if (node.top > listHeight) break
@@ -62,8 +68,8 @@ function initBookmarkTree(
 	}
 
 	setNodeProps(rootNode, 0)
-	setNodeTop(rootNode.children)
-	initIsRender(rootNode.children, listHeight)
+	setChildrenTop(rootNode.children, 0)
+	initRenderSate(rootNode.children, listHeight)
 	// bookmarkTree也是一个文件夹节点，但我们不需要它显示标题
 	rootNode.height -= FOLDER_TITLE_HEIGHT
 	return { bookmarkTree: rootNode }
@@ -76,14 +82,14 @@ interface UpdIsRenderPayload {
 function updIsRender(
 	{ top, bottom }: UpdIsRenderPayload,
 	state: BookmarkState
-) {
+): Partial<BookmarkState> {
 	const folders = state.bookmarkTree.folders,
-	foldersLen = folders.length
+		foldersLen = folders.length
 
 	// init时至少会显示两个folder, 既然已经显示了就没有必要再执行了
 	if (folders.length < 3) return
-	let si = folders.findIndex((v) => v.top >= top),
-		ei = 0,
+	const si = folders.findIndex((v) => v.top >= top)
+	let ei = 0,
 		isRefresh = false
 
 	if (si === -1) return // 正常情况下，是不存在si===-1的

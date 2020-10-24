@@ -8,11 +8,11 @@ interface Props {
     node: BookmarkTreeNode
     settings: Settings
 }
-const Label = ({ node,settings }: Props): JSX.Element => {
-    return <li 
-    className={c['label']} 
-    style={node.top ?{ position: 'absolute', top: node.top }:{}}
-    onClick={()=>settings.openTab(node.url)}
+const Label = ({ node, settings }: Props): JSX.Element => {
+    return <li
+        className={c['label']}
+        style={node.depth === 1 ? { position: 'absolute', top: node.top } : {}}
+        onClick={() => settings.openTab(node.url)}
     >
         <div className={c['unit-tab']}>
             <img
