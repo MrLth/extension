@@ -5,7 +5,7 @@ import { Fn } from './type'
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2020-05-29 17:30:01
- * @LastEditTime: 2020-10-19 09:09:45
+ * @LastEditTime: 2020-11-17 14:02:19
  * @Description: 整个项目会用到的方法和api
  */
 
@@ -183,8 +183,27 @@ export const saveToLocal = (
 	//#endregion
 }
 
-export const sortByKey = <T>(key:keyof T, desc = false) => (a:T, b:T):number => {
-    if (a[key] < b[key]) { return desc ? 1 : -1 }
-    if (a[key] > b[key]) { return desc ? -1 : 1 }
-    return 0
+export const sortByKey = <T>(key: keyof T, desc = false) => (
+	a: T,
+	b: T
+): number => {
+	if (a[key] < b[key]) {
+		return desc ? 1 : -1
+	}
+	if (a[key] > b[key]) {
+		return desc ? -1 : 1
+	}
+	return 0
+}
+
+export const queryStrToObj = (str: string): Record<string, string> => {
+	if (typeof str !== 'string') return
+	const search = str.indexOf('?') !== -1 ? str.split('?')[1] : str
+
+	if (!search) return
+	return search.split('&').reduce((sum, cur) => {
+		const [k, v] = cur.split('=')
+		if (k) sum[k] = v
+		return sum
+	}, {} as Record<string, string>)
 }
