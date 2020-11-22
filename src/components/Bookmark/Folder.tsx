@@ -5,7 +5,7 @@ import c from './index.module.scss'
 import Label from './Label'
 
 const assembleTitle = (node: BookmarkTreeNode): string => {
-    return node.depth > 1 ? assembleTitle(node.parent) + ' / ' + node.title : node.title
+    return node.depth > 1 ? node.title + ' < ' + assembleTitle(node.parent) : node.title
 }
 
 interface Props {

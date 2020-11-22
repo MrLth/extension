@@ -1,6 +1,4 @@
 import React from 'react'
-import IconFont from 'components/IconFont'
-import _ from 'lodash'
 
 //#region Import Style
 import c from './index.module.scss'
@@ -13,7 +11,6 @@ import BookmarkList from './BookmarkList'
 import { BookmarkTreeNode } from 'models/bookmark/state'
 
 const CARD_TITLE_HEIGHT = 45
-const CARD_TITLE_OFFSET = 6
 
 const moduleName = 'bookmark'
 const connect = [] as const
