@@ -1,13 +1,9 @@
-* {
-	font-family: PingFangSC-Regular, PingFang SC;
-}
-
 %card {
+	flex: 4 0 300px;
 	width: 300px;
-	// min-width: 300px;
 	height: 100vh;
-	box-shadow: 12px 0px 48px 0px rgba(0, 0, 0, 0.3);
 	background: rgba(250, 250, 250, 1);
+
 	.focused {
 		%sub-title {
 			color: #595959;
@@ -15,7 +11,7 @@
 	}
 }
 
-%btn-close{
+%btn-close {
 	opacity: 0;
 	position: absolute;
 	right: 0;
@@ -27,7 +23,7 @@
 	background: linear-gradient(to right, transparent, #fafafa);
 }
 
-%unit-tab{
+%unit-tab {
 	height: 2rem;
 	line-height: 2rem;
 	padding-left: 1rem;
@@ -35,6 +31,7 @@
 	white-space: nowrap;
 	text-overflow: ellipsis;
 	cursor: default;
+
 	img {
 		height: 1.125rem;
 		width: 1.125rem;
@@ -45,9 +42,11 @@
 
 %label {
 	position: relative;
+
 	.unit-tab {
 		@extend %unit-tab;
 	}
+
 	.btn-close {
 		@extend %btn-close;
 	}
@@ -63,7 +62,7 @@
 	line-height: 2.25rem;
 	margin-left: 1rem;
 	font-size: 0.875rem;
-	color: #8c8c8c;
+	color: #595959;
 }
 
 %title {
@@ -76,18 +75,22 @@
 	font-size: 0.875rem;
 	font-family: PingFangSC-Regular, PingFang SC;
 	background-color: #fff;
+
 	div:first-child {
 		padding-left: 1.5625rem;
 	}
+
 	div:last-child {
 		padding-right: 1rem;
 
 		font-size: 1.125rem;
+
 		svg {
 			cursor: pointer;
 			margin-left: 0.5rem;
 			color: #8c8c8c;
 			transition: color 0.25s ease-in-out;
+
 			&:hover {
 				color: #000;
 			}

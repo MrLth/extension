@@ -6,7 +6,7 @@ import Label from './Label'
 import { Settings } from '.'
 import { EmptyObject } from 'api/type'
 import { CtxDeS } from 'types/concent'
-import { NoMap, SettingsType, useConcent } from 'concent'
+import { SettingsType } from 'concent'
 
 const initState = () => ({
 })
@@ -14,8 +14,8 @@ const initState = () => ({
 type State = ReturnType<typeof initState>
 type CtxPre = CtxDeS<EmptyObject, State>
 //#endregion
-const setup = (ctx: CtxPre) => {
-
+const setup = () => {
+    console.log('default')
 }
 //#region Type Statement
 export type MySettings = SettingsType<typeof setup>
@@ -38,8 +38,8 @@ const BookmarkList = ({ rootNode, settings }: Props, ref: React.Ref<HTMLUListEle
         >
             {
                 rootNode?.children.map(v => 'children' in v
-                    ? v.isRender ? <Folder key={v.id} node={v} settings={settings}/> : null
-                    : <Label key={v.id} node={v} settings={settings}/>)
+                    ? v.isRender ? <Folder key={v.id} node={v} settings={settings} /> : null
+                    : <Label key={v.id} node={v} settings={settings} />)
             }
         </ul>
     </div>

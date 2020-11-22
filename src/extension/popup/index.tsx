@@ -1,13 +1,15 @@
-import * as React from 'react'
-import * as ReactDOM from 'react-dom'
-
-import Tab from 'components/Tab'
-import '../runConcent'
-import 'src/index.css'
+import React, { useEffect } from 'react'
+import ReactDOM from 'react-dom'
 import { useConcent } from 'concent'
-import { useEffect } from 'react'
 import { deboundFixed } from 'api'
 
+import 'normalize.css/normalize.css'
+import 'src/index.scss'
+
+import '../runConcent'
+
+
+import Tab from 'components/Tab'
 
 const App = () => {
     const { setState } = useConcent('$$global')

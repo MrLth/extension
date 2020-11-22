@@ -9,7 +9,7 @@ import c from './index.module.scss'
 import { moduleClassnames } from 'api'
 const cn = moduleClassnames.bind(null, c)
 //#endregion
-const SUB_NODE_PADDING_UNIT = 14
+const SUB_NODE_PADDING_UNIT = 16
 
 interface Props {
     node: BookmarkTreeNode

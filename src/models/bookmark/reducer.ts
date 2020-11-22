@@ -2,14 +2,14 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2020-10-13 17:35:56
- * @LastEditTime: 2020-10-24 11:44:08
+ * @LastEditTime: 2020-11-22 21:04:58
  * @Description: file content
  */
 import state, { BookmarkTreeNode } from './state'
 export type BookmarkState = typeof state
 
 const LABEL_HEIGHT = 32
-const FOLDER_TITLE_HEIGHT = 36
+const FOLDER_TITLE_HEIGHT = 40
 
 interface InitPayload {
 	rootNode: BookmarkTreeNode

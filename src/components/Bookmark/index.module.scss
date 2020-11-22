@@ -2,7 +2,9 @@
 
 .content {
 	@extend %card;
-	width: auto;
+	flex: 5 0 434px;
+	width: 434px;
+
 	display: flex;
 	flex-direction: column;
 
@@ -11,7 +13,7 @@
 		flex: 1;
 		height: 0;
 		.folder-list {
-			padding: 0.25rem 0;
+			padding: 0.25rem 0.5rem;
 			// min-width: 150px;
 			height: 100%;
 			border-right: 1px #efefef solid;
@@ -19,7 +21,7 @@
 
 			.folder-name {
 				@extend %unit-tab;
-				padding: 0 0.875rem;
+				padding-right: 1.5rem;
 
 				img {
 					margin-right: 0.75rem;
@@ -37,9 +39,11 @@
 		.bookmark-wrapper {
 			height: 100%;
 
-			overflow-y: auto;
+				flex: 1;
+				overflow-y: auto;
 			.bookmark-list {
-				width: 300px;
+				// width: 300px;
+				// width: 100%
 				position: relative;
 
 				.folder {

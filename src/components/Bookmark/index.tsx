@@ -78,7 +78,7 @@ const setup = (ctx: CtxPre) => {
 
 
             dom.wrapper.scrollTo({
-                top: folder.top - li.getBoundingClientRect().top + CARD_TITLE_HEIGHT + 32,
+                top: folder.top - li.getBoundingClientRect().top + CARD_TITLE_HEIGHT + 40,
             })
         },
         openTab: reducer.$$global.openTab
