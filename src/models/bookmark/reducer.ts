@@ -2,14 +2,12 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2020-10-13 17:35:56
- * @LastEditTime: 2020-11-22 21:04:58
+ * @LastEditTime: 2020-11-23 11:29:07
  * @Description: file content
  */
 import state, { BookmarkTreeNode } from './state'
+import { LABEL_HEIGHT, FOLDER_TITLE_HEIGHT } from 'common/const'
 export type BookmarkState = typeof state
-
-const LABEL_HEIGHT = 32
-const FOLDER_TITLE_HEIGHT = 40
 
 interface InitPayload {
 	rootNode: BookmarkTreeNode
@@ -35,7 +33,7 @@ Partial<BookmarkState> {
 				}
 				height += setNodeProps(child, depth + 1)
 			}
-		}else{
+		} else {
 			height = LABEL_HEIGHT
 		}
 

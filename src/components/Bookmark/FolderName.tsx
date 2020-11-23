@@ -9,7 +9,8 @@ import c from './index.module.scss'
 import { moduleClassnames } from 'api'
 const cn = moduleClassnames.bind(null, c)
 //#endregion
-const SUB_NODE_PADDING_UNIT = 16
+
+import { SUB_NODE_PADDING_UNIT } from 'common/const'
 
 interface Props {
     node: BookmarkTreeNode
@@ -32,7 +33,7 @@ const FolderName = ({ node, settings }: Props): JSX.Element => {
         </>
         : <li
             className={c['folder-name']}
-            style={{ paddingLeft: node.depth  * SUB_NODE_PADDING_UNIT }}
+            style={{ paddingLeft: node.depth * SUB_NODE_PADDING_UNIT }}
             onMouseEnter={(e) => settings.scrollToShow(e, node)}
         >
             <img src={folderSvg} />

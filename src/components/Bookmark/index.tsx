@@ -10,7 +10,7 @@ import FolderNameList from './FolderNameList'
 import BookmarkList from './BookmarkList'
 import { BookmarkTreeNode } from 'models/bookmark/state'
 
-const CARD_TITLE_HEIGHT = 45
+import {CARD_TITLE_HEIGHT, FOLDER_TITLE_HEIGHT} from 'common/const'
 
 const moduleName = 'bookmark'
 const connect = [] as const
@@ -75,7 +75,7 @@ const setup = (ctx: CtxPre) => {
 
 
             dom.wrapper.scrollTo({
-                top: folder.top - li.getBoundingClientRect().top + CARD_TITLE_HEIGHT + 40,
+                top: folder.top - li.getBoundingClientRect().top + CARD_TITLE_HEIGHT + FOLDER_TITLE_HEIGHT,
             })
         },
         openTab: reducer.$$global.openTab
