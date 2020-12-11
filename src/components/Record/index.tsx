@@ -96,7 +96,7 @@ const setup = (ctx: CtxPre) => {
             })
             // console.log(JSON.stringify(ctx.state.recording.map(v => ({ ...v, recordTime: +v.recordTime }))))
 
-            fetch('http://localhost:3333/check', {
+            fetch('http://47.93.37.191:3333/check', {
                 method: 'post',
                 headers: {
                     'content-type': 'application/json'
@@ -110,7 +110,7 @@ const setup = (ctx: CtxPre) => {
                         const updList = ctx.state.recording.filter(r => v.upload.includes(+r.recordTime)).map(r => ({ ...r, recordTime: +r.recordTime }))
                         console.log('updList', updList)
 
-                        fetch('http://localhost:3333/update', {
+                        fetch('http://47.93.37.191:3333/update', {
                             method: 'post',
                             headers: {
                                 'content-type': 'application/json'
