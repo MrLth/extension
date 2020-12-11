@@ -93,9 +93,10 @@ const setup = (ctx: CtxPre) => {
 
         const onCreatedListener = (tab: chrome.tabs.Tab) => {
             if (common.isEventSleep) return
-            if (tab.url === ''){
+            if (tab.url === '') {
                 console.log('tab.url empty')
-                return}
+                return
+            }
             handleTabs.queue.push((windows) => {
                 return ht.addTab(windows, tab.windowId, ht.splitUrl(tab), tab.index)
             })
@@ -515,17 +516,19 @@ const TabComponent = (): JSX.Element => {
                         <IconFont type='iconadd' onClick={settings.createWindow}></IconFont>
                     </div>
                 </div>
-                {Object.keys(renderWindows).map((key: keyof typeof renderWindows) => {
-                    return (
-                        <Window
-                            key={key}
-                            tabs={renderWindows[key]}
-                            windowId={key}
-                            attachInfo={state.windowsAttach[key]}
-                            settings={settings}
-                        />
-                    )
-                })}
+                <div className={c['list']}>
+                    {Object.keys(renderWindows).map((key: keyof typeof renderWindows) => {
+                        return (
+                            <Window
+                                key={key}
+                                tabs={renderWindows[key]}
+                                windowId={key}
+                                attachInfo={state.windowsAttach[key]}
+                                settings={settings}
+                            />
+                        )
+                    })}
+                </div>
             </div>
             <PopupFrame {...state.popupFrameProps} />
         </>

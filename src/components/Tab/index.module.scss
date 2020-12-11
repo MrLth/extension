@@ -7,6 +7,8 @@
 .content {
 	@extend %card;
 	border-left: 1px #efefef solid;
+	display: flex;
+	flex-direction: column;
 
 	.window-title {
 		@extend %sub-title;
@@ -14,6 +16,11 @@
 
 	.label {
 		@extend %label;
+	}
+
+	.list{
+		flex: 1;
+		overflow: auto;
 	}
 
 	.label {
