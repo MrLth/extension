@@ -5,7 +5,7 @@ import { Fn } from './type'
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2020-05-29 17:30:01
- * @LastEditTime: 2020-11-17 14:02:19
+ * @LastEditTime: 2020-12-11 15:16:14
  * @Description: 整个项目会用到的方法和api
  */
 
@@ -43,7 +43,7 @@ export function debound(
 	return function (...args: unknown[]): void {
 		clearTimeout(timer)
 
-		timer = setTimeout(() => {
+		timer = window.setTimeout(() => {
 			fn.apply(this, args)
 		}, delay)
 	}
@@ -67,7 +67,7 @@ export function deboundFixed(
 		if (nowTime - lastHandleTime > maxDelay) {
 			cb()
 		} else {
-			timer = setTimeout(cb, delay)
+			timer = window.setTimeout(cb, delay)
 		}
 	}
 }

@@ -147,7 +147,7 @@ const setup = (ctx: CtxPre) => {
     effect(() => {
         let timerId: number
         const updTimeFormatted = () => {
-            timerId = setTimeout(() => {
+            timerId = window.setTimeout(() => {
                 updTimeFormatted()
                 // console.log('time upd')
                 for (const [k, v] of settings.timeUpdMap) {

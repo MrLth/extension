@@ -2,7 +2,7 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2020-09-01 21:26:41
- * @LastEditTime: 2020-10-06 16:52:28
+ * @LastEditTime: 2020-12-11 15:27:02
  * @Description: file content
  */
 export interface RecordUrl {

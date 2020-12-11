@@ -8,6 +8,8 @@ import { CtxMSConn, ItemsType } from 'types/concent';
 import c from './index.module.scss'
 import IconFont from 'components/IconFont'
 import RecordList from './RecordList';
+import md5 from 'md5'
+import { cloneDeep } from 'lodash'
 //#endregion
 //#region Time Ago Init
 import TimeAgo from 'javascript-time-ago'
@@ -57,7 +59,7 @@ const setup = (ctx: CtxPre) => {
     effect(() => {
         let timerId: number
         const updRecordTimeFormatted = () => {
-            timerId = setTimeout(() => {
+            timerId = window.setTimeout(() => {
                 updRecordTimeFormatted()
                 for (const v of settings.timeUpdQueue) {
                     const timeFormatted = timeAgo.format(v.recordTime)
@@ -78,7 +80,20 @@ const setup = (ctx: CtxPre) => {
         closeRecord: reducer.record.closeRecord,
         openLabel: reducer.$$global.openTab,
         timeUpdQueue: [] as TimeUpdItem[],
-        timeAgo
+        timeAgo,
+        c() {
+            const recording = ctx.state.recording.map(v => ({ urls: md5(JSON.stringify(v.urls)), recordTime: +v.recordTime }))
+
+            const data = new FormData();
+            data.append("json", JSON.stringify(recording));
+            fetch('http://localhost:3333/check', {
+                method: 'post',
+                body: data,
+            }).then(v => v.json()).then(v => {
+                console.log('fetch', v)
+            })
+            console.log(recording)
+        }
     }
 
     return settings
@@ -94,7 +109,7 @@ const Record = (): JSX.Element => {
         <div className={c['title']}>
             <div>RECORD</div>
             <div>
-                {/* <IconFont type='iconadd'></IconFont> */}
+                <IconFont type='iconadd' onClick={settings.c}></IconFont>
             </div>
         </div>
         <div className={c['list']}>
