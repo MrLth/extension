@@ -2,7 +2,7 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2020-10-12 08:17:18
- * @LastEditTime: 2020-10-13 17:38:18
+ * @LastEditTime: 2020-12-11 21:37:07
  * @Description: file content
  */
 import { deboundFixed, readFromLocal, saveToLocal } from 'api'
@@ -43,6 +43,7 @@ function closeLabel(
 	if (recording[recordingIndex].urls.length > 1) {
 		recording[recordingIndex] = { ...recording[recordingIndex] }
 		recording[recordingIndex].urls.splice(labelIndex, 1)
+		recording[recordingIndex].lastEditTime = new Date()
 		// 保存至本地
 		isSaved = false
 		saveDelay(state)
@@ -58,7 +59,9 @@ const saveDelay = deboundFixed((state: RecordState) => {
 }, 5000)
 
 async function init(): Promise<{ recording: Recording[] }> {
-	const local = await readFromLocal<RecordState>(LOCAL_KEY, { format: JSON.parse })
+	const local = await readFromLocal<RecordState>(LOCAL_KEY, {
+		format: JSON.parse,
+	})
 	return local !== null ? local : { recording: [] }
 }
 
@@ -72,4 +75,25 @@ function addRecord(newRecording: Recording, state: RecordState): RecordState {
 	return { recording: state.recording }
 }
 
-export default { init, addRecord, save, closeLabel, closeRecord }
+function updRecord(newList: Recording[], state: RecordState): RecordState {
+	for (const item of newList) {
+		const record = {
+			...item,
+			recordTime: new Date(item.recordTime),
+			lastEditTime: new Date(item.lastEditTime),
+		}
+		const i = state.recording.findIndex((v) => v.recordTime === record.recordTime)
+		if (i === -1) {
+			state.recording.unshift(record)
+		} else {
+			state.recording.splice(i, 1, record)
+		}
+	}
+	// 保存至本地
+	isSaved = false
+	saveDelay(state)
+	// 返回新状态
+	return { recording: state.recording }
+}
+
+export default { init, addRecord, save, closeLabel, closeRecord, updRecord }

@@ -14,6 +14,7 @@ import { cloneDeep } from 'lodash'
 //#region Time Ago Init
 import TimeAgo from 'javascript-time-ago'
 import zh from 'javascript-time-ago/locale/zh'
+import { Recording } from 'models/record/state';
 TimeAgo.addLocale(zh)
 const timeAgo = new TimeAgo('zh')
 //#endregion
@@ -82,18 +83,51 @@ const setup = (ctx: CtxPre) => {
         timeUpdQueue: [] as TimeUpdItem[],
         timeAgo,
         c() {
-            const recording = ctx.state.recording.map(v => ({ urls: md5(JSON.stringify(v.urls)), recordTime: +v.recordTime }))
+            const recording = ctx.state.recording.map(v => {
+                const obj: {
+                    urls: string
+                    recordTime: number
+                    lastEditTime?: number
+                } = { urls: md5(JSON.stringify(v.urls)), recordTime: +v.recordTime }
+                if (v.lastEditTime) {
+                    obj.lastEditTime = +v.lastEditTime
+                }
+                return obj
+            })
+            // console.log(JSON.stringify(ctx.state.recording.map(v => ({ ...v, recordTime: +v.recordTime }))))
 
-            const data = new FormData();
-            data.append("json", JSON.stringify(recording));
             fetch('http://localhost:3333/check', {
                 method: 'post',
-                body: data,
+                headers: {
+                    'content-type': 'application/json'
+                },
+                body: JSON.stringify({ recording }),
             }).then(v => v.json()).then(v => {
+
+                if (v.isSuccess) {
+                    console.log('v', v)
+                    if (v.upload.length > 0) {
+                        const updList = ctx.state.recording.filter(r => v.upload.includes(+r.recordTime)).map(r => ({ ...r, recordTime: +r.recordTime }))
+                        console.log('updList', updList)
+
+                        fetch('http://localhost:3333/update', {
+                            method: 'post',
+                            headers: {
+                                'content-type': 'application/json'
+                            },
+                            body: JSON.stringify({ updList }),
+                        }).then(v => v.json()).then(v => {
+                            console.log('update,', v)
+                        })
+                    }
+
+                    reducer.record.updRecord(v.download)
+                }
                 console.log('fetch', v)
             })
             console.log(recording)
         }
+
     }
 
     return settings
@@ -109,7 +143,7 @@ const Record = (): JSX.Element => {
         <div className={c['title']}>
             <div>RECORD</div>
             <div>
-                <IconFont type='iconadd' onClick={settings.c}></IconFont>
+                <IconFont type='iconshuaxin' onClick={settings.c}></IconFont>
             </div>
         </div>
         <div className={c['list']}>
