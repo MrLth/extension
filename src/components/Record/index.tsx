@@ -1,8 +1,8 @@
 import React from 'react'
 import { NoMap, SettingsType, useConcent } from 'concent'
 //#region Type Import
-import { EmptyObject } from 'api/type'
-import { CtxMSConn, ItemsType } from 'types/concent';
+import { EmptyObject } from 'utils/type'
+import { CtxMSConn, ItemsType } from 'utils/concent';
 //#endregion
 //#region Import Style
 import c from './index.module.scss'

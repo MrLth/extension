@@ -1,12 +1,12 @@
 import * as React from 'react'
 import { memo } from 'react'
 
-import { Tab } from 'api/type'
+import { Tab } from 'utils/type'
 import Label from './Label'
 
 //#region 样式绑定
 import c from './index.module.scss'
-import { moduleClassnames } from 'api'
+import { moduleClassnames } from 'utils'
 const cn = moduleClassnames.bind(null, c)
 //#endregion
 

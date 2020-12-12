@@ -1,11 +1,11 @@
+{
 /*
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2020-10-11 11:33:30
- * @LastEditTime: 2020-10-11 13:44:03
+ * @LastEditTime: 2020-12-12 10:15:35
  * @Description: file content
  */
-{
     "compilerOptions": {
         "outDir": "./dist/",
         "sourceMap": true,

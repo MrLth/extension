@@ -2,7 +2,7 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2020-05-27 15:30:26
- * @LastEditTime: 2020-10-11 16:42:50
+ * @LastEditTime: 2020-12-12 10:36:18
  * @Description: file content
  */
 
@@ -15,8 +15,8 @@ module.exports = {
     // mode: "production",
     mode: "development",
     entry: {
-        newtab: './src/extension/newtab/index.tsx',
-        popup: './src/extension/popup/index.tsx',
+        newtab: './src/pages/newtab/index.tsx',
+        popup: './src/pages/popup/index.tsx',
         // content: './src/extension/newtab/content.ts',
         // background: './src/extension/newtab/background.ts'
     },
@@ -35,7 +35,7 @@ module.exports = {
             "@img": path.resolve("public/img"),
             'public': path.resolve("public"),
             'components': path.resolve("src/components"),
-            'api': path.resolve("src/api"),
+            'utils': path.resolve("src/utils"),
             'hooks': path.resolve("src/hooks"),
             'models': path.resolve("src/models"),
             'common': path.resolve("src/common"),
@@ -103,12 +103,16 @@ module.exports = {
             template: './template/newtab.html'
         }),
         new CopyWebpackPlugin({
-            patterns: [{ from: './src/manifest.json' }]
+            patterns: [
+                { from: './src/manifest.json' },
+                { from: './public/asset/react-dom.production.min.js' },
+                { from: './public/asset/react.production.min.js' }
+            ]
         }),
         // new CleanWebpackPlugin()
     ],
-    // externals: {
-    //     react: "React",
-    //     "react-dom": "ReactDOM"
-    // }
+    externals: {
+        react: "React",
+        "react-dom": "ReactDOM"
+    }
 };

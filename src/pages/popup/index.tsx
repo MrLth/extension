@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 import ReactDOM from 'react-dom'
 import { useConcent } from 'concent'
-import { deboundFixed } from 'api'
+import { deboundFixed } from 'utils'
 
 import 'normalize.css/normalize.css'
 import 'src/index.scss'

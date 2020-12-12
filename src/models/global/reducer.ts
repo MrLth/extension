@@ -1,6 +1,6 @@
 import { WindowSize, ModuleState } from './type'
 import { IActionCtxBase as IAC } from 'concent'
-import { Tab } from 'api/type'
+import { Tab } from 'utils/type'
 
 /*
  * @Author: mrlthf11

@@ -6,11 +6,11 @@ import { BookmarkTreeNode } from 'models/bookmark/state'
 import { Settings } from '.'
 //#region 样式绑定
 import c from './index.module.scss'
-import { moduleClassnames } from 'api'
+import { moduleClassnames } from 'utils'
 const cn = moduleClassnames.bind(null, c)
 //#endregion
 
-import { SUB_NODE_PADDING_UNIT } from 'common/const'
+import { SUB_NODE_PADDING_UNIT } from 'utils/const'
 
 interface Props {
     node: BookmarkTreeNode

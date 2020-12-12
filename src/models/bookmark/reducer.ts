@@ -6,7 +6,7 @@
  * @Description: file content
  */
 import state, { BookmarkTreeNode } from './state'
-import { LABEL_HEIGHT, FOLDER_TITLE_HEIGHT } from 'common/const'
+import { LABEL_HEIGHT, FOLDER_TITLE_HEIGHT } from 'utils/const'
 export type BookmarkState = typeof state
 
 interface InitPayload {

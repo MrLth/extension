@@ -1,7 +1,7 @@
 import React, { memo, useEffect, useState } from 'react'
 //#region 样式绑定
 import c from './index.module.scss'
-import { moduleClassnames } from 'api'
+import { moduleClassnames } from 'utils'
 const cn = moduleClassnames.bind(null, c)
 //#endregion
 

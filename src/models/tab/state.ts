@@ -1,4 +1,4 @@
-import { Windows } from "api/type";
+import { Windows } from "utils/type";
 
 /*
  * @Author: mrlthf11

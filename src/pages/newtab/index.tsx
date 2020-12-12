@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import ReactDOM from 'react-dom'
-import { deboundFixed } from '../../api'
+import { deboundFixed } from '../../utils'
 import { useConcent } from 'concent'
 
 

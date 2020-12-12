@@ -3,7 +3,7 @@ import { memo } from 'react'
 
 //#region 样式绑定
 import c from './index.module.scss'
-import { moduleClassnames } from 'api'
+import { moduleClassnames } from 'utils'
 import { RecordUrl } from 'models/record/state'
 const cn = moduleClassnames.bind(null, c)
 //#endregion

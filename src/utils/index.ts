@@ -1,11 +1,10 @@
-import Record from 'components/Record'
 import { Fn } from './type'
 
 /*
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2020-05-29 17:30:01
- * @LastEditTime: 2020-12-11 15:16:14
+ * @LastEditTime: 2020-12-11 22:01:34
  * @Description: 整个项目会用到的方法和api
  */
 
@@ -122,14 +121,14 @@ export const readFromLocal = <T>(
 			type(data) === 'array' ? [] : ({} as Record<string | number, unknown>)
 		)
 	}
-	//#region 优先从chrome extension storage读取
-	if (typeof chrome?.storage?.sync?.get === 'function') {
-		return new Promise((resolve) => {
-			chrome.storage.sync.get([key], (rst) => {
-				resolve(fixDateType(rst[key]) as T)
-			})
-		})
-	}
+	// //#region 优先从chrome extension storage读取
+	// if (typeof chrome?.storage?.sync?.get === 'function') {
+	// 	return new Promise((resolve) => {
+	// 		chrome.storage.sync.get([key], (rst) => {
+	// 			resolve(fixDateType(rst[key]) as T)
+	// 		})
+	// 	})
+	// }
 	//#endregion
 	//#region 无法从chrome extension storage读取时，改为从localStorage读取
 	let info: string | T = localStorage.getItem(key)
@@ -167,12 +166,12 @@ export const saveToLocal = (
 			type(data) === 'array' ? [] : ({} as Record<string | number, unknown>)
 		)
 	}
-	//#region 优先存储在chrome extension storage
-	if (typeof chrome?.storage?.sync?.set === 'function') {
-		return new Promise((resolve) => {
-			chrome.storage.sync.set({ [key]: fixDateType(info) }, resolve)
-		})
-	}
+	// //#region 优先存储在chrome extension storage
+	// if (typeof chrome?.storage?.sync?.set === 'function') {
+	// 	return new Promise((resolve) => {
+	// 		chrome.storage.sync.set({ [key]: fixDateType(info) }, resolve)
+	// 	})
+	// }
 	//#endregion
 	//#region 无法存储在chrome extension storage时，改为从localStorage存储
 	info = fixDateType(info)

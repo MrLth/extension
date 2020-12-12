@@ -1,15 +1,15 @@
-import { EmptyObject } from 'api/type'
+import { EmptyObject } from 'utils/type'
 import { NoMap, SettingsType, useConcent } from 'concent'
 import { HistorySection } from 'models/history/state'
 import React, { memo, useEffect, useRef } from 'react'
-import { CtxDeS } from 'types/concent'
+import { CtxDeS } from 'utils/concent'
 import Domain from './Domain'
 import { Settings, TimeUpdItem } from '.'
 //#region Import Style
 import c from './index.module.scss'
 import Label from './Label'
 import { HistoryItem } from './api'
-import { sortByKey } from 'api'
+import { sortByKey } from 'utils'
 //#endregion
 
 const ONE_DAY = 86400000

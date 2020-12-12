@@ -11,7 +11,7 @@ import {
 	WindowsAttach,
 	Tab,
 	SelectObj
-} from 'api/type'
+} from 'utils/type'
 
 const windowsA: Windows = {}
 const windowsB: Windows = {}

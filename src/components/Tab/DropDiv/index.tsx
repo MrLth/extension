@@ -4,7 +4,7 @@ import classNames from 'classnames'
 
 import './index.scss';
 
-import { Tab } from 'api/type';
+import { Tab } from 'utils/type';
 
 const DropDiv = memo(function DropDiv(props: { isHidden: boolean; dropCb: (dragTab: Tab) => void }) {
 	const { isHidden, dropCb } = props

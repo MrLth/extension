@@ -1,11 +1,11 @@
 import React from 'react'
 import { NoMap, SettingsType, useConcent } from 'concent'
 //#region Import Type
-import { Tab, Windows, WindowsAttach, Fn, EmptyObject } from 'api/type'
-import { CtxMSConn, ItemsType } from 'types/concent'
+import { Tab, Windows, WindowsAttach, Fn, EmptyObject } from 'utils/type'
+import { CtxMSConn, ItemsType } from 'utils/concent'
 //#endregion
 //#region Import Function
-import { debound, deboundFixed } from 'api'
+import { debound, deboundFixed } from 'utils'
 import ht from 'components/Tab/handleTabs'
 //#endregion
 //#region Import Components

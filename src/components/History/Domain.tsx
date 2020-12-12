@@ -6,7 +6,7 @@ import c from './index.module.scss'
 import Label from './Label'
 
 import LabelNoFavIcon from './LabelNoFavIcon'
-import { Fn } from 'api/type'
+import { Fn } from 'utils/type'
 import { HistoryItem } from './api'
 
 /*

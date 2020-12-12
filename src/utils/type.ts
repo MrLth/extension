@@ -2,7 +2,7 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2020-05-29 18:00:07
- * @LastEditTime: 2020-12-11 14:09:29
+ * @LastEditTime: 2020-10-06 13:10:41
  * @Description: 整个项目会用到的接口和类型定义
  */
 export type Windows = Record<string|number, Tab[]>

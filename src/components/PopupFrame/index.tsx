@@ -1,13 +1,13 @@
 import React, { memo } from 'react'
 //#region Import Style
 import c from './index.module.scss'
-import { moduleClassnames } from 'api'
+import { moduleClassnames } from 'utils'
 const cn = moduleClassnames.bind(null, c)
 //#endregion
 
 import { NoMap, useConcent } from 'concent'
-import { EmptyObject, Fn } from 'api/type'
-import { CtxM } from 'types/concent'
+import { EmptyObject, Fn } from 'utils/type'
+import { CtxM } from 'utils/concent'
 
 const width = 120
 const itemHeight = 32

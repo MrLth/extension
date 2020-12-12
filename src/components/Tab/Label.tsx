@@ -1,11 +1,11 @@
 import React, { memo } from 'react'
-import { Tab } from 'api/type'
+import { Tab } from 'utils/type'
 
 import defaultIcon from '@img/defaultIcon.svg'
 import IconFont from '../IconFont'
 
 import c from './index.module.scss'
-import { moduleClassnames } from 'api'
+import { moduleClassnames } from 'utils'
 const cn = moduleClassnames.bind(null, c)
 
 import { Settings } from './index'

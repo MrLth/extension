@@ -1,7 +1,7 @@
-import { EmptyObject } from 'api/type'
+import { EmptyObject } from 'utils/type'
 import { NoMap, SettingsType, useConcent } from 'concent'
 import * as React from 'react'
-import { CtxMSConn, ItemsType } from 'types/concent'
+import { CtxMSConn, ItemsType } from 'utils/concent'
 
 import { calcHeight, sortNativeHistory } from './api'
 //#region Import Style
@@ -13,7 +13,7 @@ import Section from './Section'
 //#region Time Ago Init
 import TimeAgo from 'javascript-time-ago'
 import en from 'javascript-time-ago/locale/en'
-import { debound, sortByKey } from 'api'
+import { debound, sortByKey } from 'utils'
 TimeAgo.addLocale(en)
 const timeAgo = new TimeAgo('en')
 const timeAgoFormat = (n: number): string => timeAgo.format(n, 'twitter')

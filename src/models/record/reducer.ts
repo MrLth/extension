@@ -5,7 +5,7 @@
  * @LastEditTime: 2020-12-11 21:37:07
  * @Description: file content
  */
-import { deboundFixed, readFromLocal, saveToLocal } from 'api'
+import { deboundFixed, readFromLocal, saveToLocal } from 'utils'
 import recordState, { Recording } from './state'
 import { IActionCtxBase as IAC } from 'concent'
 

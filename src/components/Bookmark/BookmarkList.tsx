@@ -4,8 +4,8 @@ import c from './index.module.scss'
 import Folder from './Folder'
 import Label from './Label'
 import { Settings } from '.'
-import { EmptyObject } from 'api/type'
-import { CtxDeS } from 'types/concent'
+import { EmptyObject } from 'utils/type'
+import { CtxDeS } from 'utils/concent'
 import { SettingsType } from 'concent'
 
 const initState = () => ({
