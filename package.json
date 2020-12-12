@@ -58,6 +58,8 @@
   "devDependencies": {
     "@types/md5": "^2.2.1",
     "resolve-url-loader": "^3.1.2",
+    "uglifyjs-webpack-plugin": "^2.2.0",
+    "webpack-bundle-analyzer": "^4.2.0",
     "webpack-cli": "^3.3.12"
   }
 }

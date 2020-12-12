@@ -2,14 +2,15 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2020-05-27 15:30:26
- * @LastEditTime: 2020-12-12 10:36:18
+ * @LastEditTime: 2020-12-12 16:15:58
  * @Description: file content
  */
-
+const webpack = require('webpack');
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
 const { CleanWebpackPlugin } = require("clean-webpack-plugin")
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin
 
 module.exports = {
     // mode: "production",
@@ -90,6 +91,7 @@ module.exports = {
     },
 
     plugins: [
+        // new CleanWebpackPlugin(),
         new HtmlWebpackPlugin({
             inject: true,
             chunks: ['newtab'],
@@ -109,7 +111,10 @@ module.exports = {
                 { from: './public/asset/react.production.min.js' }
             ]
         }),
-        // new CleanWebpackPlugin()
+        new webpack.DefinePlugin({
+            'process.env.NODE_ENV': JSON.stringify('production')
+        }),
+        new BundleAnalyzerPlugin(),
     ],
     externals: {
         react: "React",
