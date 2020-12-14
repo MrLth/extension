@@ -107,6 +107,13 @@ const setup = (ctx: CtxPre) => {
             changeInfo: chrome.tabs.TabChangeInfo,
             tab: chrome.tabs.Tab
         ) => {
+            console.table({
+                tabId,
+                changeInfo,
+                tab,
+            }
+
+            )
             if (common.isEventSleep) return
             if (changeInfo?.discarded) return
 
