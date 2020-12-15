@@ -4,7 +4,7 @@ import { Fn } from './type'
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2020-05-29 17:30:01
- * @LastEditTime: 2020-12-11 22:01:34
+ * @LastEditTime: 2020-12-15 13:47:11
  * @Description: 整个项目会用到的方法和api
  */
 
@@ -205,4 +205,25 @@ export const queryStrToObj = (str: string): Record<string, string> => {
 		if (k) sum[k] = v
 		return sum
 	}, {} as Record<string, string>)
+}
+
+interface Debug {
+	title: string
+	prev?: unknown
+	para: unknown
+	next?: unknown
+}
+export function debug({ title, prev, para, next }: Debug): void {
+	console.group(
+		'%c 11:20:35.352 %c %s ',
+		'color:#595959',
+		'background: rgb(24, 144, 255); color: rgb(255, 255, 255); font-weight: bold;',
+		title
+	)
+	{
+		prev && console.log('%c prev state  %o', 'color:#5cdbd3', prev)
+		console.log('%c parameters  %o', 'color:#69c0ff', para)
+		next && console.log('%c next state  %o', 'color:#95de64', next)
+	}
+	console.groupEnd()
 }

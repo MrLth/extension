@@ -2,7 +2,7 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2020-12-12 14:44:53
- * @LastEditTime: 2020-12-14 16:47:10
+ * @LastEditTime: 2020-12-15 10:28:21
  * @Description: file content
  */
 import state from './state'
@@ -34,4 +34,18 @@ export interface MoveTab {
 	tabId: number
 	windowId: number
 	toIndex: number
+	fromIndex: number
 }
+
+export interface AvtiveTab {
+	tabId: number
+	windowId: number
+}
+
+export interface AttachTab {
+	tabId: number
+	windowId: number
+	position: number
+}
+
+export type DetachTab = AttachTab

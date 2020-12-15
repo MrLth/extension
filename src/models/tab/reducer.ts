@@ -2,13 +2,22 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2020-10-13 17:35:56
- * @LastEditTime: 2020-12-14 17:01:10
+ * @LastEditTime: 2020-12-15 13:50:27
  * @Description: file content
  */
 
 import { tab } from 'models'
 import { Fn } from 'utils/type'
-import { MoveTab, MyTab, RemoveTab, TabMap, WindowMap } from './type'
+import {
+	AttachTab,
+	AvtiveTab,
+	DetachTab,
+	MoveTab,
+	MyTab,
+	RemoveTab,
+	TabMap,
+	WindowMap,
+} from './type'
 
 class TabHandler {
 	queue: Fn[] = []
@@ -93,6 +102,7 @@ class TabHandler {
 			} else {
 				// 1. 没有就新建
 				this.createTab(tab, { immediate: true })
+				// TODO: DEBUG
 			}
 			// 2. 更新窗口修改时间
 			this.updWindowEditTime(tab.windowId)
@@ -117,9 +127,76 @@ class TabHandler {
 		})
 	}
 
-	moveTab({ tabId, windowId, toIndex }: MoveTab) {
-		if (this.windows.has(windowId)){
+	moveTab({ tabId, windowId, fromIndex, toIndex }: MoveTab) {
+		this.push(() => {
+			if (this.windows.has(windowId)) {
+				const { tabs } = this.windows.get(windowId)
+				// 1. 优先使用 fromIndex
+				if (tabs[fromIndex].id !== tabId) {
+					// 2. 获取初始位置
+					const i = tabs.findIndex((v) => v.id === tabId)
+					if (i === -1) return // TODO: DEBUG
+					fromIndex = i
+				}
+				// 3. 更新位置
+				const [myTab] = tabs.splice(fromIndex, 1)
+				tabs.splice(toIndex, 0, myTab)
+				// 4. 更新窗口修改时间
+				this.updWindowEditTime(windowId)
+				// 5. 更新窗口标签索引
+				this.updIndexWindows.add(windowId)
+			} else {
+				// TODO: DEBUG
+			}
+		})
+	}
 
+	avtiveTab({ tabId, windowId }: AvtiveTab) {
+		if (this.windows.has(windowId) && this.tabMap.has(tabId)) {
+			// 1. 更新标签状态
+			Object.assign(this.tabMap.get(tabId), {
+				active: true,
+				lastUpdateTime: +new Date(),
+			})
+			// 2. 更新窗口修改时间
+			this.updWindowEditTime(windowId)
+		} else {
+			// TODO: DEBUG
+		}
+	}
+
+	detachTab({ tabId, windowId, position }: DetachTab) {
+		if (this.windows.has(windowId) && this.tabMap.has(tabId)) {
+			const { tabs } = this.windows.get(windowId)
+			// 1. 获取正确的 position
+			if (tabs[position].id !== tabId) {
+				const i = tabs.findIndex((v) => v.id === tabId)
+				if (i === -1) return // TODO: DEBUG
+				position = i
+			}
+			tabs.splice(position, 1)
+
+			// 2. 更新窗口修改时间
+			this.updWindowEditTime(windowId)
+			// 3. 更新窗口标签索引
+			this.updIndexWindows.add(windowId)
+		} else {
+			// TODO: DEBUG
+		}
+	}
+
+	attachTab({ tabId, windowId, position }: AttachTab) {
+		if (this.windows.has(windowId) && this.tabMap.has(tabId)) {
+			const { tabs } = this.windows.get(windowId)
+			// 1. 加入窗口
+			tabs.splice(position, 0, this.tabMap.get(tabId))
+
+			// 2. 更新窗口修改时间
+			this.updWindowEditTime(windowId)
+			// 3. 更新窗口标签索引
+			this.updIndexWindows.add(windowId)
+		} else {
+			// TODO: DEBUG
 		}
 	}
 
@@ -164,4 +241,8 @@ class TabHandler {
 // 	new Promise((resolve) => chrome.windows.getAll((v) => resolve(v))),
 // ]).then(([a, b]) => {console.log(new TabHandler(a,b))})
 
-(window as any).TabHandler = TabHandler
+// (window as any).TabHandler = TabHandler
+
+export function init(){
+	
+}
