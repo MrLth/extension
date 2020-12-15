@@ -4,7 +4,7 @@ import format from 'date-format'
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2020-05-29 17:30:01
- * @LastEditTime: 2020-12-15 17:50:33
+ * @LastEditTime: 2020-12-16 00:36:43
  * @Description: 整个项目会用到的方法和api
  */
 
@@ -243,29 +243,54 @@ export function debug({ color, title, para, multi }: Debug): void {
 	console.groupEnd()
 }
 
-export function log(val: unknown, color?: number | string): void {
-	let borderColor = '#ad6800'
-	let bgColor = '#faad14'
-	let k = 'noname'
-	let v = val
+export function log(
+	val: unknown,
+	title = 'log',
+	color?: number | string
+): void {
+	let borderColor = '#b37feb'
+	let bgColor = '#d3adf7'
+
 	if (typeof color === 'number' && color > 0 && color < 6) {
-		bgColor = ['#52c41a', '#13c2c2', '#2f54eb', '#722ed1', '#eb2f96'][color - 1]
-		borderColor = ['#389e0d', '#08979c', '#1d39c4', '#531dab', '#c41d7f'][
+		bgColor = ['#52c41a', '#13c2c2', '#2f54eb', '#ff7875', '#eb2f96'][color - 1]
+		borderColor = ['#389e0d', '#08979c', '#1d39c4', '#ff4d4f', '#c41d7f'][
 			color - 1
 		]
 	} else if (typeof color === 'string') {
 		bgColor = color
 	}
 
+	const titleColorStr = `border: 2px solid transparent;border-right:none;border-left:none;background: ${borderColor}; color: rgb(255, 255, 255);font-weight:100`
+	const colorStr = `border: 2px solid transparent;background: ${bgColor}; color: rgb(255, 255, 255);font-weight:100`
+	let pattern = `%c ${title} %c%s%c %o`
+	let parameters = [titleColorStr, colorStr, ' noname ', '', val]
 	if (typeof val === 'object') {
-		[k, v] = Object.entries(val)[0]
+		pattern = `%c ${title} `
+		parameters = [titleColorStr]
+		const entries = Object.entries(val)
+		const maxLength = entries.reduce(
+			(a, [k]) => (a < k.length ? k.length : a),
+			-Infinity
+		)
+
+		let first = true
+		for (const [k, v] of entries) {
+			pattern += '%c%s%c%s%c%s%o%s'
+			parameters.push(
+				titleColorStr,
+				first ? '' : ` ${''.padStart(title.length, ' ')} `,
+				colorStr,
+				' ' + k.padEnd(maxLength, ' ') + ' ',
+				'',
+				' ',
+				v,
+				'\n'
+			)
+			first = false
+		}
+		parameters.pop()
+		parameters.push('')
 	}
-	console.log(
-		'%c%s%c %o',
-		`border: 1px solid ${borderColor};background: ${bgColor}; color: rgb(255, 255, 255);font-weight:100`,
-		' ' + k + ' ',
-		'',
-		v
-	)
+	console.log(pattern, ...parameters)
 }
 window.log = log
