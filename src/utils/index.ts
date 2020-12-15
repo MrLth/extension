@@ -1,10 +1,10 @@
 import { Fn } from './type'
-
+import format from 'date-format'
 /*
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2020-05-29 17:30:01
- * @LastEditTime: 2020-12-15 13:47:11
+ * @LastEditTime: 2020-12-15 17:50:33
  * @Description: 整个项目会用到的方法和api
  */
 
@@ -209,21 +209,63 @@ export const queryStrToObj = (str: string): Record<string, string> => {
 
 interface Debug {
 	title: string
-	prev?: unknown
-	para: unknown
-	next?: unknown
+	para?: unknown
+	multi?: Record<string, unknown>
+	color?: number | string
 }
-export function debug({ title, prev, para, next }: Debug): void {
+export function debug({ color, title, para, multi }: Debug): void {
+	let borderColor = '#096dd9'
+	let bgColor = '#1890ff'
+	if (typeof color === 'number' && color > 0 && color < 6) {
+		bgColor = ['#52c41a', '#13c2c2', '#2f54eb', '#722ed1', '#eb2f96'][color - 1]
+		borderColor = ['#389e0d', '#08979c', '#1d39c4', '#531dab', '#c41d7f'][
+			color - 1
+		]
+	} else if (typeof color === 'string') {
+		bgColor = color
+	}
+
 	console.group(
-		'%c 11:20:35.352 %c %s ',
+		'%c %s %c%s',
 		'color:#595959',
-		'background: rgb(24, 144, 255); color: rgb(255, 255, 255); font-weight: bold;',
-		title
+		format('hh:mm:ss.SSS', new Date()),
+		`border: 1px solid ${borderColor};background: ${bgColor}; color: rgb(255, 255, 255);font-weight:100`,
+		' ' + title + ' '
 	)
 	{
-		prev && console.log('%c prev state  %o', 'color:#5cdbd3', prev)
-		console.log('%c parameters  %o', 'color:#69c0ff', para)
-		next && console.log('%c next state  %o', 'color:#95de64', next)
+		para && console.log('%c parameters  %o', 'color:#69c0ff', para)
+		if (typeof multi === 'object') {
+			for (const [k, v] of Object.entries(multi)) {
+				console.log('%c %s  %o', 'color:#5cdbd3', k.padEnd(10, ' '), v)
+			}
+		}
 	}
 	console.groupEnd()
 }
+
+export function log(val: unknown, color?: number | string): void {
+	let borderColor = '#ad6800'
+	let bgColor = '#faad14'
+	let k = 'noname'
+	let v = val
+	if (typeof color === 'number' && color > 0 && color < 6) {
+		bgColor = ['#52c41a', '#13c2c2', '#2f54eb', '#722ed1', '#eb2f96'][color - 1]
+		borderColor = ['#389e0d', '#08979c', '#1d39c4', '#531dab', '#c41d7f'][
+			color - 1
+		]
+	} else if (typeof color === 'string') {
+		bgColor = color
+	}
+
+	if (typeof val === 'object') {
+		[k, v] = Object.entries(val)[0]
+	}
+	console.log(
+		'%c%s%c %o',
+		`border: 1px solid ${borderColor};background: ${bgColor}; color: rgb(255, 255, 255);font-weight:100`,
+		' ' + k + ' ',
+		'',
+		v
+	)
+}
+window.log = log

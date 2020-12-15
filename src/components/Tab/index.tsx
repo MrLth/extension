@@ -5,8 +5,7 @@ import { Tab, Windows, WindowsAttach, Fn, EmptyObject } from 'utils/type'
 import { CtxMSConn, ItemsType } from 'utils/concent'
 //#endregion
 //#region Import Function
-import { debound, deboundFixed } from 'utils'
-import ht from 'components/Tab/handleTabs'
+import { debound, deboundFixed, debug } from 'utils'
 //#endregion
 //#region Import Components
 import Window from './Window'
@@ -17,9 +16,6 @@ import c from './index.module.scss'
 import IconFont from 'components/IconFont'
 import { Recording } from 'models/record/state'
 //#endregion
-
-
-const MAX_REFRESH_THRESHOLD = 16
 
 
 
@@ -45,7 +41,7 @@ type State = ReturnType<typeof initState>
 type CtxPre = CtxMSConn<EmptyObject, Module, State, Conn>
 //#endregion
 const setup = (ctx: CtxPre) => {
-    const { setState, state, effect } = ctx
+    const { setState, state, effect,reducer } = ctx
     // const { record } = ctx.connectedState
 
     const common = {
@@ -54,133 +50,51 @@ const setup = (ctx: CtxPre) => {
     }
     const handleTabs = {
         queue: [] as Array<(windowsObj: Windows) => Windows>,
-        fn: deboundFixed(() => {
-            // 超过最大阈值时：使用chrome的api更新
-            if (handleTabs.queue.length > MAX_REFRESH_THRESHOLD) {
-                handleTabs.queue = []
-                common.isEventSleep = true
-                handleTabs.refreshWindowsObj(() => common.isEventSleep = false)
-                return
-            }
-            // 默认依次处理queue
-            ht.referOldWindows(state.windowsObj)
-            let newWindows = ht.createNewWindows(state.windowsObj)
-            for (const fn of handleTabs.queue) {
-                newWindows = fn(newWindows)
-            }
-            handleTabs.queue = []
-            ht.dereferOldWindows()
 
-            newWindows = ht.batchUpdTabIndex(newWindows)
-
-            setState({ windowsObj: newWindows })
-        }, 200),
-        refreshWindowsObj(cb?: Fn) {
-            chrome.tabs.query({}, (newTabs: Tab[]) => {
-                const newObj = ht.groupTabsByWindowId(newTabs)
-
-                Object.keys(state.windowsObj).length && ht.minimalUpdate(state.windowsObj, newObj)
-
-                setState({ windowsObj: newObj })
-
-                cb && cb()
-            })
-        }
     }
     // 绑定[ window & tab ]更新事件
     effect(() => {
-        handleTabs.refreshWindowsObj(() => common.isEventSleep = false)
-
-        const onCreatedListener = (tab: chrome.tabs.Tab) => {
+        const onCreated = (tab: chrome.tabs.Tab) => {
             if (common.isEventSleep) return
-            if (tab.url === '') {
-                console.log('tab.url empty')
-                return
-            }
-            handleTabs.queue.push((windows) => {
-                return ht.addTab(windows, tab.windowId, ht.splitUrl(tab), tab.index)
-            })
-            handleTabs.fn()
+
         }
         const onUpdatedListener = (
             tabId: number,
             changeInfo: chrome.tabs.TabChangeInfo,
             tab: chrome.tabs.Tab
         ) => {
-            console.table({
-                tabId,
-                changeInfo,
-                tab,
-            }
-
-            )
             if (common.isEventSleep) return
-            if (changeInfo?.discarded) return
-
-            handleTabs.queue.push((windows) => {
-                return ht.updTab(windows, tab.windowId, ht.splitUrl(tab), tabId)
-            })
-            handleTabs.fn()
         }
         const onRemovedListener = (
             tabId: number,
             { windowId, isWindowClosing }: chrome.tabs.TabRemoveInfo
         ) => {
             if (common.isEventSleep) return
-            const cb = isWindowClosing
-                ? (windows: Windows) => {
-                    return ht.removeWindow(windows, windowId)
-                }
-                : (windows: Windows) => {
-                    return ht.removeTab(windows, windowId, tabId)
-                }
-            handleTabs.queue.push(cb)
-            handleTabs.fn()
         }
         const onMovedListener = (
-            _tabId: number,
+            tabId: number,
             { windowId, fromIndex, toIndex }: chrome.tabs.TabMoveInfo
         ) => {
             if (common.isEventSleep) return
-
-            handleTabs.queue.push((windows) => {
-                return ht.moveTab(windows, windowId, fromIndex, toIndex)
-            })
-            handleTabs.fn()
         }
         const onActivatedListener = ({ tabId, windowId }: chrome.tabs.TabActiveInfo) => {
             if (common.isEventSleep) return
 
-            handleTabs.queue.push((windows) => {
-                return ht.avtiveTab(windows, windowId, tabId)
-            })
-            handleTabs.fn()
         }
         const onDetachedListener = (
             tabId: number,
             { oldWindowId, oldPosition }: chrome.tabs.TabDetachInfo
         ) => {
             if (common.isEventSleep) return
-
-            handleTabs.queue.push((windows) => {
-                return ht.detachTab(windows, oldWindowId, tabId, oldPosition)
-            })
-            handleTabs.fn()
-
         }
         const onAttachedListener = (
             tabId: number,
             { newWindowId, newPosition }: chrome.tabs.TabAttachInfo
         ) => {
             if (common.isEventSleep) return
-
-            handleTabs.queue.push((windows) => {
-                return ht.attachTab(windows, newWindowId, tabId, newPosition)
-            })
-            handleTabs.fn()
         }
         //#region 事件绑定
-        chrome.tabs.onCreated.addListener(onCreatedListener)
+        chrome.tabs.onCreated.addListener(onCreated)
         chrome.tabs.onUpdated.addListener(onUpdatedListener)
         chrome.tabs.onRemoved.addListener(onRemovedListener)
         chrome.tabs.onMoved.addListener(onMovedListener)
@@ -190,7 +104,7 @@ const setup = (ctx: CtxPre) => {
         //#endregion
         //#region 事件解绑
         return () => {
-            chrome.tabs.onCreated.removeListener(onCreatedListener)
+            chrome.tabs.onCreated.removeListener(onCreated)
             chrome.tabs.onUpdated.removeListener(onUpdatedListener)
             chrome.tabs.onRemoved.removeListener(onRemovedListener)
             chrome.tabs.onMoved.removeListener(onMovedListener)
@@ -201,53 +115,32 @@ const setup = (ctx: CtxPre) => {
         //#endregion
     }, [])
 
-    const windowsAttach = {
-        upd() {
-            chrome.windows.getAll((windowsInfo) => {
-                setState({ windowAttach: ht.groupWindowsByWindowId(windowsInfo) })
-            })
-        }
-    }
+
+    effect(()=>{
+        reducer.tab.init()
+    })
+
     // 绑定[ windowsAttach ]更新事件
     effect(() => {
-        windowsAttach.upd()
-
-        const onCreatedListener = (windowsAttach: chrome.windows.Window) => {
-            const newObj = { ...state.windowsAttach }
-            newObj[windowsAttach.id] = windowsAttach
-            setState({ windowsAttach: newObj })
+        const onCreated = (windowsAttach: chrome.windows.Window) => {
+            debug({ title: 'windows.onCreated', para: { windowsAttach } })
         }
-        const onRemovedListener = (windowId: number) => {
-            const newObj = { ...state.windowsAttach }
-            delete newObj[windowId]
-            setState({ windowsAttach: newObj })
-        }
-        const onFocusChangedListener = (windowId: number) => {
-            if (-1 === windowId) return
+        const onRemoved = (windowId: number) => {
+            debug({ title: 'windows.onRemoved', para: { windowId } })
 
-            const newObj = { ...state.windowsAttach }
-            const focusedKeys = Object.keys(newObj).filter(
-                (key) => newObj[key].focused
-            )
-            focusedKeys.map((key) => {
-                newObj[key] = { ...newObj[key], focused: false }
-            })
-
-            newObj[windowId] = { ...newObj[windowId], focused: true }
-            setState({ windowsAttach: newObj })
         }
-        //#region 事件绑定
-        chrome.windows.onCreated.addListener(onCreatedListener)
-        chrome.windows.onRemoved.addListener(onRemovedListener)
-        chrome.windows.onFocusChanged.addListener(onFocusChangedListener)
-        //#endregion
-        //#region 事件解绑
+        const onFocusChanged = (windowId: number) => {
+            debug({ title: 'windows.onFocusChanged', para: { windowId } })
+
+        }
+        chrome.windows.onCreated.addListener(onCreated)
+        chrome.windows.onRemoved.addListener(onRemoved)
+        chrome.windows.onFocusChanged.addListener(onFocusChanged)
         return () => {
-            chrome.windows.onCreated.removeListener(onCreatedListener)
-            chrome.windows.onRemoved.removeListener(onRemovedListener)
-            chrome.windows.onFocusChanged.removeListener(onFocusChangedListener)
+            chrome.windows.onCreated.removeListener(onCreated)
+            chrome.windows.onRemoved.removeListener(onRemoved)
+            chrome.windows.onFocusChanged.removeListener(onFocusChanged)
         }
-        //#endregion
     }, [])
 
     // Setting
@@ -267,7 +160,7 @@ const setup = (ctx: CtxPre) => {
             console.log('window Attach', state.windowsAttach)
         },
         updateWindowAttach: () => {
-            windowsAttach.upd()
+            // windowsAttach.upd()
         },
         changeWindowAttach: (windowId: number, updateInfo: chrome.windows.UpdateInfo, isCb = true) => {
             if (isCb)
@@ -282,59 +175,6 @@ const setup = (ctx: CtxPre) => {
         //#region 全局按钮
         createWindow: () => {
             chrome.windows.create()
-        },
-        closeSelectedTab: () => {
-            const [selectedTabs] = ht.getSelectedTab(state.windowsObj)
-
-            common.isEventSleep = true
-
-            const removedCb = debound(() => {
-                handleTabs.refreshWindowsObj(() => common.isEventSleep = false)
-            }, 333)
-
-            selectedTabs.map((tab) => {
-                chrome.tabs.remove(tab, removedCb)
-            })
-        },
-        discardSelectedTab: () => {
-            const [selectedTabs] = ht.getSelectedTab(state.windowsObj)
-
-
-            common.isEventSleep = true
-
-            const cb = debound(() => {
-                handleTabs.refreshWindowsObj(() => common.isEventSleep = false)
-            }, 333)
-
-            selectedTabs.map((tab) => {
-                chrome.tabs.discard(tab, cb)
-            })
-        },
-        cancelSelected: () => {
-            const newObj: Windows = { ...state.windowsObj }
-            Object.keys(newObj).map((key: keyof typeof newObj) => {
-                let isUpdate = false
-                newObj[key].map((tab, i) => {
-                    if (tab.userSelected) {
-                        isUpdate = true
-                        newObj[key][i] = { ...tab, userSelected: false }
-                    }
-                })
-                if (isUpdate) {
-                    newObj[key] = [...newObj[key]]
-                }
-            })
-            setState({ windowsObj: newObj })
-        },
-        searchTabCb: (text: string) => {
-            if (0 === text.length) {
-
-                state.isSearching = false
-                setState({ windowsFiltered: {}, isSearching: false })
-            } else {
-                state.isSearching = false
-                setState({ windowsFiltered: ht.searchTab(state.windowsObj, text.toUpperCase()), isSearching: false })
-            }
         },
         recordSelectedTab: () => {
             // const selectedTabs = [] as Array<RecordUrl>
@@ -354,150 +194,45 @@ const setup = (ctx: CtxPre) => {
             // FIXME:
             // recordDispatch(recordActionAdds(selectedTabs))
         },
-        updateWindowsObj: handleTabs.refreshWindowsObj,
-        handleTabsFunc: handleTabs.fn,
 
         //#endregion
         //#region 窗口按钮
         closeWindow: (windowId: number) => {
             chrome.windows.remove(windowId)
         },
-        selectWindow: (windowId: keyof typeof state.windowsObj) => {
-            const newObj: Windows = Object.assign({}, state.windowsObj)
-            newObj[windowId] = [...newObj[windowId]]
 
-            newObj[windowId].map((tab, i) => {
-                if (!tab.userSelected) {
-                    newObj[windowId][i] = { ...tab, userSelected: true }
-                }
-            })
-
-            setState({ windowsObj: newObj })
-        },
         //#endregion
         //#region 标签按钮
         duplicateTab: (tabId: number) => {
             chrome.tabs.duplicate(tabId)
         },
         discardTab: (windowId: number | string, tabId: number) => {
-            chrome.tabs.discard(tabId, (tab) => {
-                if (!tab) return
+            // chrome.tabs.discard(tabId, (tab) => {
+            //     if (!tab) return
 
-                handleTabs.queue.push((windows) => {
-                    return ht.updTab(windows, windowId, ht.splitUrl(tab), tabId)
-                })
-                handleTabs.fn()
-            })
+            //     handleTabs.queue.push((windows) => {
+            //         return ht.updTab(windows, windowId, ht.splitUrl(tab), tabId)
+            //     })
+            //     handleTabs.fn()
+            // })
         },
         //#endregion
         //#region 测试
-        printTabs: () => {
-            console.log('windows:', state.windowsObj)
-        },
-        printUrl: (isMergeWindows = true) => {
-            const compareFunction = (
-                a: { id: number; url: string },
-                b: { id: number; url: string }
-            ) => {
-                if (a.url < b.url) {
-                    return -1
-                }
-                if (a.url > b.url) {
-                    return 1
-                }
-
-                return 0
-            }
-            const chromeHostObjArr: {
-                id: number
-                windowId: number
-                sortUrl: string
-                url: string
-            }[] = []
-            let hostObjArr: {
-                id: number
-                windowId: number
-                sortUrl: string
-                url: string
-            }[] = []
-            Object.values(state.windowsObj).forEach(tabs => {
-                tabs.forEach(tab => {
-                    if (tab.userProtocol?.includes('http'))
-                        hostObjArr.push({
-                            sortUrl: tab.userHost.split('.').reverse().join('') + tab.userRoute,
-                            url: tab.url,
-                            id: tab.id,
-                            windowId: tab.windowId
-                        })
-                    else {
-                        const url = tab.userProtocol
-                            ? tab.userProtocol + '://' + tab.userHost
-                            : tab.url
-                        chromeHostObjArr.push({
-                            sortUrl: url,
-                            url: tab.url,
-                            id: tab.id,
-                            windowId: tab.windowId
-                        })
-                    }
-                })
-            })
-
-            hostObjArr = hostObjArr
-                .sort(compareFunction)
-                .concat(chromeHostObjArr.sort(compareFunction))
-
-            common.isEventSleep = true
-            const tabsMovedCb = debound(() => {
-                handleTabs.refreshWindowsObj(() => common.isEventSleep = false)
-            }, 333)
-
-            let lastUrl: string
-            if (isMergeWindows) {
-                chrome.tabs.query({ active: true, currentWindow: true }, ([tab]) => {
-                    const firstWindowId = tab.windowId
-                    hostObjArr.map(({ id, url }) => {
-                        if (url === lastUrl) chrome.tabs.remove(id)
-                        else {
-                            chrome.tabs.move(
-                                id,
-                                { windowId: firstWindowId, index: -1 },
-                                tabsMovedCb
-                            )
-                            lastUrl = url
-                        }
-                    })
-                })
-            } else {
-                let lastWindowId: number
-                hostObjArr.map(({ id, url, windowId }) => {
-                    if (url === lastUrl && windowId === lastWindowId) chrome.tabs.remove(id)
-                    else {
-                        chrome.tabs.move(id, { index: -1 }, tabsMovedCb)
-                        lastWindowId = windowId
-                        lastUrl = url
-                    }
-                })
-            }
-
-            // updateWindowsObj()
-            // isEventSleep.current = false
-        },
         recordAllTab: () => {
-            const newRecording: Recording = {
-                urls: [],
-                recordTime: new Date()
-            }
+            // const newRecording: Recording = {
+            //     urls: [],
+            //     recordTime: new Date()
+            // }
 
-            Object.values(state.windowsObj).forEach((tabs) => {
-                // concat不会改变原数组，所以这里使用push
-                Array.prototype.push.apply(newRecording.urls, tabs.map(v => ({
-                    title: v.title,
-                    url: v.url
-                })))
-            })
+            // Object.values(state.windowsObj).forEach((tabs) => {
+            //     // concat不会改变原数组，所以这里使用push
+            //     Array.prototype.push.apply(newRecording.urls, tabs.map(v => ({
+            //         title: v.title,
+            //         url: v.url
+            //     })))
+            // })
 
-            ctx.reducer.record.addRecord(newRecording)
+            // ctx.reducer.record.addRecord(newRecording)
         }
         //#endregion
     }
@@ -509,8 +244,6 @@ type Ctx = CtxMSConn<EmptyObject, Module, State, Conn, Settings>
 const TabComponent = (): JSX.Element => {
     const { state, settings } = useConcent<EmptyObject, Ctx, NoMap>({ module: moduleName, setup, state: initState, connect })
 
-    const renderWindows = state.isSearching ? state.windowsFiltered : state.windowsObj
-
 
     return (
         <>
@@ -518,13 +251,13 @@ const TabComponent = (): JSX.Element => {
                 <div className={c['title']}>
                     <div>TAB</div>
                     <div>
-                        <IconFont type='iconjump_to_top' onClick={() => settings.recordAllTab()}></IconFont>
-                        <IconFont type='icongit-merge-line' onClick={() => settings.printUrl(true)}></IconFont>
-                        <IconFont type='iconadd' onClick={settings.createWindow}></IconFont>
+                        {/* <IconFont type='iconjump_to_top' onClick={() => settings.recordAllTab()}></IconFont> */}
+                        {/* <IconFont type='icongit-merge-line' onClick={() => settings.printUrl(true)}></IconFont> */}
+                        {/* <IconFont type='iconadd' onClick={settings.createWindow}></IconFont> */}
                     </div>
                 </div>
                 <div className={c['list']}>
-                    {Object.keys(renderWindows).map((key: keyof typeof renderWindows) => {
+                    {/* {Object.keys(renderWindows).map((key: keyof typeof renderWindows) => {
                         return (
                             <Window
                                 key={key}
@@ -534,7 +267,7 @@ const TabComponent = (): JSX.Element => {
                                 settings={settings}
                             />
                         )
-                    })}
+                    })} */}
                 </div>
             </div>
             <PopupFrame {...state.popupFrameProps} />

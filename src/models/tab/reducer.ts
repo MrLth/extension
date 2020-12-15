@@ -2,7 +2,7 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2020-10-13 17:35:56
- * @LastEditTime: 2020-12-15 13:50:27
+ * @LastEditTime: 2020-12-15 14:28:50
  * @Description: file content
  */
 
@@ -16,10 +16,11 @@ import {
 	MyTab,
 	RemoveTab,
 	TabMap,
+	TabState,
 	WindowMap,
 } from './type'
 
-class TabHandler {
+export class TabHandler {
 	queue: Fn[] = []
 	windows: WindowMap
 	tabMap: TabMap = new Map()
@@ -243,6 +244,13 @@ class TabHandler {
 
 // (window as any).TabHandler = TabHandler
 
-export function init(){
-	
+async function init(): Promise<Partial<TabState>> {
+	const [nativeTabs, windowsAttaches] = (await Promise.all([
+		new Promise((resolve) => chrome.tabs.query({}, (v) => resolve(v))),
+		new Promise((resolve) => chrome.windows.getAll((v) => resolve(v))),
+	])) as [chrome.tabs.Tab[], chrome.windows.Window[]]
+
+	return { tabHandler: new TabHandler(nativeTabs, windowsAttaches) }
 }
+
+export default { init }

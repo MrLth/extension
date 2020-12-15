@@ -2,9 +2,10 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2020-12-12 14:44:53
- * @LastEditTime: 2020-12-15 10:28:21
+ * @LastEditTime: 2020-12-15 13:59:56
  * @Description: file content
  */
+import { type } from 'utils'
 import state from './state'
 export type TabState = typeof state
 
