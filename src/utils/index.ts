@@ -4,7 +4,7 @@ import format from 'date-format'
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2020-05-29 17:30:01
- * @LastEditTime: 2020-12-16 00:36:43
+ * @LastEditTime: 2020-12-16 09:48:44
  * @Description: 整个项目会用到的方法和api
  */
 
@@ -212,8 +212,17 @@ interface Debug {
 	para?: unknown
 	multi?: Record<string, unknown>
 	color?: number | string
+	group?: boolean
+	label?: string
 }
-export function debug({ color, title, para, multi }: Debug): void {
+export function debug({
+	color,
+	title,
+	para,
+	multi,
+	group = false,
+	label = '',
+}: Debug): void {
 	let borderColor = '#096dd9'
 	let bgColor = '#1890ff'
 	if (typeof color === 'number' && color > 0 && color < 6) {
@@ -225,22 +234,78 @@ export function debug({ color, title, para, multi }: Debug): void {
 		bgColor = color
 	}
 
-	console.group(
-		'%c %s %c%s',
-		'color:#595959',
-		format('hh:mm:ss.SSS', new Date()),
-		`border: 1px solid ${borderColor};background: ${bgColor}; color: rgb(255, 255, 255);font-weight:100`,
-		' ' + title + ' '
+	const timeColor = 'color:#595959;font-weight:700;font-size:13px'
+	const time = format('hh:mm:ss.SSS', new Date())
+	const labelColor =
+		label.length > 0
+			? `border: 1px solid ${borderColor};font-size:13px;background: ${borderColor}; color: rgb(255, 255, 255);font-weight:100;padding:0 4px`
+			: ''
+	const titleColor = `border: 1px solid ${borderColor};font-size:13px;background: ${bgColor}; color: rgb(255, 255, 255);font-weight:100`
+	const titleText = ' ' + title + ' '
+	const border = 'border-left: 1px solid #000;padding:2px 0;margin-left:5.5px'
+	const paraColor = 'color:#69c0ff'
+	const multiColor = 'color:#5cdbd3'
+	const entries = Object.entries(multi)
+	const maxLength = entries.reduce(
+		(a, [k]) => (a < k.length ? k.length : a),
+		typeof para === 'string' ? para.length : 10
 	)
-	{
-		para && console.log('%c parameters  %o', 'color:#69c0ff', para)
-		if (typeof multi === 'object') {
-			for (const [k, v] of Object.entries(multi)) {
-				console.log('%c %s  %o', 'color:#5cdbd3', k.padEnd(10, ' '), v)
+	const paraTitle = 'parameters'
+
+	if (group) {
+		console.group(
+			'%c %s %c%s%c%s',
+			timeColor,
+			time,
+			labelColor,
+			label,
+			titleColor,
+			titleText
+		)
+		{
+			para &&
+				console.log('%c %s  %o', paraColor, paraTitle.padEnd(maxLength, ' '), para)
+			if (typeof multi === 'object') {
+				for (const [k, v] of Object.entries(multi)) {
+					console.log('%c %s  %o', multiColor, k.padEnd(maxLength, ' '), v)
+				}
 			}
 		}
+		console.groupEnd()
+	} else {
+		let pattern = '%s%c %s %c%s%c%s%c'
+		const parameters = [
+			'🔰',
+			timeColor,
+			time,
+			labelColor,
+			label,
+			titleColor,
+			titleText,
+			'',
+		]
+
+		if (para) {
+			pattern += '%s%c%s%c %s  %o'
+			parameters.push(
+				'\n',
+				border,
+				' ',
+				paraColor,
+				paraTitle.padEnd(maxLength, ' '),
+				para
+			)
+		}
+
+		if (typeof multi === 'object') {
+			for (const [k, v] of entries) {
+				pattern += '%s%c%s%c %s  %o'
+				parameters.push('\n', border, ' ', multiColor, k.padEnd(maxLength, ' '), v)
+			}
+		}
+
+		console.log(pattern, ...parameters)
 	}
-	console.groupEnd()
 }
 
 export function log(

@@ -10,7 +10,7 @@ import FolderNameList from './FolderNameList'
 import BookmarkList from './BookmarkList'
 import { BookmarkTreeNode } from 'models/bookmark/state'
 
-import {CARD_TITLE_HEIGHT, FOLDER_TITLE_HEIGHT} from 'utils/const'
+import { CARD_TITLE_HEIGHT, FOLDER_TITLE_HEIGHT } from 'utils/const'
 
 const moduleName = 'bookmark'
 const connect = [] as const
@@ -55,7 +55,7 @@ const setup = (ctx: CtxPre) => {
             e.stopPropagation()
             const top = dom.wrapper.scrollTop
             const bottom = top + common.listHeight
-            console.log('scrollCb')
+            // console.log('scrollCb')
             reducer.bookmark.updIsRender({ top, bottom })
         },
         scrollToShow(e: React.MouseEvent<HTMLLIElement, MouseEvent>, node: BookmarkTreeNode) {
@@ -90,7 +90,7 @@ type Ctx = CtxMSConn<EmptyObject, Module, State, Conn, Settings>
 const Bookmark = (): JSX.Element => {
     const { state, settings } = useConcent<EmptyObject, Ctx, NoMap>({ module: moduleName, setup, state: initState, connect })
 
-    console.log('BookMark rendered')
+    log({ BookMark: 'BookMark' }, 'render count', 2)
     return <div className={c['content']}>
         <div className={c['title']}>
             <div>BOOKMARK</div>
