@@ -123,8 +123,9 @@ const setup = (ctx: CtxPre) => {
 
     // 绑定[ windowsAttach ]更新事件
     effect(() => {
-        const onCreated = (windowsAttach: chrome.windows.Window) => {
-            debug({ title: 'windows.onCreated', para: { windowsAttach } })
+        const onCreated = (attach: chrome.windows.Window) => {
+            if (common.isEventSleep) return
+            state.tabHandler?.createWindow(attach)
         }
         const onRemoved = (windowId: number) => {
             debug({ title: 'windows.onRemoved', para: { windowId } })
@@ -262,12 +263,11 @@ const TabComponent = (): JSX.Element => {
                 <div className={c['list']}>
                     {
                         windows && [...windows.entries()].map(([k, v]) => {
-                            log({ k, v })
                             return <Window
                                 key={k}
                                 myWindow={v}
                                 settings={settings}
-                                lastEditTime={v.lastEditTime}
+                                updateKey={v.updateKey}
                             />
                         })
                     }

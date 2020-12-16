@@ -2,7 +2,7 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2020-11-11 07:59:07
- * @LastEditTime: 2020-12-16 11:25:46
+ * @LastEditTime: 2020-12-17 00:48:52
  * @Description: file content
  */
 import { run } from 'concent'
@@ -17,18 +17,18 @@ run(models, {
 			if (ctx.calledBy === 'dispatch') {
 				debug({
 					title: `${ctx.module} / ${ctx.type}`,
-					para: { ctx },
+					// para: { ctx },
 					multi: {
 						payload: ctx.payload,
-						commitState: ctx.committedState,
+						...ctx.committedState,
 					},
 				})
 			} else {
 				debug({
 					title: `${ctx.module} ${ctx.calledBy}`,
-					para: ctx,
+					// para: ctx,
 					multi: {
-						commitState: ctx.committedState,
+						...ctx.committedState,
 					},
 					color: 1,
 				})

@@ -15,7 +15,7 @@ const itemHeight = 32
 export interface PopupOption {
     title: string | JSX.Element
     icon: JSX.Element
-    cb?: Fn
+    cb?: (event: React.MouseEvent<HTMLLIElement, MouseEvent>) => void
 }
 
 export interface PopupFrameProps {

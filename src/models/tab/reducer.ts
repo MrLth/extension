@@ -2,7 +2,7 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2020-10-13 17:35:56
- * @LastEditTime: 2020-12-16 17:00:19
+ * @LastEditTime: 2020-12-17 00:51:59
  * @Description: file content
  */
 
@@ -10,7 +10,7 @@ import { tab } from 'models'
 import { debug, proxyMethods } from 'utils'
 import { IActionCtxBase as IAC } from 'concent'
 import { Fn, Obj } from 'utils/type'
-import { debounce } from 'lodash'
+import { cloneDeep, debounce } from 'lodash'
 import {
 	AttachTab,
 	AvtiveTab,
@@ -22,6 +22,7 @@ import {
 	TabMap,
 	TabState,
 	WindowMap,
+	MyWindow,
 } from './type'
 
 export class TabHandler {
@@ -49,7 +50,7 @@ export class TabHandler {
 				map.set(c.windowId, {
 					tabs: [myTab],
 					attach: windowsAttaches.find((v) => v.id === c.windowId),
-					lastEditTime: +new Date(),
+					updateKey: +new Date(),
 				})
 			}
 			return map
@@ -62,26 +63,37 @@ export class TabHandler {
 		const urlInfo = urlStr ? new URL(urlStr) : undefined
 
 		return Object.assign(tab, {
-			lastUpdateTime: +new Date(),
+			updateKey: +new Date(),
 			urlInfo,
 		})
 	}
 
-	createTab(tab: chrome.tabs.Tab, config?: BaseConfig): void {
-		const { immediate = false } = config ?? {}
-		const task = () => {
+	createWindow(attach: chrome.windows.Window): void {
+		this.push(() => {
+			this.windows.set(attach.id, {
+				tabs: [],
+				attach,
+				updateKey: +new Date(),
+			})
+		})
+	}
+
+	createTab(tab: chrome.tabs.Tab): void {
+		this.push(() => {
 			// 1. 新建
 			const myTab = this.initTab(tab)
 			this.tabMap.set(tab.id, myTab)
-			if (this.windows.has(tab.windowId)) {
+			if (!this.windows.has(tab.windowId)) {
 				// 2. 新建窗口
-				this.windows.set(tab.windowId, {
-					tabs: [myTab],
-					attach: null,
-					lastEditTime: +new Date(),
-				})
-				// 3.更新窗口信息
-				this.updAttach = true
+				// this.windows.set(tab.windowId, {
+				// 	tabs: [myTab],
+				// 	attach: null,
+				// 	updateKey: +new Date(),
+				// })
+				// // 3.更新窗口信息
+				// this.updAttach = true
+				// TODO: Debug
+				log('createTab', 'error', 4)
 			} else {
 				// 2. 添加到已有窗口
 				this.windows.get(tab.windowId).tabs.splice(tab.index, 0, myTab)
@@ -90,26 +102,17 @@ export class TabHandler {
 				// 4. 更新窗口标签索引
 				this.updTabsWindows(tab.windowId, tab.index)
 			}
-		}
-
-		log({ this: this })
-
-		if (immediate) task()
-		else this.push(task)
+		})
 	}
 
 	updateTab(tab: chrome.tabs.Tab): void {
 		this.push(() => {
 			if (this.tabMap.has(tab.id)) {
 				// 1. 存在则更新
-				this.tabMap.set(tab.id, {
-					...this.tabMap.get(tab.id),
-					...tab,
-					lastUpdateTime: +new Date(),
-				})
+				const myTab = this.tabMap.get(tab.id)
+				Object.assign(myTab, tab)
+				TabHandler.regenerateUpdateKey(myTab)
 			} else {
-				// 1. 没有就新建
-				this.createTab(tab, { immediate: true })
 				// TODO: DEBUG
 				log('updateTab', 'error', 4)
 			}
@@ -169,10 +172,9 @@ export class TabHandler {
 		this.push(() => {
 			if (this.windows.has(windowId) && this.tabMap.has(tabId)) {
 				// 1. 更新标签状态
-				Object.assign(this.tabMap.get(tabId), {
-					active: true,
-					lastUpdateTime: +new Date(),
-				})
+				const tab = this.tabMap.get(tabId)
+				tab.active = true
+				TabHandler.regenerateUpdateKey(tab)
 				// 2. 更新窗口修改时间
 				this.updTimeWindows.add(windowId)
 			} else {
@@ -252,6 +254,14 @@ export class TabHandler {
 	private push(task: Fn) {
 		this.queue.push(task)
 	}
+
+	static regenerateUpdateKey(obj: MyWindow | MyTab): void {
+		let newKey
+		do {
+			newKey = +new Date() * 100 + ((Math.random() * 100) | 0)
+		} while (newKey === obj.updateKey)
+		obj.updateKey = newKey
+	}
 }
 
 async function init(
@@ -270,16 +280,16 @@ async function init(
 		target: tabHandler,
 		handler: debounce(() => {
 			ctx.dispatch(batchUpdate)
-		}, 5000),
+		}),
 		proxyKeys: ['push'],
 	})
 
 	const tabHandlerProxy2 = proxyMethods({
 		target: tabHandlerProxy1,
 		handler: (target, thisArg, args) => {
-			log({ target: target.name, thisArg, args }, 'tab', 2)
+			log({ target: target.name, args }, 'tab', 2)
 		},
-		ignoreKeys: ['push', 'updWindowEditTime'],
+		ignoreKeys: ['push'],
 	})
 
 	return { tabHandler: tabHandlerProxy2 }
@@ -290,6 +300,14 @@ function batchUpdate(_: unknown, state: TabState): Partial<TabState> {
 
 	updIndexWindows.clear()
 	updTimeWindows.clear()
+
+	const tabHandler = cloneDeep(state.tabHandler)
+	debug({
+		title: `tab / batchUpdate before`,
+		multi: {
+			tabHandler,
+		},
+	})
 
 	// 1. 执行更新任务
 	for (const fn of queue) {
@@ -307,13 +325,20 @@ function batchUpdate(_: unknown, state: TabState): Partial<TabState> {
 			})
 		}
 	}
-
+	// 2. 清空队列
+	queue.length = 0
+	// 3. 更新索引
 	for (const [windowId, position] of updIndexWindows.entries()) {
 		if (!windows.has(windowId)) continue
 		const tabs = windows.get(windowId).tabs
 		for (let i = position, len = tabs.length; i < len; i++) {
 			tabs[i].index = i
 		}
+	}
+	// 4. 更新窗口修改时间
+	for (const windowId of updTimeWindows.values()) {
+		if (!windows.has(windowId)) continue
+		TabHandler.regenerateUpdateKey(windows.get(windowId))
 	}
 
 	return state

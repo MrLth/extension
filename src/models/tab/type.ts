@@ -2,14 +2,14 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2020-12-12 14:44:53
- * @LastEditTime: 2020-12-16 15:29:05
+ * @LastEditTime: 2020-12-16 23:49:01
  * @Description: file content
  */
 import state from './state'
 export type TabState = typeof state
 
 export interface MyTab extends chrome.tabs.Tab {
-	lastUpdateTime: number
+	updateKey: number
 	urlInfo: URL
 }
 
@@ -18,7 +18,7 @@ export type WindowMap = Map<number, MyWindow>
 export interface MyWindow {
 	tabs: MyTab[]
 	attach?: chrome.windows.Window
-	lastEditTime: number
+	updateKey: number
 }
 
 export type TabMap = Map<number, MyTab>

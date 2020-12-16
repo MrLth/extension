@@ -15,10 +15,11 @@ import { MyWindow } from 'models/tab/type'
 interface Props {
   myWindow: MyWindow
   settings: Settings
-  lastEditTime: number
+  updateKey: number
 }
 
-const Window = ({ myWindow: { tabs, attach }, settings }: Props) => {
+const Window = ({ myWindow, settings }: Props) => {
+  const { tabs, attach } = myWindow
   const tabArr = []
 
   const len = tabs.length
@@ -41,6 +42,7 @@ const Window = ({ myWindow: { tabs, attach }, settings }: Props) => {
           <Label
             key={tab.id}
             tab={tab}
+            updateKey={tab.updateKey}
             settings={settings}
           />
         )
@@ -58,6 +60,7 @@ const Window = ({ myWindow: { tabs, attach }, settings }: Props) => {
       <Label
         key={tab.id}
         tab={tab}
+        updateKey={tab.updateKey}
         settings={settings}
       />
     )
@@ -72,13 +75,13 @@ const Window = ({ myWindow: { tabs, attach }, settings }: Props) => {
         )
     )
   }
-
+  log({ Window: attach.id, myWindow }, 'render', 5)
   return (
     <ul
       className={cn('window', {
         'focused': attach?.focused
       })}>
-      <div className={cn("window-title")}>window # {attach.id}</div>
+      <div className={cn("window-title")}>window # {attach?.id}</div>
       {tabArr}
     </ul>
   )
