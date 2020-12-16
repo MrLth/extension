@@ -2,7 +2,7 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2020-10-04 18:52:15
- * @LastEditTime: 2020-12-16 09:29:34
+ * @LastEditTime: 2020-12-16 11:48:59
  * @Description: file content
  */
 declare module '*.module.scss' {

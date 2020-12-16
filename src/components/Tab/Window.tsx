@@ -1,7 +1,6 @@
 import * as React from 'react'
 import { memo } from 'react'
 
-import { Tab } from 'utils/type'
 import Label from './Label'
 
 //#region 样式绑定
@@ -11,19 +10,21 @@ const cn = moduleClassnames.bind(null, c)
 //#endregion
 
 import { Settings } from './index'
+import { MyWindow } from 'models/tab/type'
 
 interface Props {
-  tabs: Tab[]
-  windowId: string | number
-  attachInfo: chrome.windows.Window
+  myWindow: MyWindow
   settings: Settings
+  lastEditTime: number
 }
 
-const Window = (props: Props) => {
-  const { tabs, settings } = props
+const Window = ({ myWindow: { tabs, attach }, settings }: Props) => {
   const tabArr = []
 
   const len = tabs.length
+  let nextHost: string | number, host: string | number
+
+
   for (let i = 0; i < len; i++) {
     let tab = tabs[i]
     let nextTab = i + 1 !== len && tabs[i + 1]
@@ -31,27 +32,32 @@ const Window = (props: Props) => {
     const tempArr = []
     const key = tab.id
 
-    if (nextTab.userHost === tab.userHost) {
+    nextHost = nextTab.urlInfo?.host ?? NaN
+    host = tab.urlInfo?.host ?? NaN
+
+    if (nextHost === host) {
       do {
         tempArr.push(
           <Label
             key={tab.id}
             tab={tab}
-            index={i}
             settings={settings}
           />
         )
         i++
         tab = nextTab
         nextTab = i + 1 !== tabs.length && tabs[i + 1]
-      } while (i + 1 < len && nextTab.userHost === tab.userHost)
+
+        host = nextHost
+        nextHost = nextTab.urlInfo?.host ?? NaN
+
+      } while (i + 1 < len && nextHost === host)
     }
 
     tempArr.push(
       <Label
         key={tab.id}
         tab={tab}
-        index={i}
         settings={settings}
       />
     )
@@ -67,52 +73,12 @@ const Window = (props: Props) => {
     )
   }
 
-  // #region
-  // const jsx1 = (
-  //   <>
-  //     <div className={c["btn-wrapper"]}>
-  //       <button
-  //         onClick={(e) => {
-  //           selectWindow(windowId)
-  //           e.stopPropagation()
-  //         }}>
-  //         选择
-  //       </button>
-  //       {attachInfo?.state === 'minimized' ? (
-  //         <button
-  //           onClick={(e) => {
-  //             changeWindowAttach(parseInt(windowId as string), { state: 'normal' })
-  //             e.stopPropagation()
-  //           }}>
-  //           恢复
-  //         </button>
-  //       ) : (
-  //           <button
-  //             onClick={(e) => {
-  //               changeWindowAttach(parseInt(windowId as string), { state: 'minimized' })
-  //               e.stopPropagation()
-  //             }}>
-  //             最小化
-  //           </button>
-  //         )}
-  //       <button
-  //         onClick={(e) => {
-  //           closeWindow(+windowId)
-  //           e.stopPropagation()
-  //         }}>
-  //         关闭
-  //       </button>
-  //     </div>
-  //   </>
-  // )
-  //#endregion
-
   return (
     <ul
       className={cn('window', {
-        'focused': props.attachInfo && props.attachInfo.focused
+        'focused': attach?.focused
       })}>
-      <div className={cn("window-title")}>window # {props.windowId}</div>
+      <div className={cn("window-title")}>window # {attach.id}</div>
       {tabArr}
     </ul>
   )

@@ -90,7 +90,7 @@ type Ctx = CtxMSConn<EmptyObject, Module, State, Conn, Settings>
 const Bookmark = (): JSX.Element => {
     const { state, settings } = useConcent<EmptyObject, Ctx, NoMap>({ module: moduleName, setup, state: initState, connect })
 
-    log({ BookMark: 'BookMark' }, 'render count', 2)
+    log({ BookMark: 'BookMark' }, 'render', 5)
     return <div className={c['content']}>
         <div className={c['title']}>
             <div>BOOKMARK</div>

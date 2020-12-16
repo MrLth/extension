@@ -2,10 +2,9 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2020-12-12 14:44:53
- * @LastEditTime: 2020-12-15 13:59:56
+ * @LastEditTime: 2020-12-16 15:29:05
  * @Description: file content
  */
-import { type } from 'utils'
 import state from './state'
 export type TabState = typeof state
 
@@ -14,14 +13,13 @@ export interface MyTab extends chrome.tabs.Tab {
 	urlInfo: URL
 }
 
-export type WindowMap = Map<
-	number,
-	{
-		tabs: MyTab[]
-		attach?: chrome.windows.Window
-		lastEditTime: number
-	}
->
+export type WindowMap = Map<number, MyWindow>
+
+export interface MyWindow {
+	tabs: MyTab[]
+	attach?: chrome.windows.Window
+	lastEditTime: number
+}
 
 export type TabMap = Map<number, MyTab>
 
@@ -50,3 +48,7 @@ export interface AttachTab {
 }
 
 export type DetachTab = AttachTab
+
+export interface BaseConfig {
+	immediate: boolean
+}

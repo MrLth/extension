@@ -1,10 +1,12 @@
-import { Fn } from './type'
+import { EmptyObject, Fn, Keys, Obj } from './type'
 import format from 'date-format'
+import { Key } from 'react'
+import { TabHandler } from 'models/tab/reducer'
 /*
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2020-05-29 17:30:01
- * @LastEditTime: 2020-12-16 09:48:44
+ * @LastEditTime: 2020-12-16 16:01:08
  * @Description: 整个项目会用到的方法和api
  */
 
@@ -245,7 +247,7 @@ export function debug({
 	const border = 'border-left: 1px solid #000;padding:2px 0;margin-left:5.5px'
 	const paraColor = 'color:#69c0ff'
 	const multiColor = 'color:#5cdbd3'
-	const entries = Object.entries(multi)
+	const entries = Object.entries(multi ?? {})
 	const maxLength = entries.reduce(
 		(a, [k]) => (a < k.length ? k.length : a),
 		typeof para === 'string' ? para.length : 10
@@ -359,3 +361,65 @@ export function log(
 	console.log(pattern, ...parameters)
 }
 window.log = log
+
+interface ProxyMethods<T> {
+	target: T
+	handler: (target: Fn, thisArg: unknown, args: unknown[]) => unknown
+	proxyKeys?: Keys
+	ignoreKeys?: Keys
+}
+export function proxyMethods<T>({
+	target,
+	handler,
+	proxyKeys,
+	ignoreKeys,
+}: ProxyMethods<T>): T {
+	if (!proxyKeys) {
+		if (typeof target.constructor === 'function') {
+			// 1. 类的实例，方法从类原型上找
+			proxyKeys = allKeys(Object.getPrototypeOf(target))
+			const set = new Set(proxyKeys)
+			set.delete('constructor')
+			proxyKeys = Array.from(set)
+		} else {
+			// 2. 普通对象，仅遍历自身
+			proxyKeys = allKeys(target as Obj)
+		}
+	}
+	proxyKeys = proxyKeys.filter((k) => typeof (target as Obj)[k] === 'function')
+
+	// 3. 去重 && 去除忽略键
+	const set = new Set(proxyKeys)
+	ignoreKeys && ignoreKeys.forEach((k) => set.delete(k))
+	proxyKeys = Array.from(set)
+
+	// 4. 为这些函数添加代理
+	const fnMap = new Map<Key, Fn>()
+	for (const k of proxyKeys) {
+		const fn = (target as Obj)[k]
+		if (typeof fn === 'function') {
+			fnMap.set(
+				k,
+				new Proxy(fn, {
+					apply(target, thisArg, args) {
+						handler(target, thisArg, args)
+						return target.call(thisArg, ...args)
+					},
+				})
+			)
+		}
+	}
+
+	// 5. 为对象添加代理，让方法函数的访问走代理
+	return (new Proxy(target as Obj, {
+		get(obj, k) {
+			if (typeof k !== 'symbol') {
+				return fnMap.has(k) ? fnMap.get(k) : obj[k]
+			}
+		},
+	}) as unknown) as T
+}
+
+function allKeys<T>(obj: T): Keys {
+	return Object.keys(Object.getOwnPropertyDescriptors(obj))
+}

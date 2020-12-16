@@ -41,84 +41,85 @@ type State = ReturnType<typeof initState>
 type CtxPre = CtxMSConn<EmptyObject, Module, State, Conn>
 //#endregion
 const setup = (ctx: CtxPre) => {
-    const { setState, state, effect,reducer } = ctx
+    const { setState, state, effect, reducer } = ctx
     // const { record } = ctx.connectedState
 
     const common = {
-        isEventSleep: true,
-
+        isEventSleep: false,
     }
-    const handleTabs = {
-        queue: [] as Array<(windowsObj: Windows) => Windows>,
 
-    }
     // 绑定[ window & tab ]更新事件
     effect(() => {
         const onCreated = (tab: chrome.tabs.Tab) => {
             if (common.isEventSleep) return
-
+            state.tabHandler?.createTab(tab)
         }
-        const onUpdatedListener = (
-            tabId: number,
-            changeInfo: chrome.tabs.TabChangeInfo,
+        const onUpdated = (
+            _tabId: number,
+            _changeInfo: chrome.tabs.TabChangeInfo,
             tab: chrome.tabs.Tab
         ) => {
             if (common.isEventSleep) return
+            state.tabHandler?.updateTab(tab)
         }
-        const onRemovedListener = (
+        const onRemoved = (
             tabId: number,
             { windowId, isWindowClosing }: chrome.tabs.TabRemoveInfo
         ) => {
             if (common.isEventSleep) return
+            state.tabHandler?.removeTab({ tabId, windowId, isWindowClosing })
         }
-        const onMovedListener = (
+        const onMoved = (
             tabId: number,
             { windowId, fromIndex, toIndex }: chrome.tabs.TabMoveInfo
         ) => {
             if (common.isEventSleep) return
+            state.tabHandler?.moveTab({ tabId, windowId, fromIndex, toIndex })
         }
-        const onActivatedListener = ({ tabId, windowId }: chrome.tabs.TabActiveInfo) => {
+        const onActivated = ({ tabId, windowId }: chrome.tabs.TabActiveInfo) => {
             if (common.isEventSleep) return
-
+            state.tabHandler?.avtiveTab({ tabId, windowId })
         }
-        const onDetachedListener = (
+        const onDetached = (
             tabId: number,
-            { oldWindowId, oldPosition }: chrome.tabs.TabDetachInfo
+            { oldWindowId: windowId, oldPosition: position }: chrome.tabs.TabDetachInfo
         ) => {
             if (common.isEventSleep) return
+            state.tabHandler?.detachTab({ tabId, windowId, position })
         }
-        const onAttachedListener = (
+        const onAttached = (
             tabId: number,
-            { newWindowId, newPosition }: chrome.tabs.TabAttachInfo
+            { newWindowId: windowId, newPosition: position }: chrome.tabs.TabAttachInfo
         ) => {
             if (common.isEventSleep) return
+            state.tabHandler?.attachTab({ tabId, windowId, position })
         }
         //#region 事件绑定
         chrome.tabs.onCreated.addListener(onCreated)
-        chrome.tabs.onUpdated.addListener(onUpdatedListener)
-        chrome.tabs.onRemoved.addListener(onRemovedListener)
-        chrome.tabs.onMoved.addListener(onMovedListener)
-        chrome.tabs.onActivated.addListener(onActivatedListener)
-        chrome.tabs.onDetached.addListener(onDetachedListener)
-        chrome.tabs.onAttached.addListener(onAttachedListener)
+        chrome.tabs.onUpdated.addListener(onUpdated)
+        chrome.tabs.onRemoved.addListener(onRemoved)
+        chrome.tabs.onMoved.addListener(onMoved)
+        chrome.tabs.onActivated.addListener(onActivated)
+        chrome.tabs.onDetached.addListener(onDetached)
+        chrome.tabs.onAttached.addListener(onAttached)
         //#endregion
         //#region 事件解绑
         return () => {
             chrome.tabs.onCreated.removeListener(onCreated)
-            chrome.tabs.onUpdated.removeListener(onUpdatedListener)
-            chrome.tabs.onRemoved.removeListener(onRemovedListener)
-            chrome.tabs.onMoved.removeListener(onMovedListener)
-            chrome.tabs.onActivated.removeListener(onActivatedListener)
-            chrome.tabs.onDetached.removeListener(onDetachedListener)
-            chrome.tabs.onAttached.removeListener(onAttachedListener)
+            chrome.tabs.onUpdated.removeListener(onUpdated)
+            chrome.tabs.onRemoved.removeListener(onRemoved)
+            chrome.tabs.onMoved.removeListener(onMoved)
+            chrome.tabs.onActivated.removeListener(onActivated)
+            chrome.tabs.onDetached.removeListener(onDetached)
+            chrome.tabs.onAttached.removeListener(onAttached)
         }
         //#endregion
     }, [])
 
 
-    effect(()=>{
-        reducer.tab.init()
-    })
+    effect(() => {
+        reducer.tab.init(null)
+    }, [])
 
     // 绑定[ windowsAttach ]更新事件
     effect(() => {
@@ -244,7 +245,9 @@ type Ctx = CtxMSConn<EmptyObject, Module, State, Conn, Settings>
 const TabComponent = (): JSX.Element => {
     const { state, settings } = useConcent<EmptyObject, Ctx, NoMap>({ module: moduleName, setup, state: initState, connect })
 
+    const { windows } = state.tabHandler ?? {}
 
+    log({ Tab: 'Tab' }, 'render', 5)
     return (
         <>
             <div className={c['content']}>
@@ -257,17 +260,17 @@ const TabComponent = (): JSX.Element => {
                     </div>
                 </div>
                 <div className={c['list']}>
-                    {/* {Object.keys(renderWindows).map((key: keyof typeof renderWindows) => {
-                        return (
-                            <Window
-                                key={key}
-                                tabs={renderWindows[key]}
-                                windowId={key}
-                                attachInfo={state.windowsAttach[key]}
+                    {
+                        windows && [...windows.entries()].map(([k, v]) => {
+                            log({ k, v })
+                            return <Window
+                                key={k}
+                                myWindow={v}
                                 settings={settings}
+                                lastEditTime={v.lastEditTime}
                             />
-                        )
-                    })} */}
+                        })
+                    }
                 </div>
             </div>
             <PopupFrame {...state.popupFrameProps} />

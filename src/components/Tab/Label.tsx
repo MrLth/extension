@@ -12,7 +12,6 @@ import { Settings } from './index'
 
 interface Props {
     tab: Tab
-    index: number
     settings: Settings
 }
 
@@ -24,9 +23,7 @@ const getLabelDom = (dom: HTMLElement): HTMLElement => {
     return getLabelDom(dom.parentElement)
 }
 
-const Label = (props: Props) => {
-    const { tab, settings } = props
-
+const Label = ({ tab, settings }: Props) => {
     return (
         <li
             className={cn('label', {
