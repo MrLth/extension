@@ -2,18 +2,17 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2020-10-13 17:35:56
- * @LastEditTime: 2020-12-17 00:51:59
+ * @LastEditTime: 2020-12-17 16:44:11
  * @Description: file content
  */
 
-import { tab } from 'models'
-import { debug, proxyMethods } from 'utils'
+import { debug, proxyMethods, type } from 'utils'
 import { IActionCtxBase as IAC } from 'concent'
-import { Fn, Obj } from 'utils/type'
+import { Fn } from 'utils/type'
 import { cloneDeep, debounce } from 'lodash'
 import {
 	AttachTab,
-	AvtiveTab,
+	ActiveTab,
 	DetachTab,
 	BaseConfig,
 	MoveTab,
@@ -31,30 +30,39 @@ export class TabHandler {
 	tabMap: TabMap = new Map()
 	updIndexWindows = new Map<number, number>()
 	updTimeWindows = new Set<number>()
-	private running: boolean
-	private updAttach: boolean
+	focusWindow: number
 
 	constructor(
 		nativeTabs: chrome.tabs.Tab[],
 		windowsAttaches: chrome.windows.Window[]
 	) {
+		// 1. 更新 windows
 		this.windows = nativeTabs.reduce((map, c) => {
 			const myTab = this.initTab(c)
 			// hashmap
 			this.tabMap.set(c.id, myTab)
 
 			if (map.has(c.windowId)) {
-				map.get(c.windowId).tabs.push(myTab)
+				const myWindow = map.get(c.windowId)
+				// 2. 更新 tabs
+				myWindow.tabs.push(myTab)
+				// 3. 更新 activeTabId
+				if (myTab.active) myWindow.activeTabId = myTab.id
 			} else {
 				// initial myWindow
 				map.set(c.windowId, {
 					tabs: [myTab],
 					attach: windowsAttaches.find((v) => v.id === c.windowId),
 					updateKey: +new Date(),
+					activeTabId: -1,
 				})
 			}
 			return map
 		}, new Map() as WindowMap)
+
+		// 2. 更新当前焦点窗口
+		const focusWindow = windowsAttaches.find((v) => v.focused)
+		this.focusWindow = focusWindow ? focusWindow.id : -1
 	}
 
 	initTab(tab: chrome.tabs.Tab): MyTab {
@@ -74,6 +82,7 @@ export class TabHandler {
 				tabs: [],
 				attach,
 				updateKey: +new Date(),
+				activeTabId: -1,
 			})
 		})
 	}
@@ -124,7 +133,7 @@ export class TabHandler {
 	removeTab({ tabId, windowId, isWindowClosing }: RemoveTab): void {
 		this.push(() => {
 			// 1. 关闭窗口
-			if (isWindowClosing) return this.closeWindow(windowId, { immediate: true })
+			if (isWindowClosing) return this.removeWindow(windowId, { immediate: true })
 			// 2. 或者只关闭标签
 			if (this.windows.has(windowId)) {
 				const { tabs } = this.windows.get(windowId)
@@ -168,18 +177,30 @@ export class TabHandler {
 		})
 	}
 
-	avtiveTab({ tabId, windowId }: AvtiveTab): void {
+	activeTab({ tabId, windowId }: ActiveTab): void {
 		this.push(() => {
 			if (this.windows.has(windowId) && this.tabMap.has(tabId)) {
 				// 1. 更新标签状态
 				const tab = this.tabMap.get(tabId)
 				tab.active = true
+				// 2. 取消上次焦点的标签
+				const myWindow = this.windows.get(windowId)
+				if (this.tabMap.has(myWindow.activeTabId)) {
+					const last = this.tabMap.get(myWindow.activeTabId)
+					last.active = false
+					TabHandler.regenerateUpdateKey(last)
+				} else {
+					log({ activeTab: myWindow.activeTabId }, 'error', 4)
+				}
+				// 3. 更新标签
 				TabHandler.regenerateUpdateKey(tab)
-				// 2. 更新窗口修改时间
+				// 4. 更新窗口 activeTabId
+				myWindow.activeTabId = tabId
+				// 5. 更新窗口
 				this.updTimeWindows.add(windowId)
 			} else {
 				// TODO: DEBUG
-				log('avtiveTab', 'error', 4)
+				log('activeTab', 'error', 4)
 			}
 		})
 	}
@@ -194,16 +215,17 @@ export class TabHandler {
 					if (i === -1) {
 						// TODO: DEBUG
 						log('detachTab 1', 'error', 4)
-
 						return
 					}
 					position = i
 				}
+				// 2. 从原来的窗口中移除
 				tabs.splice(position, 1)
-
-				// 2. 更新窗口修改时间
+				// 3. 更改 windowId
+				this.tabMap.get(tabId).windowId = null
+				// 4. 更新窗口修改时间
 				this.updTimeWindows.add(windowId)
-				// 3. 更新窗口标签索引
+				// 5. 更新窗口标签索引
 				this.updTabsWindows(windowId, position)
 			} else {
 				// TODO: DEBUG
@@ -218,10 +240,11 @@ export class TabHandler {
 				const { tabs } = this.windows.get(windowId)
 				// 1. 加入窗口
 				tabs.splice(position, 0, this.tabMap.get(tabId))
-
-				// 2. 更新窗口修改时间
+				// 2. 更新 windowId
+				this.tabMap.get(tabId).windowId = windowId
+				// 3. 更新窗口修改时间
 				this.updTimeWindows.add(windowId)
-				// 3. 更新窗口标签索引
+				// 4. 更新窗口标签索引
 				this.updTabsWindows(windowId, position)
 			} else {
 				// TODO: DEBUG
@@ -230,9 +253,8 @@ export class TabHandler {
 		})
 	}
 
-	closeWindow(windowId: number, config?: BaseConfig): void {
+	removeWindow(windowId: number, config?: BaseConfig): void {
 		const { immediate = false } = config ?? {}
-
 		const task = () => {
 			if (!this.windows.has(windowId)) return
 			// 1. 删除窗口下所有标签
@@ -243,7 +265,25 @@ export class TabHandler {
 			this.windows.delete(windowId)
 		}
 		if (immediate) task()
-		else this.queue.push(task)
+		else this.push(task)
+	}
+
+	changeFocusWindow(windowId: number): void {
+		this.push(() => {
+			// 1. 只处理正确获取焦点
+			if (windowId === -1) return
+			// 2. blur
+			if (this.windows.has(this.focusWindow))
+				this.windows.get(this.focusWindow).attach.focused = false
+			// 3. focus
+			if (this.windows.has(windowId))
+				this.windows.get(windowId).attach.focused = true
+			// 4. update window updateKey
+			this.updTimeWindows.add(this.focusWindow)
+			this.updTimeWindows.add(windowId)
+			// 5. update cache
+			this.focusWindow = windowId
+		})
 	}
 
 	private updTabsWindows(windowId: number, position: number): void {
@@ -276,7 +316,7 @@ async function init(
 
 	const tabHandler = new TabHandler(nativeTabs, windowsAttaches)
 
-	const tabHandlerProxy1 = proxyMethods({
+	const proxyA = proxyMethods({
 		target: tabHandler,
 		handler: debounce(() => {
 			ctx.dispatch(batchUpdate)
@@ -284,15 +324,15 @@ async function init(
 		proxyKeys: ['push'],
 	})
 
-	const tabHandlerProxy2 = proxyMethods({
-		target: tabHandlerProxy1,
-		handler: (target, thisArg, args) => {
-			log({ target: target.name, args }, 'tab', 2)
+	const proxyB = proxyMethods({
+		target: proxyA,
+		handler: (target, _thisArg, args) => {
+			log({ target: target.name, args }, 'batch', 2)
 		},
 		ignoreKeys: ['push'],
 	})
 
-	return { tabHandler: tabHandlerProxy2 }
+	return { tabHandler: proxyB }
 }
 
 function batchUpdate(_: unknown, state: TabState): Partial<TabState> {
@@ -344,4 +384,23 @@ function batchUpdate(_: unknown, state: TabState): Partial<TabState> {
 	return state
 }
 
-export default { init, batchUpdate }
+function openTab(tab: chrome.tabs.Tab | string, state: TabState): void {
+	if (typeof tab === 'string') {
+		for (const v of state.tabHandler.tabMap.values()) {
+			if (v.url === tab) {
+				tab = v
+				break
+			}
+		}
+		if (typeof tab === 'string') {
+			const url = new URL(tab)
+			if (!url) return
+			window.open(url.href)
+			return
+		}
+	}
+	chrome.tabs.update(tab.id, { active: true })
+	chrome.windows.update(tab.windowId, { focused: true })
+}
+
+export default { init, batchUpdate, openTab }

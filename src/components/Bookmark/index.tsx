@@ -78,7 +78,7 @@ const setup = (ctx: CtxPre) => {
                 top: folder.top - li.getBoundingClientRect().top + CARD_TITLE_HEIGHT + FOLDER_TITLE_HEIGHT,
             })
         },
-        openTab: reducer.$$global.openTab
+        openTab: reducer.tab.openTab
     }
 
     return settings

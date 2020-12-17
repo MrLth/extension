@@ -13,7 +13,9 @@ import Section from './Section'
 //#region Time Ago Init
 import TimeAgo from 'javascript-time-ago'
 import en from 'javascript-time-ago/locale/en'
-import { debound, sortByKey } from 'utils'
+import {  sortByKey } from 'utils'
+import { debounce } from 'lodash'
+
 TimeAgo.addLocale(en)
 const timeAgo = new TimeAgo('en')
 const timeAgoFormat = (n: number): string => timeAgo.format(n, 'twitter')
@@ -75,7 +77,7 @@ const setup = (ctx: CtxPre) => {
                 }
             })
         },
-        updFirstSection: debound(() => {
+        updFirstSection: debounce(() => {
             const endTime = new Date().valueOf()
             chrome.history.search({ text: '', startTime: common.startTime, endTime, maxResults: 9999 }, (result) => {
                 const rstList = sortNativeHistory(result)
@@ -169,7 +171,7 @@ const setup = (ctx: CtxPre) => {
     })
 
     const settings = {
-        openLabel: reducer.$$global.openTab,
+        openLabel: reducer.tab.openTab,
         refList: {
             set current(v: HTMLUListElement) {
                 common.listHeight = v.clientHeight

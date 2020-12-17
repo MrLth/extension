@@ -9,7 +9,7 @@ import { Recording } from 'models/record/state'
 import Label from './Label'
 import { Settings } from '.'
 import IconFont from 'components/IconFont'
-import { useRefVal } from 'hooks'
+import { useRefVal } from 'utils/hooks'
 interface Props {
     recordingIndex: number
     recording: Recording

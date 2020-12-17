@@ -2,11 +2,12 @@ import { EmptyObject, Fn, Keys, Obj } from './type'
 import format from 'date-format'
 import { Key } from 'react'
 import { TabHandler } from 'models/tab/reducer'
+import { ignoreLog } from 'config'
 /*
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2020-05-29 17:30:01
- * @LastEditTime: 2020-12-16 16:01:08
+ * @LastEditTime: 2020-12-17 16:54:40
  * @Description: 整个项目会用到的方法和api
  */
 
@@ -36,42 +37,6 @@ export function throttle(
 	}
 }
 
-export function debound(
-	fn: (...args: unknown[]) => unknown,
-	delay: number
-): (...args: unknown[]) => void {
-	let timer: number = null
-	return function (...args: unknown[]): void {
-		clearTimeout(timer)
-
-		timer = window.setTimeout(() => {
-			fn.apply(this, args)
-		}, delay)
-	}
-}
-
-export function deboundFixed(
-	fn: (...args: unknown[]) => unknown,
-	delay: number,
-	maxDelay = delay + 50
-): (...args: unknown[]) => void {
-	let timer: number = null
-	let lastHandleTime = +new Date()
-	return function (...args: unknown[]): void {
-		clearTimeout(timer)
-		const nowTime = +new Date()
-
-		const cb = () => {
-			lastHandleTime = nowTime
-			fn.apply(this, args)
-		}
-		if (nowTime - lastHandleTime > maxDelay) {
-			cb()
-		} else {
-			timer = window.setTimeout(cb, delay)
-		}
-	}
-}
 
 export const moduleClassnames = (
 	module: Record<string, string>,
@@ -315,6 +280,9 @@ export function log(
 	title = 'log',
 	color?: number | string
 ): void {
+	// 1. 忽略
+	if (ignoreLog.includes(title)) return
+
 	let borderColor = '#b37feb'
 	let bgColor = '#d3adf7'
 

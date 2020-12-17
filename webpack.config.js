@@ -2,7 +2,7 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2020-05-27 15:30:26
- * @LastEditTime: 2020-12-12 16:15:58
+ * @LastEditTime: 2020-12-17 16:56:05
  * @Description: file content
  */
 const webpack = require('webpack');
@@ -37,11 +37,8 @@ module.exports = {
             'public': path.resolve("public"),
             'components': path.resolve("src/components"),
             'utils': path.resolve("src/utils"),
-            'hooks': path.resolve("src/hooks"),
+            'config': path.resolve("src/config"),
             'models': path.resolve("src/models"),
-            'common': path.resolve("src/common"),
-            'types': path.resolve("src/types"),
-            'store': path.resolve("src/store"),
             'src': path.resolve("src")
         }
     },

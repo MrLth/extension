@@ -1,7 +1,8 @@
 import React, { useEffect } from 'react'
 import ReactDOM from 'react-dom'
 import { useConcent } from 'concent'
-import { deboundFixed } from 'utils'
+import { debounce } from 'lodash'
+
 
 import 'normalize.css/normalize.css'
 import 'src/index.scss'
@@ -15,7 +16,7 @@ const App = () => {
     const { setState } = useConcent('$$global')
 
     useEffect(() => {
-        const windowResizeListener = deboundFixed(() => {
+        const windowResizeListener = debounce(() => {
             setState({
                 windowSize: {
                     width: window?.innerWidth,

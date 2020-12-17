@@ -9,12 +9,10 @@ import c from './index.module.scss'
 import IconFont from 'components/IconFont'
 import RecordList from './RecordList';
 import md5 from 'md5'
-import { cloneDeep } from 'lodash'
 //#endregion
 //#region Time Ago Init
 import TimeAgo from 'javascript-time-ago'
 import zh from 'javascript-time-ago/locale/zh'
-import { Recording } from 'models/record/state';
 TimeAgo.addLocale(zh)
 const timeAgo = new TimeAgo('zh')
 //#endregion
@@ -38,7 +36,6 @@ type CtxPre = CtxMSConn<EmptyObject, Module, State, Conn>
 //#endregion
 const setup = (ctx: CtxPre) => {
     const { effect, reducer } = ctx
-    const { tab } = ctx.connectedState
 
     // 数据初始化
     effect(() => {
@@ -79,7 +76,7 @@ const setup = (ctx: CtxPre) => {
     const settings = {
         closeLabel: reducer.record.closeLabel,
         closeRecord: reducer.record.closeRecord,
-        openLabel: reducer.$$global.openTab,
+        openLabel: reducer.tab.openTab,
         timeUpdQueue: [] as TimeUpdItem[],
         timeAgo,
         c() {

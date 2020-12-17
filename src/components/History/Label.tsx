@@ -14,7 +14,7 @@ import defaultIcon from '@img/defaultIcon.svg'
 // import IconFont from 'components/IconFont'
 import { Settings } from '.'
 import { HistoryItem } from './api'
-import { useRefVal } from 'hooks'
+import { useRefVal } from 'utils/hooks'
 const HOUR = 3600000
 function timeFormat(timeStamp: number): string {
     const date = new Date(timeStamp)

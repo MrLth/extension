@@ -2,10 +2,11 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2020-10-12 08:17:18
- * @LastEditTime: 2020-12-16 14:28:46
+ * @LastEditTime: 2020-12-17 15:25:55
  * @Description: file content
  */
-import { deboundFixed, readFromLocal, saveToLocal } from 'utils'
+import {  readFromLocal, saveToLocal } from 'utils'
+import { debounce } from 'lodash'
 import recordState, { Recording } from './state'
 import { IActionCtxBase as IAC } from 'concent'
 
@@ -54,7 +55,7 @@ function closeLabel(
 	return state
 }
 
-const saveDelay = deboundFixed((state: RecordState) => {
+const saveDelay = debounce((state: RecordState) => {
 	save(null, state)
 }, 5000)
 

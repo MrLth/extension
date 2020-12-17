@@ -1,20 +1,18 @@
-import React from 'react'
+import React, { useEffect, useRef } from 'react'
 import { NoMap, SettingsType, useConcent } from 'concent'
 //#region Import Type
-import { Tab, Windows, WindowsAttach, Fn, EmptyObject } from 'utils/type'
+import { Tab, Windows, WindowsAttach, EmptyObject } from 'utils/type'
 import { CtxMSConn, ItemsType } from 'utils/concent'
 //#endregion
-//#region Import Function
-import { debound, deboundFixed, debug } from 'utils'
-//#endregion
+
 //#region Import Components
 import Window from './Window'
 import PopupFrame, { PopupFrameProps, PopupOption } from '../PopupFrame'
 //#endregion
 //#region Import Style
 import c from './index.module.scss'
-import IconFont from 'components/IconFont'
-import { Recording } from 'models/record/state'
+import { LABEL_HEIGHT, WINDOW_TITLE_HEIGHT } from 'models/tab/const'
+import useViewable from './hooks/useViewable'
 //#endregion
 
 
@@ -48,6 +46,9 @@ const setup = (ctx: CtxPre) => {
         isEventSleep: false,
     }
 
+    effect(() => {
+        reducer.tab.init(null)
+    }, [])
     // 绑定[ window & tab ]更新事件
     effect(() => {
         const onCreated = (tab: chrome.tabs.Tab) => {
@@ -78,7 +79,7 @@ const setup = (ctx: CtxPre) => {
         }
         const onActivated = ({ tabId, windowId }: chrome.tabs.TabActiveInfo) => {
             if (common.isEventSleep) return
-            state.tabHandler?.avtiveTab({ tabId, windowId })
+            state.tabHandler?.activeTab({ tabId, windowId })
         }
         const onDetached = (
             tabId: number,
@@ -115,12 +116,6 @@ const setup = (ctx: CtxPre) => {
         }
         //#endregion
     }, [])
-
-
-    effect(() => {
-        reducer.tab.init(null)
-    }, [])
-
     // 绑定[ windowsAttach ]更新事件
     effect(() => {
         const onCreated = (attach: chrome.windows.Window) => {
@@ -128,11 +123,12 @@ const setup = (ctx: CtxPre) => {
             state.tabHandler?.createWindow(attach)
         }
         const onRemoved = (windowId: number) => {
-            debug({ title: 'windows.onRemoved', para: { windowId } })
-
+            if (common.isEventSleep) return
+            state.tabHandler?.removeWindow(windowId)
         }
         const onFocusChanged = (windowId: number) => {
-            debug({ title: 'windows.onFocusChanged', para: { windowId } })
+            if (common.isEventSleep) return
+            state.tabHandler?.changeFocusWindow(windowId)
 
         }
         chrome.windows.onCreated.addListener(onCreated)
@@ -145,15 +141,11 @@ const setup = (ctx: CtxPre) => {
         }
     }, [])
 
-    // Setting
     return {
         closeTab: (tabId: number) => {
             chrome.tabs.remove(tabId)
         },
-        openTab: (tab: Tab) => {
-            chrome.tabs.update(tab.id, { active: true })
-            chrome.windows.update(tab.windowId, { focused: true })
-        },
+        openTab: reducer.tab.openTab,
         // popupFrame
         updPopupFrameProps: (obj: PopupFrameProps) => {
             setState({ popupFrameProps: obj })
@@ -208,7 +200,7 @@ const setup = (ctx: CtxPre) => {
         duplicateTab: (tabId: number) => {
             chrome.tabs.duplicate(tabId)
         },
-        discardTab: (windowId: number | string, tabId: number) => {
+        discardTab: () => {
             // chrome.tabs.discard(tabId, (tab) => {
             //     if (!tab) return
 
@@ -235,7 +227,7 @@ const setup = (ctx: CtxPre) => {
             // })
 
             // ctx.reducer.record.addRecord(newRecording)
-        }
+        },
         //#endregion
     }
 }
@@ -247,6 +239,10 @@ const TabComponent = (): JSX.Element => {
     const { state, settings } = useConcent<EmptyObject, Ctx, NoMap>({ module: moduleName, setup, state: initState, connect })
 
     const { windows } = state.tabHandler ?? {}
+
+    // 让当前活动标签可视
+    const { listRef } = useViewable(state)
+
 
     log({ Tab: 'Tab' }, 'render', 5)
     return (
@@ -260,16 +256,17 @@ const TabComponent = (): JSX.Element => {
                         {/* <IconFont type='iconadd' onClick={settings.createWindow}></IconFont> */}
                     </div>
                 </div>
-                <div className={c['list']}>
+                <div className={c['list']} ref={listRef}>
                     {
-                        windows && [...windows.entries()].map(([k, v]) => {
-                            return <Window
-                                key={k}
-                                myWindow={v}
-                                settings={settings}
-                                updateKey={v.updateKey}
-                            />
-                        })
+                        windows && [...windows.entries()]
+                            .map(([k, v]) => {
+                                return <Window
+                                    key={k}
+                                    myWindow={v}
+                                    settings={settings}
+                                    updateKey={v.updateKey}
+                                />
+                            })
                     }
                 </div>
             </div>
