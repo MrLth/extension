@@ -93,6 +93,7 @@ const setup = (ctx: CtxPre) => {
             })
             // console.log(JSON.stringify(ctx.state.recording.map(v => ({ ...v, recordTime: +v.recordTime }))))
 
+            // http://www.baidu.com
             fetch('http://47.93.37.191:3333/check', {
                 method: 'post',
                 headers: {
