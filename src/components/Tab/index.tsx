@@ -1,7 +1,7 @@
-import React, { useEffect, useRef } from 'react'
+import React, {  } from 'react'
 import { NoMap, SettingsType, useConcent } from 'concent'
 //#region Import Type
-import { Tab, Windows, WindowsAttach, EmptyObject } from 'utils/type'
+import { Windows, WindowsAttach, EmptyObject } from 'utils/type'
 import { CtxMSConn, ItemsType } from 'utils/concent'
 //#endregion
 
@@ -11,7 +11,6 @@ import PopupFrame, { PopupFrameProps, PopupOption } from '../PopupFrame'
 //#endregion
 //#region Import Style
 import c from './index.module.scss'
-import { LABEL_HEIGHT, WINDOW_TITLE_HEIGHT } from 'models/tab/const'
 import useViewable from './hooks/useViewable'
 //#endregion
 

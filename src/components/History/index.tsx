@@ -6,7 +6,6 @@ import { CtxMSConn, ItemsType } from 'utils/concent'
 import { calcHeight, sortNativeHistory } from './api'
 //#region Import Style
 import c from './index.module.scss'
-import IconFont from 'components/IconFont'
 import { HistorySection } from 'models/history/state'
 import Section from './Section'
 //#endregion
@@ -46,7 +45,6 @@ const DAY = 86400000
 
 const setup = (ctx: CtxPre) => {
     const { effect, reducer, state } = ctx
-    const { tab } = ctx.connectedState
 
     const dom = {
         list: null as HTMLUListElement
@@ -152,7 +150,7 @@ const setup = (ctx: CtxPre) => {
             timerId = window.setTimeout(() => {
                 updTimeFormatted()
                 // console.log('time upd')
-                for (const [k, v] of settings.timeUpdMap) {
+                for (const [, v] of settings.timeUpdMap) {
                     if (typeof v.setTimeFormatted !== 'function') {
                         break
                     }
@@ -214,7 +212,7 @@ const setup = (ctx: CtxPre) => {
             console.log(state.historySectionList[0].list.map(v => [v.list[0].title, v.list[0].visitTime, v.list[0].visitTime && format('hh:mm:ss', new Date(v.list[0].visitTime)), v.list[0].url]))
         },
         test1() {
-            console.log(Array.from(settings.timeUpdMap).map(([k, v]) => v).sort(sortByKey<TimeUpdItem>('recordTime', true)).map(v => [v.title, format('hh:mm:ss', new Date(v.recordTime))]))
+            console.log(Array.from(settings.timeUpdMap).map(([, v]) => v).sort(sortByKey<TimeUpdItem>('recordTime', true)).map(v => [v.title, format('hh:mm:ss', new Date(v.recordTime))]))
         },
     }
     return settings
