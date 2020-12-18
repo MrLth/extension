@@ -2,7 +2,7 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2020-05-27 15:30:26
- * @LastEditTime: 2020-12-17 16:56:05
+ * @LastEditTime: 2020-12-18 08:31:30
  * @Description: file content
  */
 const webpack = require('webpack');
@@ -37,7 +37,7 @@ module.exports = {
             'public': path.resolve("public"),
             'components': path.resolve("src/components"),
             'utils': path.resolve("src/utils"),
-            'config': path.resolve("src/config"),
+            'config': path.resolve("config"),
             'models': path.resolve("src/models"),
             'src': path.resolve("src")
         }
@@ -103,7 +103,7 @@ module.exports = {
         }),
         new CopyWebpackPlugin({
             patterns: [
-                { from: './src/manifest.json' },
+                { from: './config/manifest.json' },
                 { from: './public/asset/react-dom.production.min.js' },
                 { from: './public/asset/react.production.min.js' }
             ]
