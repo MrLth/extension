@@ -2,7 +2,7 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2020-10-13 17:35:56
- * @LastEditTime: 2020-12-17 16:44:11
+ * @LastEditTime: 2020-12-20 15:19:08
  * @Description: file content
  */
 
@@ -54,7 +54,7 @@ export class TabHandler {
 					tabs: [myTab],
 					attach: windowsAttaches.find((v) => v.id === c.windowId),
 					updateKey: +new Date(),
-					activeTabId: -1,
+					activeTabId: myTab.id,
 				})
 			}
 			return map

@@ -57,6 +57,11 @@
 					background-image: url('~@img/tabGroupBgLastActivatedNotFocus.svg');
 				}
 			}
+
+			.btn-close {
+				background: linear-gradient(to right, transparent, #fafafa);
+
+			}
 		}
 	}
 
@@ -67,6 +72,8 @@
 				background-color: #e6f7ff;
 			}
 		}
+
+
 
 		.tab-group {
 			.label {
@@ -79,6 +86,10 @@
 
 					&:last-of-type {
 						background-image: url('~@img/tabGroupBgLastActivated.svg');
+					}
+
+					.btn-close {
+						background: linear-gradient(to right, transparent, #e6f7ff);
 					}
 				}
 			}

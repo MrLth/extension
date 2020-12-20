@@ -2,7 +2,7 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2020-12-17 14:32:20
- * @LastEditTime: 2020-12-17 16:04:07
+ * @LastEditTime: 2020-12-20 15:19:22
  * @Description: 让当前活动标签可视
  */
 
@@ -29,15 +29,15 @@ const effect = debounce(
 
 		// 2. 不可视 => 可视
 		const listHeight = listRef.current.clientHeight
-        const listScrollTop = listRef.current.scrollTop
-        // 2.1 不可视 => 显示在底部
+		const listScrollTop = listRef.current.scrollTop
+		// 2.1 不可视 => 显示在底部
 		if (tabTop > listHeight + listScrollTop) {
 			listRef.current.scrollTo({
 				top: tabTop - listHeight + LABEL_HEIGHT,
 			})
 			return
-        }
-        // 2.1 不可视 => 显示在顶部
+		}
+		// 2.1 不可视 => 显示在顶部
 		if (tabTop < listScrollTop) {
 			listRef.current.scrollTo({
 				top: tabTop,
