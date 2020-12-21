@@ -2,7 +2,7 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2020-12-17 14:32:20
- * @LastEditTime: 2020-12-20 15:19:22
+ * @LastEditTime: 2020-12-21 10:40:22
  * @Description: 让当前活动标签可视
  */
 
@@ -41,6 +41,7 @@ const effect = debounce(
 		if (tabTop < listScrollTop) {
 			listRef.current.scrollTo({
 				top: tabTop,
+				behavior: 'auto',
 			})
 		}
 	},

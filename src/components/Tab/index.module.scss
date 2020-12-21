@@ -24,8 +24,17 @@
 	}
 
 	.label {
+		.btn-close {
+			background: linear-gradient(to right, transparent, #fafafa);
+
+		}
+
 		&.activated {
 			background-color: #eee;
+
+			.btn-close {
+				background: linear-gradient(to right, transparent, #e6f7ff);
+			}
 		}
 	}
 
@@ -58,10 +67,7 @@
 				}
 			}
 
-			.btn-close {
-				background: linear-gradient(to right, transparent, #fafafa);
 
-			}
 		}
 	}
 
@@ -86,10 +92,6 @@
 
 					&:last-of-type {
 						background-image: url('~@img/tabGroupBgLastActivated.svg');
-					}
-
-					.btn-close {
-						background: linear-gradient(to right, transparent, #e6f7ff);
 					}
 				}
 			}
