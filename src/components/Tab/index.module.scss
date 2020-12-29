@@ -1,100 +1,100 @@
 @import 'utils/index';
 
 .title {
-	@extend %title;
+    @extend %title;
 }
 
 .content {
-	@extend %card;
-	border-left: 1px #efefef solid;
-	display: flex;
-	flex-direction: column;
+    @extend %card;
 
-	.window-title {
-		@extend %sub-title;
-	}
+    display: flex;
+    flex-direction: column;
 
-	.label {
-		@extend %label;
-	}
+    border-left: 1px #efefef solid;
 
-	.list {
-		flex: 1;
-		overflow: auto;
-	}
+    .window-title {
+        @extend %sub-title;
+    }
 
-	.label {
-		.btn-close {
-			background: linear-gradient(to right, transparent, #fafafa);
+    .label {
+        @extend %label;
+    }
 
-		}
+    .list {
+        overflow: auto;
+        flex: 1;
+    }
 
-		&.activated {
-			background-color: #eee;
+    .label {
+        .btn-close {
+            background: linear-gradient(to right, transparent, #fafafa);
+        }
 
-			.btn-close {
-				background: linear-gradient(to right, transparent, #e6f7ff);
-			}
-		}
-	}
+        &.activated {
+            background-color: #eee;
 
-	.tab-group {
-		.label {
-			// height: 1.75rem;
-			// line-height: 1.75rem;
-			background-image: url('~@img/tabGroupBg.svg');
-			background-repeat: no-repeat;
-			background-size: 1.5rem 2rem;
-			background-position: 0.8rem 0rem;
+            .btn-close {
+                background: linear-gradient(to right, transparent, #e6f7ff);
+            }
+        }
+    }
 
-			&:first-of-type {
-				background-image: url('~@img/tabGroupBgFirst.svg');
-			}
-
-			&:last-of-type {
-				background-image: url('~@img/tabGroupBgLast.svg');
-			}
-
-			&.activated {
-				background-image: url('~@img/tabGroupBgActivatedNotFocus.svg');
-
-				&:first-of-type {
-					background-image: url('~@img/tabGroupBgFirstActivatedNotFocus.svg');
-				}
-
-				&:last-of-type {
-					background-image: url('~@img/tabGroupBgLastActivatedNotFocus.svg');
-				}
-			}
+    .tab-group {
+        .label {
+            // height: 1.75rem;
+            // line-height: 1.75rem;
+            background-image: url('~@img/tabGroupBg.svg');
+            background-repeat: no-repeat;
+            background-position: .8rem 0rem;
+            background-size: 1.5rem 2rem;
 
 
-		}
-	}
+            &:first-of-type {
+                background-image: url('~@img/tabGroupBgFirst.svg');
+            }
 
-	.focused {
-		.label {
-			&.activated {
-				color: #0050b3;
-				background-color: #e6f7ff;
-			}
-		}
+            &:last-of-type {
+                background-image: url('~@img/tabGroupBgLast.svg');
+            }
+
+            &.activated {
+                background-image: url('~@img/tabGroupBgActivatedNotFocus.svg');
+
+                &:first-of-type {
+                    background-image: url('~@img/tabGroupBgFirstActivatedNotFocus.svg');
+                }
+
+                &:last-of-type {
+                    background-image: url('~@img/tabGroupBgLastActivatedNotFocus.svg');
+                }
+            }
+        }
+    }
+
+    .focused {
+        .label {
+            &.activated {
+                color: #0050b3;
+                background-color: #e6f7ff;
+            }
+        }
 
 
 
-		.tab-group {
-			.label {
-				&.activated {
-					background-image: url('~@img/tabGroupBgActivated.svg');
+        .tab-group {
+            .label {
+                &.activated {
+                    background-image: url('~@img/tabGroupBgActivated.svg');
 
-					&:first-of-type {
-						background-image: url('~@img/tabGroupBgFirstActivated.svg');
-					}
+                    &:first-of-type {
+                        background-image: url('~@img/tabGroupBgFirstActivated.svg');
+                    }
 
-					&:last-of-type {
-						background-image: url('~@img/tabGroupBgLastActivated.svg');
-					}
-				}
-			}
-		}
-	}
+                    &:last-of-type {
+                        background-image: url('~@img/tabGroupBgLastActivated.svg');
+                    }
+                }
+            }
+        }
+    }
 }

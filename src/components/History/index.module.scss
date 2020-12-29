@@ -7,7 +7,7 @@
 
 	border-left: 1px #efefef solid;
 
-	.date{
+	.date {
 		@extend %sub-title;
 	}
 }
@@ -21,7 +21,8 @@
 	overflow-y: auto;
 	padding-bottom: 0.75rem;
 	position: relative;
-	.section{
+
+	.section {
 		position: absolute;
 		width: 100%;
 	}
@@ -31,9 +32,11 @@
 	@extend %label;
 	display: flex;
 	justify-content: space-between;
+
 	.unit-tab {
 		flex: 1 1;
 	}
+
 	.time {
 		color: #bfbfbf;
 		padding-right: 0.5rem;
@@ -45,16 +48,20 @@
 
 .domain {
 	padding: 0.25rem 0;
-	&:first-child{
+
+	&:first-child {
 		padding: 0;
 	}
+
 	.label {
 		height: 1.75rem;
 		line-height: 1.75rem;
+
 		.unit-tab {
 			height: 1.75rem;
 			line-height: 1.75rem;
 		}
+
 		.time {
 			height: 1.75rem;
 			line-height: 1.75rem;
