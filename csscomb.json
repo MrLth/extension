@@ -9,7 +9,7 @@
     "color-case": "lower",
     "color-shorthand": true,
     "element-case": "lower",
-    "eof-newline": true,
+    "eof-newline": false,
     "leading-zero": false,
     "quotes": "single",
     "space-after-colon": " ",
