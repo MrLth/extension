@@ -38,7 +38,7 @@ function App() {
             <Bookmark />
             <Tab />
             <History />
-            <Record />
+            {/* <Record /> */}
         </>
     )
 }
