@@ -2,11 +2,11 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2020-10-12 08:17:18
- * @LastEditTime: 2020-12-17 15:25:55
+ * @LastEditTime: 2021-02-18 17:13:47
  * @Description: file content
  */
 import {  readFromLocal, saveToLocal } from 'utils'
-import { debounce } from 'lodash'
+import { debounce } from 'lodash-es'
 import recordState, { Recording } from './state'
 import { IActionCtxBase as IAC } from 'concent'
 

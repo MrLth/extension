@@ -9,7 +9,7 @@
 import { debug, proxyMethods, type } from 'utils'
 import { IActionCtxBase as IAC } from 'concent'
 import { Fn } from 'utils/type'
-import { cloneDeep, debounce } from 'lodash'
+import { cloneDeep, debounce } from 'lodash-es'
 import {
 	AttachTab,
 	ActiveTab,

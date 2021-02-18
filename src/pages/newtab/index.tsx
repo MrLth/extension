@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import ReactDOM from 'react-dom'
-import { debounce } from 'lodash'
+import { debounce } from 'lodash-es'
 import { useConcent } from 'concent'
 
 

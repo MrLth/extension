@@ -1,7 +1,14 @@
+/*
+ * @Author: mrlthf11
+ * @LastEditors: mrlthf11
+ * @Date: 2020-12-11 14:57:20
+ * @LastEditTime: 2021-02-18 17:14:07
+ * @Description: file content
+ */
 import React, { useEffect } from 'react'
 import ReactDOM from 'react-dom'
 import { useConcent } from 'concent'
-import { debounce } from 'lodash'
+import { debounce } from 'lodash-es'
 
 
 import 'normalize.css/normalize.css'

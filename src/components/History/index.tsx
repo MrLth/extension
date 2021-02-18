@@ -13,7 +13,7 @@ import Section from './Section'
 import TimeAgo from 'javascript-time-ago'
 import en from 'javascript-time-ago/locale/en'
 import {  sortByKey } from 'utils'
-import { debounce } from 'lodash'
+import { debounce } from 'lodash-es'
 
 TimeAgo.addLocale(en)
 const timeAgo = new TimeAgo('en')

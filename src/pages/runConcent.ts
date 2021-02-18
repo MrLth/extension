@@ -8,7 +8,7 @@
 import { run } from 'concent'
 import * as models from 'models'
 import { debug } from 'utils'
-import { cloneDeep } from 'lodash'
+import { cloneDeep } from 'lodash-es'
 
 run(models, {
 	middlewares: [
