@@ -2,13 +2,13 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2020-12-17 14:32:20
- * @LastEditTime: 2020-12-21 10:40:22
+ * @LastEditTime: 2021-02-19 08:54:53
  * @Description: 让当前活动标签可视
  */
 
 import { debounce } from 'lodash-es'
-import { LABEL_HEIGHT, WINDOW_TITLE_HEIGHT } from 'models/tab/const'
-import { TabState } from 'models/tab/type'
+import { LABEL_HEIGHT, WINDOW_TITLE_HEIGHT } from 'components/Tab/model/const'
+import { TabState } from 'components/Tab/model/type'
 import { MutableRefObject, useEffect, useRef } from 'react'
 
 const effect = debounce(

@@ -5,7 +5,7 @@ import { moduleClassnames } from 'utils'
 const cn = moduleClassnames.bind(null, c)
 //#endregion
 
-import { Recording } from 'models/record/state'
+import { Recording } from 'components/Record/model/state'
 import Label from './Label'
 import { Settings } from '.'
 import IconFont from 'components/IconFont'

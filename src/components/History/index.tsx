@@ -6,7 +6,7 @@ import { CtxMSConn, ItemsType } from 'utils/concent'
 import { calcHeight, sortNativeHistory } from './api'
 //#region Import Style
 import c from './index.module.scss'
-import { HistorySection } from 'models/history/state'
+import { HistorySection } from 'components/History/model/state'
 import Section from './Section'
 //#endregion
 //#region Time Ago Init

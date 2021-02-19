@@ -2,7 +2,7 @@ import React from 'react'
 
 import folderSvg from '@img/folder.svg'
 import folderOpenSvg from '@img/folder-open.svg'
-import { BookmarkTreeNode } from 'models/bookmark/state'
+import { BookmarkTreeNode } from 'components/Bookmark/model/state'
 import { Settings } from '.'
 //#region 样式绑定
 import c from './index.module.scss'

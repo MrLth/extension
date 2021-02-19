@@ -4,7 +4,7 @@ import { memo } from 'react'
 //#region 样式绑定
 import c from './index.module.scss'
 import { moduleClassnames } from 'utils'
-import { RecordUrl } from 'models/record/state'
+import { RecordUrl } from 'components/Record/model/state'
 const cn = moduleClassnames.bind(null, c)
 //#endregion
 import defaultIcon from '@img/defaultIcon.svg'

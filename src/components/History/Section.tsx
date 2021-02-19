@@ -1,6 +1,6 @@
 import { EmptyObject } from 'utils/type'
 import { NoMap, SettingsType, useConcent } from 'concent'
-import { HistorySection } from 'models/history/state'
+import { HistorySection } from 'components/History/model/state'
 import React, { memo, useEffect, useRef } from 'react'
 import { CtxDeS } from 'utils/concent'
 import Domain from './Domain'

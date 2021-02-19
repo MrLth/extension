@@ -8,7 +8,7 @@ import { EmptyObject } from 'utils/type'
 import { NoMap, SettingsType, useConcent } from 'concent'
 import FolderNameList from './FolderNameList'
 import BookmarkList from './BookmarkList'
-import { BookmarkTreeNode } from 'models/bookmark/state'
+import { BookmarkTreeNode } from 'components/Bookmark/model/state'
 
 import { CARD_TITLE_HEIGHT, FOLDER_TITLE_HEIGHT } from 'utils/const'
 

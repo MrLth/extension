@@ -1,3 +1,10 @@
+/*
+ * @Author: mrlthf11
+ * @LastEditors: mrlthf11
+ * @Date: 2020-12-17 08:05:07
+ * @LastEditTime: 2021-02-19 08:55:26
+ * @Description: file content
+ */
 import * as React from 'react'
 import { memo } from 'react'
 
@@ -10,7 +17,7 @@ const cn = moduleClassnames.bind(null, c)
 //#endregion
 
 import { Settings } from './index'
-import { MyWindow } from 'models/tab/type'
+import { MyWindow } from 'components/Tab/model/type'
 
 interface Props {
   myWindow: MyWindow

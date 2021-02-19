@@ -1,5 +1,5 @@
 import React, { forwardRef } from 'react'
-import { BookmarkTreeNode } from 'models/bookmark/state'
+import { BookmarkTreeNode } from 'components/Bookmark/model/state'
 import c from './index.module.scss'
 import Folder from './Folder'
 import Label from './Label'

@@ -1,4 +1,4 @@
-import { BookmarkTreeNode } from 'models/bookmark/state'
+import { BookmarkTreeNode } from 'components/Bookmark/model/state'
 import React from 'react'
 import c from './index.module.scss'
 import defaultIcon from '@img/defaultIcon.svg'
