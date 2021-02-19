@@ -4,10 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "webpack --watch",
-    "build": "webpack",
-    "build:prod": "webpack --config webpack/webpack.config.base.js",
-    "build:dev": "webpack --config webpack/webpack.config.dev.js"
+    "build": "webpack --config webpack.config.prod.js",
+    "watch": "webpack --watch --config webpack.config.dev.js"
   },
   "keywords": [],
   "author": "",
@@ -55,6 +53,7 @@
     "sass-loader": "^7.3.1",
     "speed-measure-webpack-plugin": "^1.4.2",
     "style-loader": "^2.0.0",
+    "terser-webpack-plugin": "^5.1.1",
     "thread-loader": "^3.0.1",
     "ts-loader": "^8.0.17",
     "typescript": "^3.9.9",

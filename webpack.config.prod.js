@@ -3,24 +3,30 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2020-05-27 15:30:26
- * @LastEditTime: 2021-02-19 15:13:07
+ * @LastEditTime: 2021-02-19 16:37:17
  * @Description: file content
  */
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
-const ParallelUglifyPlugin = require('webpack-parallel-uglify-plugin');
+const ParallelUglifyPlugin = require('webpack-parallel-uglify-plugin'); // 比直接使用 TerserPlugin 更快
+// const TerserPlugin = require("terser-webpack-plugin");
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
-const HappyPack = require('happypack')
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
+
+const threadLoader = require('thread-loader');
+threadLoader.warmup({
+    // there should be 1 cpu for the fork-ts-checker-webpack-plugin
+    workers: require('os').cpus().length - 1,
+    poolTimeout: Infinity
+}, ['ts-loader']);
 
 // 解析命令行参数, 但是配合 webpack-cli 会报错
 // const argv = require('minimist')(process.argv.slice(2))
 
 // const SpeedMeasurePlugin = require("speed-measure-webpack-plugin");
 // const smp = new SpeedMeasurePlugin();
-
 const entry = {
     newtab: path.resolve('src/pages/newtab/index.tsx'),
     popup: path.resolve('src/pages/popup/index.tsx'),
@@ -32,7 +38,7 @@ module.exports = /*smp.wrap(*/{
     mode: "production",
     entry,
     output: {
-        path: path.resolve(__dirname, '../dist'),
+        path: path.resolve(__dirname, 'dist'),
         filename: '[name].[contenthash:8].bundle.js',
         publicPath: '/'
     },
@@ -46,10 +52,20 @@ module.exports = /*smp.wrap(*/{
             'config': path.resolve("config"),
             'models': path.resolve("src/models"),
             'src': path.resolve("src")
-        }
+        },
     },
     optimization: {
         minimize: false,
+        //#region terser
+        /** *
+        minimize: true,
+        minimizer: [
+            new TerserPlugin({
+                parallel: true,
+            }),
+        ],
+        /** */
+        //#endregion
         splitChunks: {
             chunks: 'all',
             // 被多次引入的包会优先分出来，不受 maxInitialRequests 限制
@@ -73,12 +89,7 @@ module.exports = /*smp.wrap(*/{
                 exclude: /node_modules/,
                 use: [
                     {
-                        loader: 'thread-loader',
-                        options: {
-                            // there should be 1 cpu for the fork-ts-checker-webpack-plugin
-                            workers: require('os').cpus().length - 1,
-                            poolTimeout: Infinity // set this to Infinity in watch mode - see https://github.com/webpack-contrib/thread-loader
-                        },
+                        loader: 'thread-loader'
                     },
                     {
                         loader: "ts-loader",
@@ -142,14 +153,14 @@ module.exports = /*smp.wrap(*/{
             inject: true,
             chunks: ['newtab'],
             filename: 'newtab.html',
-            template: './template/newtab.html'
+            template: './template/prod.html'
         }),
         ...entry.popup
             ? [new HtmlWebpackPlugin({
                 inject: true,
                 chunks: ['popup'],
                 filename: 'popup.html',
-                template: './template/newtab.html'
+                template: './template/prod.html'
             })]
             : [],
         //#endregion
@@ -169,6 +180,7 @@ module.exports = /*smp.wrap(*/{
             exclude: /min.js$/,
             terser: true,
         }),
+        // thread-load 配合 ts-loader 需要关闭类型验证，作为弥补，以下 plugin 将使用额外一个进程进行类型验证
         new ForkTsCheckerWebpackPlugin({
             typescript: {
                 diagnosticOptions: {
