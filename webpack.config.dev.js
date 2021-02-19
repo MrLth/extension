@@ -3,7 +3,7 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2020-05-27 15:30:26
- * @LastEditTime: 2021-02-19 16:29:31
+ * @LastEditTime: 2021-02-19 17:06:07
  * @Description: file content
  */
 const path = require('path');
@@ -30,6 +30,10 @@ console.log('entry', entry)
 
 module.exports = {
   mode: "development",
+  devServer: {
+    contentBase: './dist',
+    hot:true
+  },
   entry,
   output: {
     path: path.resolve(__dirname, 'dist'),
