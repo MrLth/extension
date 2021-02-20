@@ -3,6 +3,7 @@
   "name": "扩展练习",
   "description": "这是一个用于练习的扩展程序",
   "version": "1.0",
+  "minimum_chrome_version": "80",
   "permissions": [
     "activeTab",
     "storage",
@@ -18,6 +19,5 @@
   "browser_action": {
     "default_title": "这是一个示例Chrome插件",
     "default_popup": "./popup.html"
-  },
-  "content_security_policy": "script-src 'self' https://at.alicdn.com; object-src 'self'"
+  }
 }
