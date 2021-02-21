@@ -2,46 +2,47 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2020-12-17 08:05:07
- * @LastEditTime: 2021-02-19 08:55:26
+ * @LastEditTime: 2021-02-22 00:18:17
  * @Description: file content
  */
-import * as React from 'react'
-import { memo } from 'react'
+import * as React from 'react';
+import { memo } from 'react';
 
-import Label from './Label'
+import { moduleClassnames } from 'utils';
+import { MyWindow } from 'components/Tab/model/type';
+import Label from './Label';
 
-//#region 样式绑定
-import c from './index.module.scss'
-import { moduleClassnames } from 'utils'
-const cn = moduleClassnames.bind(null, c)
-//#endregion
+// #region 样式绑定
+import c from './index.module.scss';
+// #endregion
 
-import { Settings } from './index'
-import { MyWindow } from 'components/Tab/model/type'
+import { Settings } from './index';
+
+const cn = moduleClassnames.bind(null, c);
 
 interface Props {
   myWindow: MyWindow
   settings: Settings
-  updateKey: number
+  // updateKey: number
 }
 
 const Window = ({ myWindow, settings }: Props) => {
-  const { tabs, attach } = myWindow
-  const tabArr = []
+  const { tabs, attach } = myWindow;
+  const tabArr = [];
 
-  const len = tabs.length
-  let nextHost: string | number, host: string | number
+  const len = tabs.length;
+  let nextHost: string | number; let
+    host: string | number;
 
+  for (let i = 0; i < len; i += 1) {
+    let tab = tabs[i];
+    let nextTab = i + 1 !== len && tabs[i + 1];
 
-  for (let i = 0; i < len; i++) {
-    let tab = tabs[i]
-    let nextTab = i + 1 !== len && tabs[i + 1]
+    const tempArr = [];
+    const key = tab.id;
 
-    const tempArr = []
-    const key = tab.id
-
-    nextHost = nextTab.urlInfo?.host ?? NaN
-    host = tab.urlInfo?.host ?? NaN
+    nextHost = nextTab.urlInfo?.host ?? NaN;
+    host = tab.urlInfo?.host ?? NaN;
 
     if (nextHost === host) {
       do {
@@ -49,49 +50,52 @@ const Window = ({ myWindow, settings }: Props) => {
           <Label
             key={tab.id}
             tab={tab}
-            updateKey={tab.updateKey}
+            // updateKey={tab.updateKey}
             settings={settings}
-          />
-        )
-        i++
-        tab = nextTab
-        nextTab = i + 1 !== tabs.length && tabs[i + 1]
+          />,
+        );
+        i += 1;
+        tab = nextTab;
+        nextTab = i + 1 !== tabs.length && tabs[i + 1];
 
-        host = nextHost
-        nextHost = nextTab.urlInfo?.host ?? NaN
-
-      } while (i + 1 < len && nextHost === host)
+        host = nextHost;
+        nextHost = nextTab.urlInfo?.host ?? NaN;
+      } while (i + 1 < len && nextHost === host);
     }
 
     tempArr.push(
       <Label
         key={tab.id}
         tab={tab}
-        updateKey={tab.updateKey}
+        // updateKey={tab.updateKey}
         settings={settings}
-      />
-    )
+      />,
+    );
 
     tabArr.push(
       tempArr.length === 1 ? (
         tempArr
       ) : (
-          <div className={c["tab-group"]} key={key}>
-            {tempArr}
-          </div>
-        )
-    )
+        <div className={c['tab-group']} key={key}>
+          {tempArr}
+        </div>
+      ),
+    );
   }
-  log({ Window: attach.id, myWindow }, 'render', 5)
+  log({ Window: attach.id, myWindow }, 'render', 5);
   return (
     <ul
       className={cn('window', {
-        'focused': attach?.focused
-      })}>
-      <div className={cn("window-title")}>window # {attach?.id}</div>
+        focused: attach?.focused,
+      })}
+    >
+      <div className={cn('window-title')}>
+        window #
+        {attach?.id}
+      </div>
       {tabArr}
     </ul>
-  )
-}
+  );
+};
 
-export default memo(Window)
+export default memo(Window);

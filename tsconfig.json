@@ -2,12 +2,19 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2021-02-04 09:55:02
- * @LastEditTime: 2021-02-20 09:11:42
+ * @LastEditTime: 2021-02-20 22:36:51
  * @Description: file content
  */
 {
+    "include": [
+        "src"
+    ],
+    "exclude": [
+        "server/*",
+        "config/*"
+    ],
     "compilerOptions": {
-        "outDir": "./dist/",
+        "outDir": "./build/",
         "sourceMap": true,
         "incremental": true,
         "noImplicitAny": true,
@@ -22,10 +29,14 @@
         ],
         "baseUrl": "src",
         "paths": {
-            "config": ["../config"]
+            "config": [
+                "../config"
+            ]
         },
-        "plugins": [{
-            "name": "typescript-plugin-css-modules"
-        }]
+        "plugins": [
+            {
+                "name": "typescript-plugin-css-modules"
+            }
+        ]
     }
 }

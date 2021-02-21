@@ -2,54 +2,55 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2020-12-12 14:44:53
- * @LastEditTime: 2020-12-17 14:02:16
+ * @LastEditTime: 2021-02-21 16:40:52
  * @Description: tab component's type defined file
  */
-import state from './state'
+import state from './state';
+
 export type TabState = typeof state
 
 export interface MyTab extends chrome.tabs.Tab {
-	updateKey: number
-	urlInfo: URL
+  updateKey: number
+  urlInfo: URL
 }
 
 export type WindowMap = Map<number, MyWindow>
 
 export interface MyWindow {
-	tabs: MyTab[]
-	attach?: chrome.windows.Window
-	updateKey: number
-	activeTabId: number
+  tabs: MyTab[]
+  attach?: chrome.windows.Window
+  updateKey: number
+  activeTabId: number
 }
 
 export type TabMap = Map<number, MyTab>
 
 export interface RemoveTab {
-	tabId: number
-	windowId: number
-	isWindowClosing: boolean
+  tabId: number
+  windowId: number
+  isWindowClosing: boolean
 }
 
 export interface MoveTab {
-	tabId: number
-	windowId: number
-	toIndex: number
-	fromIndex: number
+  tabId: number
+  windowId: number
+  toIndex: number
+  fromIndex: number
 }
 
 export interface ActiveTab {
-	tabId: number
-	windowId: number
+  tabId: number
+  windowId: number
 }
 
 export interface AttachTab {
-	tabId: number
-	windowId: number
-	position: number
+  tabId: number
+  windowId: number
+  position: number
 }
 
 export type DetachTab = AttachTab
 
 export interface BaseConfig {
-	immediate: boolean
+  immediate: boolean
 }

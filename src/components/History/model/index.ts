@@ -5,6 +5,7 @@
  * @LastEditTime: 2020-10-13 17:36:09
  * @Description: file content
  */
-import state from './state'
-import reducer from './reducer'
-export default { state, reducer }
+import state from './state';
+import reducer from './reducer';
+
+export default { state, reducer };

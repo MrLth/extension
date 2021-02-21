@@ -6,8 +6,8 @@
  * @Description: file content
  */
 // import reducer from './reducer'
-import state from './state'
-import reducer from './reducer'
+import state from './state';
+import reducer from './reducer';
 
 // export default { state, reducer }
-export default { state, reducer }
+export default { state, reducer };

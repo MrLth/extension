@@ -6,8 +6,8 @@
  * @Description: file content
  */
 export default {
-    windowSize: {
-        width: window?.innerWidth,
-        height: window?.innerHeight
-    }
-}
+  windowSize: {
+    width: window?.innerWidth,
+    height: window?.innerHeight,
+  },
+};

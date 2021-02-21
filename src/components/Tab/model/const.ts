@@ -6,5 +6,5 @@
  * @Description: tab component's const variable defined file
  */
 
-export const LABEL_HEIGHT = 32
-export const WINDOW_TITLE_HEIGHT = 52
+export const LABEL_HEIGHT = 32;
+export const WINDOW_TITLE_HEIGHT = 52;

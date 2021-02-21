@@ -1,48 +1,58 @@
-import React, { forwardRef } from 'react'
-import { BookmarkTreeNode } from 'components/Bookmark/model/state'
-import c from './index.module.scss'
-import Folder from './Folder'
-import Label from './Label'
-import { Settings } from '.'
-import { EmptyObject } from 'utils/type'
-import { CtxDeS } from 'utils/concent'
-import { SettingsType } from 'concent'
+/*
+ * @Author: mrlthf11
+ * @LastEditors: mrlthf11
+ * @Date: 2021-02-20 19:59:04
+ * @LastEditTime: 2021-02-21 19:24:04
+ * @Description: file content
+ */
+import React, { forwardRef } from 'react';
+import { BookmarkTreeNode } from 'components/Bookmark/model/state';
+import { EmptyObject } from 'utils/type';
+import { CtxDeS } from 'utils/concent';
+import { SettingsType } from 'concent';
+import c from './index.module.scss';
+import Folder from './Folder';
+import Label from './Label';
+import { Settings } from '.';
 
 const initState = () => ({
-})
-//#region Type Statement
+});
+// #region Type Statement
 type State = ReturnType<typeof initState>
 type CtxPre = CtxDeS<EmptyObject, State>
-//#endregion
+// #endregion
 const setup = () => {
-    console.log('default')
-}
-//#region Type Statement
+  console.log('default');
+};
+// #region Type Statement
 export type MySettings = SettingsType<typeof setup>
 type Ctx = CtxDeS<EmptyObject, State, MySettings>
-//#endregion
+// #endregion
 interface Props {
-    rootNode: BookmarkTreeNode
-    settings: Settings
+  rootNode: BookmarkTreeNode
+  settings: Settings
 }
-const BookmarkList = ({ rootNode, settings }: Props, ref: React.Ref<HTMLUListElement>): JSX.Element => {
-
-    return <div
-        className={c['bookmark-wrapper']}
-        onScroll={settings.scrollCb}
+const BookmarkList = (
+  { rootNode, settings }: Props,
+  ref: React.Ref<HTMLUListElement>,
+): JSX.Element => (
+  <div
+    className={c['bookmark-wrapper']}
+    onScroll={settings.scrollCb}
+  >
+    <ul
+      ref={ref}
+      className={c['bookmark-list']}
+      style={{ height: rootNode?.height ?? 0 }}
     >
-        <ul
-            ref={ref}
-            className={c['bookmark-list']}
-            style={{ height: rootNode?.height ?? 0 }}
-        >
-            {
-                rootNode?.children.map(v => 'children' in v
-                    ? v.isRender ? <Folder key={v.id} node={v} settings={settings} /> : null
-                    : <Label key={v.id} node={v} settings={settings} />)
-            }
-        </ul>
-    </div>
-}
+      {
+        rootNode?.children.map((v) => (
+          'children' in v
+            ? v.isRender && <Folder key={v.id} node={v} settings={settings} />
+            : <Label key={v.id} node={v} settings={settings} />))
+      }
+    </ul>
+  </div>
+);
 
-export default forwardRef(BookmarkList)
+export default forwardRef(BookmarkList);

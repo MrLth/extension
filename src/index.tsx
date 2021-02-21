@@ -1,3 +1,10 @@
+/*
+ * @Author: mrlthf11
+ * @LastEditors: mrlthf11
+ * @Date: 2020-10-11 20:03:46
+ * @LastEditTime: 2021-02-21 23:59:47
+ * @Description: file content
+ */
 // import * as React from "react";
 // import { useContext, useEffect } from "react";
 // import * as ReactDOM from "react-dom";
@@ -11,61 +18,60 @@
 // import History from './view/History'
 
 // function App() {
-//     const { dispatch, faviconStorage, faviconStorageDispatch } = useContext(RecordContext)
+//   const { dispatch, faviconStorage, faviconStorageDispatch } = useContext(RecordContext)
 
-//     useEffect(() => {
+//   useEffect(() => {
 
-//         chrome.storage.local.get((storage) => {
+//     chrome.storage.local.get((storage) => {
 
-//             const urls = storage?.urls || []
+//       const urls = storage?.urls || []
 
-//             dispatch(recordActionInit(Array.from(urls)))
+//       dispatch(recordActionInit(Array.from(urls)))
 
-//             const favicons = storage?.favicons || {}
+//       const favicons = storage?.favicons || {}
 
-//             faviconStorageDispatch(faviconStorageActionAdd(favicons))
-//         })
-//     }, [])
+//       faviconStorageDispatch(faviconStorageActionAdd(favicons))
+//     })
+//   }, [])
 
-//     return (
-//         <div className="content-wrapper">
-//             <div className="bookmark-wrapper">
-//                 <Bookmark />
-//             </div>
-//             <div className="popup-wrapper">
-//                 <Popup />
-//             </div>
-//             <div className="history-wrapper">
-//                 <History />
-//             </div>
-//             <div className="record-wrapper">
-//                 <Record />
-//             </div>
-//         </div>
-//     )
+//   return (
+//     <div className="content-wrapper">
+//       <div className="bookmark-wrapper">
+//         <Bookmark />
+//       </div>
+//       <div className="popup-wrapper">
+//         <Popup />
+//       </div>
+//       <div className="history-wrapper">
+//         <History />
+//       </div>
+//       <div className="record-wrapper">
+//         <Record />
+//       </div>
+//     </div>
+//   )
 // }
 
 // ReactDOM.render(
-//     <RecordProvider>
-//         <App />
-//     </RecordProvider>
-//     ,
-//     document.getElementById("example")
+//   <RecordProvider>
+//     <App />
+//   </RecordProvider>
+//   ,
+//   document.getElementById("example")
 // );
 
 // if ('serviceWorker' in navigator) {
-//     window.addEventListener('load', function () {
-//         navigator.serviceWorker.register('./sw.js')
-//             .then(function (registration) {
-//                 // 注册成功
-//                 // console.log('ServiceWorker registration successful with scope: ', registration.scope);
-//             })
-//             .catch(function (err) {
-//                 // 注册失败
-//                 console.log('ServiceWorker registration failed: ', err);
-//             });
-//     });
+//   window.addEventListener('load', function () {
+//     navigator.serviceWorker.register('./sw.js')
+//       .then(function (registration) {
+//         // 注册成功
+//         // console.log('ServiceWorker registration successful with scope: ', registration.scope);
+//       })
+//       .catch(function (err) {
+//         // 注册失败
+//         console.log('ServiceWorker registration failed: ', err);
+//       });
+//   });
 // }
-
 
 // serviceWorker.unregister();

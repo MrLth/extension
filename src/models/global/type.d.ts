@@ -5,7 +5,7 @@
  * @LastEditTime: 2020-10-04 18:51:44
  * @Description: file content
  */
-import state from './state'
+import state from './state';
 
 interface WindowSize {
     height: number
@@ -13,4 +13,3 @@ interface WindowSize {
 }
 
 type ModuleState = typeof state
-

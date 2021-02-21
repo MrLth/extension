@@ -5,7 +5,8 @@
  * @LastEditTime: 2020-10-06 15:24:17
  * @Description: file content
  */
-import state from './state'
-import reducer from './reducer'
-import lifecycle from './lifecycle'
-export default { state, reducer, lifecycle }
+import state from './state';
+import reducer from './reducer';
+import lifecycle from './lifecycle';
+
+export default { state, reducer, lifecycle };

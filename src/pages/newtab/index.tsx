@@ -5,21 +5,19 @@
  * @LastEditTime: 2021-02-20 15:28:43
  * @Description: file content
  */
-import React from 'react'
-import ReactDOM from 'react-dom'
+import React from 'react';
+import ReactDOM from 'react-dom';
 
-import App from './App'
-
+import App from './App';
 
 const render = (Component: React.FC) => {
-    ReactDOM.render(
-        <Component />,
-        document.getElementById('root')
-    )
-}
+  ReactDOM.render(
+    <Component />,
+    document.getElementById('root'),
+  );
+};
 
-
-render(App)
+render(App);
 
 // // ReactDOM.render(
 // //     <App />,
@@ -32,4 +30,3 @@ render(App)
 //         render(App)
 //     })
 // }
-

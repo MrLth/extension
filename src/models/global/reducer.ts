@@ -1,6 +1,6 @@
-import { WindowSize, ModuleState } from './type'
-import { IActionCtxBase as IAC } from 'concent'
-import { Tab } from 'utils/type'
+import { IActionCtxBase as IAC } from 'concent';
+import { Tab } from 'utils/type';
+import { WindowSize, ModuleState } from './type';
 
 /*
  * @Author: mrlthf11
@@ -10,4 +10,4 @@ import { Tab } from 'utils/type'
  * @Description: file content
  */
 
-export default {}
+export default {};

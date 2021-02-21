@@ -3,13 +3,14 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2021-02-20 14:18:21
- * @LastEditTime: 2021-02-20 17:37:32
+ * @LastEditTime: 2021-02-20 21:49:17
  * @Description: file content
  */
+const { resolve } = require('path')
+const { minimum_chrome_version } = require(resolve('config/manifest.json'));
+
 module.exports = (api) => {
   api.cache(true)
-
-  const { minimum_chrome_version } = require(`./manifest.json`);
 
   return {
     presets: [
