@@ -8,7 +8,6 @@
  */
 const { HotModuleReplacementPlugin } = require('webpack');
 const { merge } = require('webpack-merge');
-const { DefinePlugin } = require('webpack')
 const { HOST, PORT, HRM_PATH } = require('../server/config')
 
 const config = require('./webpack.common')
@@ -57,8 +56,5 @@ module.exports = merge(config, {
   },
   plugins: [
     new HotModuleReplacementPlugin(),
-    new DefinePlugin({
-      __DEV__: JSON.stringify(JSON.parse(process.env.BUILD_DEV || 'true')),
-    }),
   ],
 })

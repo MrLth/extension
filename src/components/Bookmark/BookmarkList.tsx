@@ -43,7 +43,7 @@ const BookmarkList = (
     <ul
       ref={ref}
       className={c['bookmark-list']}
-      style={{ height: rootNode?.height ?? 0 }}
+      style={{ height: rootnode?.height ?? 0 }}
     >
       {
         rootNode?.children.map((v) => (

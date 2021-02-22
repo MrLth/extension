@@ -1,30 +1,32 @@
-li{
-  list-style: none;
-}
-ul{
-  margin: 0;
-  padding: 0;
+li {
+    list-style: none;
 }
 
-#root{
-  display: flex;
-  overflow-y: hidden;
+ul {
+    margin: 0;
+    padding: 0;
+}
+
+#root {
+    display: flex;
+    overflow-y: hidden;
 }
 
 ::-webkit-scrollbar {
-  height: 4px;
-  overflow: visible;
-  width: 4px;
+
+    width: 4px;
+    height: 4px;
+    overflow: visible;
 }
 
 
 ::-webkit-scrollbar-thumb {
-  background-color: #efefef;
-  border-radius: 2px 0 0 2px;
-  /* min-height: 28px; */
+    background-color: #efefef;
+    border-radius: 2px 0 0 2px;
+    /* min-height: 28px; */
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background-color: #d9d9d9;
-  /* min-height: 28px; */
+    background-color: #d9d9d9;
+    /* min-height: 28px; */
 }

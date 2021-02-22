@@ -9,23 +9,20 @@
 
     display: flex;
     flex-direction: column;
-
     border-left: 1px #efefef solid;
 
     .window-title {
         @extend %sub-title;
     }
 
+    .list {
+        flex: 1;
+        overflow: auto;
+    }
+
     .label {
         @extend %label;
-    }
 
-    .list {
-        overflow: auto;
-        flex: 1;
-    }
-
-    .label {
         .btn-close {
             background: linear-gradient(to right, transparent, #fafafa);
         }
@@ -45,7 +42,7 @@
             // line-height: 1.75rem;
             background-image: url('~@img/tabGroupBg.svg');
             background-repeat: no-repeat;
-            background-position: .8rem 0rem;
+            background-position: .8rem 0;
             background-size: 1.5rem 2rem;
 
 

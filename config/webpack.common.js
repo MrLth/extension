@@ -3,7 +3,7 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2020-05-27 15:30:26
- * @LastEditTime: 2021-02-21 02:36:52
+ * @LastEditTime: 2021-02-22 08:58:28
  * @Description: file content
  */
 const { resolve } = require('path');
@@ -13,6 +13,8 @@ const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const FriendlyErrorsWebpackPlugin = require('friendly-errors-webpack-plugin');
 const Webpackbar = require('webpackbar');
+const { DefinePlugin } = require('webpack')
+
 // const threadLoader = require('thread-loader');
 // threadLoader.warmup({
 //   workers: require('os').cpus().length - 1,
@@ -20,7 +22,7 @@ const Webpackbar = require('webpackbar');
 // }, ['babel-loader']);
 
 // eslint-disable-next-line no-underscore-dangle
-const __DEV__ = process.env.NODE_ENV !== 'production';
+const isDev = process.env.NODE_ENV !== 'production';
 
 const entry = {
   newtab: resolve('src/pages/newtab/index.tsx'),
@@ -31,7 +33,7 @@ const htmlWebpackPluginList = Object.keys(entry).map((key) => new HtmlWebpackPlu
   inject: true,
   chunks: [key],
   filename: `${key}.html`,
-  template: resolve(__DEV__ ? 'template/dev.html' : 'template/prod.html'),
+  template: resolve(isDev ? 'template/dev.html' : 'template/prod.html'),
 }));
 
 module.exports = {
@@ -66,7 +68,7 @@ module.exports = {
               cacheDirectory: true,
             },
           },
-          'eslint-loader',
+          // 'eslint-loader',
         ],
       },
       {
@@ -95,8 +97,12 @@ module.exports = {
     new ForkTsCheckerWebpackPlugin({
       typescript: {
         configFile: resolve('tsconfig.json'),
-        profile: !__DEV__,
+        profile: !isDev,
       },
+    }),
+
+    new DefinePlugin({
+      __DEV__: JSON.stringify(JSON.parse(process.env.BUILD_DEV || 'true')),
     }),
 
     new FriendlyErrorsWebpackPlugin(),

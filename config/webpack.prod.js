@@ -3,24 +3,28 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2020-05-27 15:30:26
- * @LastEditTime: 2021-02-20 21:15:07
+ * @LastEditTime: 2021-02-22 10:57:28
  * @Description: file content
  */
+
+const { resolve } = require('webpack')
+const { merge } = require('webpack-merge');
 const CopyWebpackPlugin = require('copy-webpack-plugin')
 const ParallelUglifyPlugin = require('webpack-parallel-uglify-plugin'); // 比直接使用 TerserPlugin 更快
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
-const { minimum_chrome_version } = require(`./manifest.json`);
-const { merge } = require('webpack-merge');
+const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer')
+
+const { minimum_chrome_version: minimumChromeVersion } = require('./manifest.json');
 const config = require('./webpack.common')
 
-// 解析命令行参数, 但是配合 webpack-cli 会报错
+// 解析命令行参数, 但是配合 webpack-cli 会报错, 请使用 cross-env
 // const argv = require('minimist')(process.argv.slice(2))
 // require("speed-measure-webpack-plugin");
 // require("terser-webpack-plugin")
 
 module.exports = merge(config, {
-  mode: "production",
+  mode: 'production',
   optimization: {
     minimize: false,
     splitChunks: {
@@ -34,7 +38,7 @@ module.exports = merge(config, {
             return `npm.${packageName.replace('@', '')}` // npm 软件包名称是 URL 安全的，但是某些服务器不喜欢@符号
           },
         },
-      }
+      },
     },
   },
   module: {
@@ -47,39 +51,39 @@ module.exports = merge(config, {
             loader: 'css-loader',
             options: {
               modules: {
-                auto: /\.(local|module|m)\.s?css$/
-              }
-            }
+                auto: /\.(local|module|m)\.s?css$/,
+              },
+            },
           },
           {
-            loader: "postcss-loader",
+            loader: 'postcss-loader',
             options: {
               postcssOptions: {
                 plugins: [
                   [
-                    "postcss-preset-env",
+                    'postcss-preset-env',
                     {
-                      browsers: minimum_chrome_version
-                        ? `Chrome > ${minimum_chrome_version}`
-                        : 'last 2 Chrome versions'
+                      browsers: minimumChromeVersion
+                        ? `Chrome > ${minimumChromeVersion}`
+                        : 'last 2 Chrome versions',
                     },
                   ],
                 ],
               },
             },
           },
-          'sass-loader'
-        ]
-      }
-    ]
+          'sass-loader',
+        ],
+      },
+    ],
   },
 
   plugins: [
     new CopyWebpackPlugin({
       patterns: [
-        { from: './public/asset/react-dom.production.min.js' },
-        { from: './public/asset/react.production.min.js' }
-      ]
+        { from: resolve('public/asset/react-dom.production.min.js') },
+        { from: resolve('public/asset/react.production.min.js') },
+      ],
     }),
 
     new MiniCssExtractPlugin(),
@@ -91,10 +95,10 @@ module.exports = merge(config, {
       terser: true,
     }),
 
-    new (require('webpack-bundle-analyzer').BundleAnalyzerPlugin)
+    new BundleAnalyzerPlugin(),
   ],
   externals: {
-    react: "React",
-    "react-dom": "ReactDOM"
-  }
+    react: 'React',
+    'react-dom': 'ReactDOM',
+  },
 })

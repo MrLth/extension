@@ -72,7 +72,7 @@ const PopupFrame = (props: PopupFrameProps): JSX.Element => {
   }
 
   return (
-    <ul className={c.content} style={{ top, left, display: isShow ? 'block' : 'none' }}>
+    <ul className={c.content} style={{ top, left, display: isshow ? 'block' : 'none' }}>
       {options.map((v, i) => (
         <li
           role="presentation"

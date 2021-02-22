@@ -4,8 +4,8 @@
 	@extend %card;
 	display: flex;
 	flex-direction: column;
-	box-shadow: none;
 	border-left: 1px #efefef solid;
+	box-shadow: none;
 
 	.record-title {
 

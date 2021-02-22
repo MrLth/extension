@@ -1,5 +1,5 @@
 node_modules/*
-.history/*
 build/*
+public/asset/*
+.*/*
 .*.*
-webpack.config.js

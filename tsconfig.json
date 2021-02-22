@@ -1,42 +1,28 @@
-/*
- * @Author: mrlthf11
- * @LastEditors: mrlthf11
- * @Date: 2021-02-04 09:55:02
- * @LastEditTime: 2021-02-20 22:36:51
- * @Description: file content
- */
 {
-    "include": [
-        "src"
+  "compilerOptions": {
+    "outDir": "./build/",
+    "sourceMap": true,
+    "incremental": true,
+    "noImplicitAny": true,
+    "module": "esnext",
+    "moduleResolution": "node",
+    "allowSyntheticDefaultImports": true,
+    "target": "ES2017",
+    "jsx": "react",
+    "types": [
+      //(various types, e.g. jquery, core-js),
+      "chrome"
     ],
-    "exclude": [
-        "server/*",
-        "config/*"
-    ],
-    "compilerOptions": {
-        "outDir": "./build/",
-        "sourceMap": true,
-        "incremental": true,
-        "noImplicitAny": true,
-        "module": "esnext",
-        "moduleResolution": "node",
-        "allowSyntheticDefaultImports": true,
-        "target": "ES2017",
-        "jsx": "react",
-        "types": [
-            //(various types, e.g. jquery, core-js),
-            "chrome"
-        ],
-        "baseUrl": "src",
-        "paths": {
-            "config": [
-                "../config"
-            ]
-        },
-        "plugins": [
-            {
-                "name": "typescript-plugin-css-modules"
-            }
-        ]
-    }
+    "baseUrl": "src",
+    "paths": {
+      "config": [
+        "../config"
+      ]
+    },
+    "plugins": [
+      {
+        "name": "typescript-plugin-css-modules"
+      }
+    ]
+  }
 }
