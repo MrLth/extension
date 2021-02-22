@@ -2,7 +2,7 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2020-10-11 20:03:45
- * @LastEditTime: 2021-02-22 16:54:54
+ * @LastEditTime: 2021-02-22 23:07:02
  * @Description: file content
  */
 const { resolve } = require('path');
@@ -48,6 +48,7 @@ module.exports = {
     'react/no-array-index-key': WARN,
     'no-restricted-syntax': OFF,
     'no-bitwise': OFF,
+    'no-console': OFF,
     "import/extensions": [
       ERROR,
       "ignorePackages",

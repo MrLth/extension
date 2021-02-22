@@ -2,10 +2,14 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2020-10-04 18:52:15
- * @LastEditTime: 2021-02-21 21:10:53
+ * @LastEditTime: 2021-02-22 23:17:35
  * @Description: file content
  */
 declare module '*.module.scss' {
+  const classes: { [key: string]: string };
+  export default classes;
+}
+declare module '*.m.scss' {
   const classes: { [key: string]: string };
   export default classes;
 }

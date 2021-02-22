@@ -1,0 +1,47 @@
+.content {
+    position: absolute;
+    width: 120px;
+    background-color: #fff;
+    border-radius: 0.3125rem;
+    box-shadow: rgba(0, 0, 0, 0.09) 0 5px 12px 4px;
+    transition: top 0.1s ease-in-out, left 0.1s ease-in-out;
+    will-change: top, left;
+
+    li {
+        display: flex;
+        height: 2rem;
+        color: #434343;
+        line-height: 2rem;
+        background-color: #fff;
+        border-bottom: 1px #f7f7f7 solid;
+        transition: color 0.1s ease-in-out, background-color 0.1s ease-in-out;
+        will-change: color, background-color;
+        &:first-child {
+            border-radius: 0.3125rem 0.3125rem 0 0;
+        }
+
+        &:last-child {
+            border: none;
+            border-radius: 0 0 0.3125rem 0.3125rem;
+        }
+
+        div:first-child {
+            padding: 0 0.75rem 0 1rem;
+            font-size: 1rem;
+        }
+
+        div:last-child {
+            font-size: 0.875rem;
+        }
+
+        &:hover {
+            color: #1890ff;
+            // background-color: #E6F7FF;
+
+            div:first-child {
+                color: #1890ff;
+
+            }
+        }
+    }
+}

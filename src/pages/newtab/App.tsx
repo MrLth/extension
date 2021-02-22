@@ -14,9 +14,9 @@ import 'normalize.css/normalize.css';
 import 'src/index.scss';
 
 import '../runConcent';
-import History from 'components/History';
-import Bookmark from 'components/Bookmark';
-import Tab from '../../components/Tab';
+import History from 'modules/History';
+import Bookmark from 'modules/Bookmark';
+import Tab from '../../modules/Tab';
 
 function App(): JSX.Element {
   const { setState } = useConcent('$$global');

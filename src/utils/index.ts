@@ -1,14 +1,20 @@
-import format from 'date-format';
-import { Key } from 'react';
-import { ignoreLog } from 'config';
-import { Fn, Keys, Obj } from './type';
 /*
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2020-05-29 17:30:01
- * @LastEditTime: 2021-02-21 20:40:03
+ * @LastEditTime: 2021-02-22 23:37:15
  * @Description: 整个项目会用到的方法和api
  */
+
+import format from 'date-format';
+import { Key } from 'react';
+import { ignoreLog } from 'config';
+import TimeAgo from 'javascript-time-ago';
+import zh from 'javascript-time-ago/locale/zh';
+import { Fn, Keys, Obj } from './type';
+
+TimeAgo.addLocale(zh);
+export const timeAgo = new TimeAgo('zh');
 
 const DATE_LOCAL_PLACEHOLDER = 'TIMESTAMP';
 

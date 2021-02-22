@@ -6,7 +6,7 @@
  * @Description: file content
  */
 export { default as $$global } from './global';
-export { default as record } from '../components/Record/model';
-export { default as tab } from '../components/Tab/model';
-export { default as history } from '../components/History/model';
-export { default as bookmark } from '../components/Bookmark/model';
+export { default as record } from '../modules/Record/model';
+export { default as tab } from '../modules/Tab/model';
+export { default as history } from '../modules/History/model';
+export { default as bookmark } from '../modules/Bookmark/model';

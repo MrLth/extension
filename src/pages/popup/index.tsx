@@ -15,7 +15,7 @@ import 'src/index.scss';
 
 import '../runConcent';
 
-import Tab from 'components/Tab';
+import Tab from 'modules/Tab';
 
 const App = () => {
   const { setState } = useConcent('$$global');
