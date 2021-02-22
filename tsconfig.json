@@ -10,13 +10,27 @@
     "target": "ES2017",
     "jsx": "react",
     "types": [
-      //(various types, e.g. jquery, core-js),
       "chrome"
     ],
     "baseUrl": "src",
     "paths": {
       "config": [
         "../config"
+      ],
+      "config/*": [
+        "../config/*"
+      ],
+      "@img/*": [
+        "../public/img/*"
+      ],
+      "src/*": [
+        "../src/*"
+      ],
+      "public": [
+        "../public"
+      ],
+      "public/*": [
+        "../public/*"
       ]
     },
     "plugins": [

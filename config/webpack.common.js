@@ -3,10 +3,10 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2020-05-27 15:30:26
- * @LastEditTime: 2021-02-22 08:58:28
+ * @LastEditTime: 2021-02-22 16:35:26
  * @Description: file content
  */
-const { resolve } = require('path');
+// const { resolve: _resolve } = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
@@ -14,6 +14,30 @@ const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const FriendlyErrorsWebpackPlugin = require('friendly-errors-webpack-plugin');
 const Webpackbar = require('webpackbar');
 const { DefinePlugin } = require('webpack')
+const { readdirSync, statSync } = require('fs')
+const tsConfig = require('../tsconfig.json')
+const { resolve } = require('../server/config')
+
+const { paths, baseUrl } = tsConfig.compilerOptions
+
+const alias = {}
+if (![undefined, '.', './'].includes(baseUrl)) {
+  const baseUrlSubDirectoryList = readdirSync(resolve(baseUrl)).filter(
+    (filename) => statSync(resolve(baseUrl, filename)).isDirectory(),
+  )
+
+  for (const directory of baseUrlSubDirectoryList) {
+    alias[directory] = resolve(baseUrl, directory)
+  }
+
+  for (const [k, v] of Object.entries(paths)) {
+    const custom = k.replace(/\/\*$/, '')
+    const realPath = v[0].replace(/\/\*$/, '')
+    alias[custom] = resolve(baseUrl, realPath)
+  }
+}
+
+// console.log(resolve('.'))
 
 // const threadLoader = require('thread-loader');
 // threadLoader.warmup({
@@ -45,15 +69,7 @@ module.exports = {
   },
   resolve: {
     extensions: ['.ts', '.tsx', '.js'],
-    alias: {
-      '@img': resolve('public/img'),
-      public: resolve('public'),
-      components: resolve('src/components'),
-      utils: resolve('src/utils'),
-      config: resolve('config'),
-      models: resolve('src/models'),
-      src: resolve('src'),
-    },
+    alias, // 由 tsconfig.js 转换生成，请到 tsconfig.paths 设置
   },
   module: {
     rules: [

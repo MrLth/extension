@@ -2,11 +2,11 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2020-11-11 07:59:07
- * @LastEditTime: 2021-02-22 01:14:40
+ * @LastEditTime: 2021-02-22 16:54:41
  * @Description: file content
  */
 import * as React from 'react';
-import 'public/asset/iconfont.js';
+import 'public/asset/iconfont';
 
 import c from './index.module.scss';
 

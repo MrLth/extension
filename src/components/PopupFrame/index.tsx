@@ -2,7 +2,7 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2021-01-11 10:11:06
- * @LastEditTime: 2021-02-22 01:00:10
+ * @LastEditTime: 2021-02-22 16:48:38
  * @Description: file content
  */
 import React, { memo } from 'react';
@@ -72,7 +72,7 @@ const PopupFrame = (props: PopupFrameProps): JSX.Element => {
   }
 
   return (
-    <ul className={c.content} style={{ top, left, display: isshow ? 'block' : 'none' }}>
+    <ul className={c.content} style={{ top, left, display: isShow ? 'block' : 'none' }}>
       {options.map((v, i) => (
         <li
           role="presentation"

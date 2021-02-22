@@ -2,14 +2,14 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2021-02-20 19:59:04
- * @LastEditTime: 2021-02-22 01:43:35
+ * @LastEditTime: 2021-02-22 17:27:36
  * @Description: file content
  */
 import { BookmarkTreeNode } from 'components/Bookmark/model/state';
 import React from 'react';
 import defaultIcon from '@img/defaultIcon.svg';
 import c from './index.module.scss';
-import { Settings } from '.';
+import { Settings } from './setup';
 
 interface Props {
   node: BookmarkTreeNode

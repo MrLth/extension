@@ -7,7 +7,7 @@
  */
 import { BookmarkTreeNode } from 'components/Bookmark/model/state';
 import React from 'react';
-import { Settings } from '.';
+import { Settings } from './setup';
 import FolderName from './FolderName';
 import c from './index.module.scss';
 

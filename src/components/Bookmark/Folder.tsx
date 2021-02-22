@@ -1,6 +1,13 @@
+/*
+ * @Author: mrlthf11
+ * @LastEditors: mrlthf11
+ * @Date: 2021-02-22 08:34:51
+ * @LastEditTime: 2021-02-22 17:28:07
+ * @Description: file content
+ */
 import { BookmarkTreeNode } from 'components/Bookmark/model/state';
 import React from 'react';
-import { Settings } from '.';
+import { Settings } from './setup';
 import c from './index.module.scss';
 import Label from './Label';
 

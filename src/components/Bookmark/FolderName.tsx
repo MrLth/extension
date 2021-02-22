@@ -2,17 +2,17 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2021-02-20 19:59:04
- * @LastEditTime: 2021-02-22 14:07:57
+ * @LastEditTime: 2021-02-22 17:29:08
  * @Description: file content
  */
 import React from 'react';
 
 import folderSvg from '@img/folder.svg';
 import folderOpenSvg from '@img/folder-open.svg';
-import { BookmarkTreeNode } from 'components/Bookmark/model/state';
 import { moduleClassnames } from 'utils';
 import { SUB_NODE_PADDING_UNIT } from 'utils/const';
-import { Settings } from '.';
+import { BookmarkTreeNode } from './model/state';
+import { Settings } from './setup';
 // #region 样式绑定
 import c from './index.module.scss';
 // #endregion

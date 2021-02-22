@@ -2,7 +2,7 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2021-02-20 19:59:04
- * @LastEditTime: 2021-02-21 19:24:04
+ * @LastEditTime: 2021-02-22 17:03:52
  * @Description: file content
  */
 import React, { forwardRef } from 'react';
@@ -13,7 +13,9 @@ import { SettingsType } from 'concent';
 import c from './index.module.scss';
 import Folder from './Folder';
 import Label from './Label';
-import { Settings } from '.';
+// import { Settings } from '.';
+import { Settings } from './setup'
+// import {Settings} from './index'
 
 const initState = () => ({
 });
@@ -43,7 +45,7 @@ const BookmarkList = (
     <ul
       ref={ref}
       className={c['bookmark-list']}
-      style={{ height: rootnode?.height ?? 0 }}
+      style={{ height: rootNode?.height ?? 0 }}
     >
       {
         rootNode?.children.map((v) => (

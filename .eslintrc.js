@@ -2,10 +2,11 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2020-10-11 20:03:45
- * @LastEditTime: 2021-02-22 01:15:06
+ * @LastEditTime: 2021-02-22 16:54:54
  * @Description: file content
  */
 const { resolve } = require('path');
+
 const OFF = 0;
 const WARN = 1
 const ERROR = 2;
@@ -17,79 +18,65 @@ module.exports = {
     node: true,
     webextensions: true,
   },
-  parser: "@typescript-eslint/parser",
+  parser: '@typescript-eslint/parser',
   plugins: [
-    "@typescript-eslint",
-    // 'import'
+    '@typescript-eslint',
+    'import'
   ],
   extends: [
     'airbnb',
     'airbnb/hooks',
-    "plugin:@typescript-eslint/recommended",
-    // 'plugin:import/errors',
-    // 'plugin:import/warnings',
-    // 'plugin:import/typescript'
+    'plugin:@typescript-eslint/recommended',
+    'plugin:import/typescript'
   ],
   settings: {
-    // "import/resolver": {
-    //   node: {
-    //     path: [
-    //       resolve('src'),
-    //       resolve('src/utils'),
-    //     ],
-    //     extensions: ['.js', '.jsx', '.tsx', '.ts', '.d.ts']
-    //   },
-    // },
-    //   typescript: {
-    //     directory: [resolve('tsconfig.json')],
-    //   },
-    // },
-    // typescript: {},
-    // 'babel-module': {
-    //   extensions: ['.js', '.jsx', '.tsx', '.ts', '.d.ts'],
-    //   alias: {
-    //     "utils": resolve('src/utils'),
-    //   }
-    // },
-    // "eslint-import-resolver-custom-alias": {
-    //   "alias": {
-    //     "src": "./src",
-    //     "utils": './src/utils',
-    //     "components": "./src/components"
-    //   },
-    //   "extensions": [".tsx", ".ts"],
-    // },
+
+    "import/resolver": {
+      // fix import alias not working
+      typescript: {
+        project: [resolve('tsconfig.json')],
+      },
+    },
+
     react: {
-      version: "detect"
-    }
+      version: 'detect',
+    },
   },
   rules: {
-    'semi': OFF,
-    "react/jsx-filename-extension": [ERROR, { extensions: [".jsx", ".tsx"] }],
-    "react/no-array-index-key": WARN,
-    'import/extensions': OFF,
+    semi: OFF,
+    'react/jsx-filename-extension': [ERROR, { extensions: ['.jsx', '.tsx'] }],
+    'react/no-array-index-key': WARN,
     'no-restricted-syntax': OFF,
-    "no-bitwise": OFF
+    'no-bitwise': OFF,
+    "import/extensions": [
+      ERROR,
+      "ignorePackages",
+      {
+        "js": "never",
+        "jsx": "never",
+        "ts": "never",
+        "tsx": "never"
+      }
+    ],
   },
   overrides: [
     {
       files: [
-        "*.ts",
-        "*.tsx"
+        '*.ts',
+        '*.tsx',
       ],
       parserOptions: {
-        project: resolve("tsconfig.json")
+        project: resolve('tsconfig.json'),
       },
       rules: {
-        'import/no-unresolved': OFF,
-        'react/jsx-props-no-spreading': OFF
-      }
+        'react/jsx-props-no-spreading': OFF, // spreading props in typescript is safely
+      },
     },
     {
-      files: ["*.js", "*.d.ts"],
+      files: ['*.js', '*.d.ts'],
       rules: {
-        '@typescript-eslint/no-var-requires': OFF
-      }
-    }
+        '@typescript-eslint/no-var-requires': OFF,
+      },
+    },
   ],
 }
