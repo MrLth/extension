@@ -5,9 +5,6 @@
  * @LastEditTime: 2021-02-21 16:40:52
  * @Description: tab component's type defined file
  */
-import state from './state';
-
-export type TabState = typeof state
 
 export interface MyTab extends chrome.tabs.Tab {
   updateKey: number

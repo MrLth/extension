@@ -3,7 +3,7 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2020-05-27 15:30:26
- * @LastEditTime: 2021-02-22 15:58:14
+ * @LastEditTime: 2021-02-23 00:39:20
  * @Description: file content
  */
 
@@ -13,7 +13,7 @@ const CopyWebpackPlugin = require('copy-webpack-plugin')
 const ParallelUglifyPlugin = require('webpack-parallel-uglify-plugin'); // 比直接使用 TerserPlugin 更快
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
-const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer')
+// const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer')
 const { resolve } = require('../server/config')
 
 const { minimum_chrome_version: minimumChromeVersion } = require('./manifest.json');
@@ -96,7 +96,7 @@ module.exports = merge(config, {
       terser: true,
     }),
 
-    new BundleAnalyzerPlugin(),
+    // new BundleAnalyzerPlugin(),
   ],
   externals: {
     react: 'React',

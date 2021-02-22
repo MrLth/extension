@@ -2,7 +2,7 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2020-10-11 20:03:45
- * @LastEditTime: 2021-02-22 23:07:02
+ * @LastEditTime: 2021-02-23 00:35:24
  * @Description: file content
  */
 const { resolve } = require('path');
@@ -21,17 +21,16 @@ module.exports = {
   parser: '@typescript-eslint/parser',
   plugins: [
     '@typescript-eslint',
-    'import'
+    'import',
   ],
   extends: [
     'airbnb',
     'airbnb/hooks',
     'plugin:@typescript-eslint/recommended',
-    'plugin:import/typescript'
+    'plugin:import/typescript',
   ],
   settings: {
-
-    "import/resolver": {
+    'import/resolver': {
       // fix import alias not working
       typescript: {
         project: [resolve('tsconfig.json')],
@@ -42,22 +41,26 @@ module.exports = {
       version: 'detect',
     },
   },
+  globals: {
+    log: 'readonly',
+  },
   rules: {
     semi: OFF,
+    'no-undef': ERROR,
     'react/jsx-filename-extension': [ERROR, { extensions: ['.jsx', '.tsx'] }],
     'react/no-array-index-key': WARN,
     'no-restricted-syntax': OFF,
     'no-bitwise': OFF,
     'no-console': OFF,
-    "import/extensions": [
+    'import/extensions': [
       ERROR,
-      "ignorePackages",
+      'ignorePackages',
       {
-        "js": "never",
-        "jsx": "never",
-        "ts": "never",
-        "tsx": "never"
-      }
+        js: 'never',
+        jsx: 'never',
+        ts: 'never',
+        tsx: 'never',
+      },
     ],
   },
   overrides: [

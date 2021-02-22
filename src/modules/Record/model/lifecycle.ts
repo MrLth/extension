@@ -2,10 +2,10 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2021-02-20 19:59:04
- * @LastEditTime: 2021-02-22 00:51:21
+ * @LastEditTime: 2021-02-23 00:37:20
  * @Description: file content
  */
-import reducer, { RecordState } from './reducer';
+import reducer from './reducer';
 
 type TypeDescriptor = {
   type: string

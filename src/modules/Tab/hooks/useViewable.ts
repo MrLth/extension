@@ -7,9 +7,9 @@
  */
 
 import { debounce } from 'lodash-es';
-import { TabState } from 'modules/Tab/model/type';
 import { MutableRefObject, useEffect, useRef } from 'react';
 import { FOLDER_TITLE_HEIGHT, LABEL_HEIGHT } from 'utils/const';
+import { TabState } from '../model/reducer';
 
 const effect = debounce(
   (state: TabState, listRef: MutableRefObject<HTMLDivElement>) => {

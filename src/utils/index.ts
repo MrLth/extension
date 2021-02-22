@@ -2,7 +2,7 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2020-05-29 17:30:01
- * @LastEditTime: 2021-02-22 23:37:15
+ * @LastEditTime: 2021-02-23 00:47:50
  * @Description: 整个项目会用到的方法和api
  */
 
@@ -353,8 +353,8 @@ export function proxyMethods<T>({
   proxyKeys,
   ignoreKeys,
 }: ProxyMethods<T>): T {
-  let keys: Keys
-  if (!proxyKeys) {
+  let keys: Keys = proxyKeys
+  if (!keys) {
     if (typeof target.constructor === 'function') {
       // 1. 类的实例，方法从类原型上找
       keys = allKeys(Object.getPrototypeOf(target));
@@ -366,8 +366,8 @@ export function proxyMethods<T>({
       keys = allKeys(target as Obj);
     }
   }
-  keys = proxyKeys.filter((k) => typeof (target as Obj)[k] === 'function');
-
+  keys = keys.filter((k) => typeof (target as Obj)[k] === 'function');
+  console.log(1)
   // 3. 去重 && 去除忽略键
   const set = new Set(keys);
   if (ignoreKeys) ignoreKeys.forEach((k) => set.delete(k));
@@ -375,7 +375,7 @@ export function proxyMethods<T>({
 
   // 4. 为这些函数添加代理
   const fnMap = new Map<Key, Fn>();
-  for (const k of proxyKeys) {
+  for (const k of keys) {
     const fn = (target as Obj)[k];
     if (typeof fn === 'function') {
       fnMap.set(
