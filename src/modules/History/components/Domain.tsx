@@ -2,7 +2,7 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2020-10-14 08:40:09
- * @LastEditTime: 2021-02-22 23:28:14
+ * @LastEditTime: 2021-02-23 10:14:56
  * @Description: file content
  */
 
@@ -25,7 +25,7 @@ const Domain = ({
 }: Props) => {
   const jsxList = useMemo(() => {
     const ls = [];
-    for (let i = 1, len = ls.length; i < len; i += 1) {
+    for (let i = 1, len = list.length; i < len; i += 1) {
       const v = list[i];
       ls.push(<LabelNoFavIcon key={v.id} item={v} settings={settings} />);
     }

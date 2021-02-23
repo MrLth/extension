@@ -2,7 +2,7 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2020-05-29 17:30:01
- * @LastEditTime: 2021-02-23 10:00:48
+ * @LastEditTime: 2021-02-23 10:08:22
  * @Description: 整个项目会用到的方法和api
  */
 
@@ -388,7 +388,7 @@ export function proxyMethods<T>({
       );
     }
   }
-
+  console.log(1)
   // 5. 为对象添加代理，让方法函数的访问走代理
   return (new Proxy(target as Obj, {
     get(obj, k) {

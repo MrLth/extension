@@ -2,7 +2,7 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2021-02-22 17:17:23
- * @LastEditTime: 2021-02-22 17:35:40
+ * @LastEditTime: 2021-02-23 10:06:17
  * @Description: file content
  */
 import { SettingsType } from 'concent';
@@ -42,6 +42,7 @@ export const setup = (ctx: CtxPre) => {
   const settings = {
     refList: {
       set current(v: HTMLUListElement) {
+        if (!v) return
         dom.wrapper = v.parentElement as HTMLDivElement;
         common.listHeight = dom.wrapper.clientHeight;
         dom.list = v;

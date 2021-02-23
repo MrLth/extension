@@ -12,14 +12,13 @@ import { NoMap, SettingsType, useConcent } from 'concent';
 import { HistorySection } from 'modules/History/model/state';
 import { CtxDeS } from 'utils/concent';
 import { sortByKey } from 'utils';
+import { DAY } from 'utils/const';
 import Domain from './Domain';
 import Label from './Label';
 import { Settings } from '../setup';
 import { HistoryItem } from '../api';
 
 import c from '../index.m.scss';
-
-const ONE_DAY = 86400000;
 
 function dayFormat(timeStamp: number): string {
   const date = new Date(new Date(timeStamp).setHours(0, 0, 0, 0));
@@ -29,7 +28,7 @@ function dayFormat(timeStamp: number): string {
   const nowDateNum = nowDate.valueOf();
   if (dateNum === nowDateNum) {
     return '今天';
-  } if (dateNum === nowDateNum - ONE_DAY) {
+  } if (dateNum === nowDateNum - DAY) {
     return '昨天';
   }
 

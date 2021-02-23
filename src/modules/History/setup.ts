@@ -2,7 +2,7 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2021-02-22 23:08:09
- * @LastEditTime: 2021-02-22 23:25:18
+ * @LastEditTime: 2021-02-23 10:07:00
  * @Description: file content
  */
 import { EmptyObject, Obj } from 'utils/type';
@@ -149,6 +149,7 @@ export const setup = (ctx: CtxPre) => {
     openLabel: reducer.tab.openTab,
     refList: {
       set current(v: HTMLUListElement) {
+        if (!v) return
         common.listHeight = v.clientHeight;
         common.listCount = Math.ceil(common.listHeight / LABEL_HEIGHT);
         dom.list = v;
