@@ -12,7 +12,8 @@ const cn = moduleClassnames.bind(null, c);
 interface Props {
   tab: Tab
   settings: Settings
-  // updateKey: number
+  updateKey: number
+  windowUpdKey: number
 }
 
 const getLabelDom = (dom: HTMLElement): HTMLElement => {
@@ -21,12 +22,16 @@ const getLabelDom = (dom: HTMLElement): HTMLElement => {
   return getLabelDom(dom.parentElement);
 };
 
-const Label = ({ tab, settings }: Props) => {
+const Label = ({
+  tab, settings, updateKey, windowUpdKey,
+}: Props) => {
   log({ Label: tab.title, tab }, 'render', 5);
 
   return (
     <li
       role="presentation"
+      data-upd-time={updateKey}
+      data-window-upd-time={windowUpdKey}
       className={cn('label', {
         activated: tab.active,
       })}

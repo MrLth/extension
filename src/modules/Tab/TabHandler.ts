@@ -2,7 +2,7 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2021-02-23 00:15:42
- * @LastEditTime: 2021-02-23 00:20:45
+ * @LastEditTime: 2021-02-23 10:44:51
  * @Description: file content
  */
 import { Fn } from 'utils/type';
@@ -138,6 +138,7 @@ class TabHandler {
         return
       }
       // 2. 或者只关闭标签
+      console.log(this.windows.has(windowId))
       if (this.windows.has(windowId)) {
         const { tabs } = this.windows.get(windowId);
         const i = tabs.findIndex((v) => v.id === tabId);

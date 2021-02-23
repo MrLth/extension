@@ -13,8 +13,8 @@ const CopyWebpackPlugin = require('copy-webpack-plugin')
 const ParallelUglifyPlugin = require('webpack-parallel-uglify-plugin'); // 比直接使用 TerserPlugin 更快
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
-// const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer')
 const { resolve } = require('../server/config')
+// const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer')
 
 const { minimum_chrome_version: minimumChromeVersion } = require('./manifest.json');
 const config = require('./webpack.common')

@@ -3,7 +3,7 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2020-05-27 15:30:26
- * @LastEditTime: 2021-02-22 16:35:26
+ * @LastEditTime: 2021-02-23 11:08:44
  * @Description: file content
  */
 // const { resolve: _resolve } = require('path');
@@ -57,7 +57,7 @@ const htmlWebpackPluginList = Object.keys(entry).map((key) => new HtmlWebpackPlu
   inject: true,
   chunks: [key],
   filename: `${key}.html`,
-  template: resolve(isDev ? 'template/dev.html' : 'template/prod.html'),
+  template: resolve(isDev ? 'public/template/dev.html' : 'public/template/prod.html'),
 }));
 
 module.exports = {
@@ -113,7 +113,7 @@ module.exports = {
     new ForkTsCheckerWebpackPlugin({
       typescript: {
         configFile: resolve('tsconfig.json'),
-        profile: !isDev,
+        // profile: !isDev,
       },
     }),
 

@@ -2,7 +2,7 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2021-02-23 09:35:55
- * @LastEditTime: 2021-02-23 09:59:50
+ * @LastEditTime: 2021-02-23 10:47:40
  * @Description: file content
  */
 import React from 'react';
@@ -48,7 +48,7 @@ const TabComponent = (): JSX.Element => {
                   key={k}
                   myWindow={v}
                   settings={settings}
-                // updateKey={v.updateKey}
+                  updateKey={v.updateKey}
                 />
               ))
           }

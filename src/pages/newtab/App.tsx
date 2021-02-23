@@ -2,7 +2,7 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2020-12-11 14:57:20
- * @LastEditTime: 2021-02-23 09:59:38
+ * @LastEditTime: 2021-02-23 11:00:16
  * @Description: file content
  */
 import React, { useEffect } from 'react';
@@ -11,9 +11,9 @@ import { useConcent } from 'concent';
 // import { hot } from 'react-hot-loader/root';
 
 import 'normalize.css/normalize.css';
-import 'src/index.scss';
+import 'pages/index.scss';
 
-import '../runConcent';
+import '../../models/run';
 import History from 'modules/History';
 import Bookmark from 'modules/Bookmark';
 import Tab from '../../modules/Tab';

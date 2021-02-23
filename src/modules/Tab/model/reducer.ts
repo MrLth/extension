@@ -2,7 +2,7 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2020-10-13 17:35:56
- * @LastEditTime: 2021-02-23 00:38:56
+ * @LastEditTime: 2021-02-23 10:37:31
  * @Description: file content
  */
 
@@ -90,6 +90,7 @@ async function init(
   const proxyB = proxyMethods({
     target: proxyA,
     handler: (target, _thisArg, args) => {
+      console.log('123')
       log({ target: target.name, args }, 'batch', 2);
     },
     ignoreKeys: ['push'],

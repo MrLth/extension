@@ -2,7 +2,7 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2020-12-17 08:05:07
- * @LastEditTime: 2021-02-23 00:13:12
+ * @LastEditTime: 2021-02-23 10:51:50
  * @Description: file content
  */
 import React, { memo } from 'react';
@@ -17,10 +17,10 @@ const cn = moduleClassnames.bind(null, c);
 interface Props {
   myWindow: MyWindow
   settings: Settings
-  // updateKey: number
+  updateKey: number
 }
 
-const Window = ({ myWindow, settings }: Props) => {
+const Window = ({ myWindow, settings, updateKey }: Props) => {
   const { tabs, attach } = myWindow;
   const tabArr = [];
 
@@ -44,7 +44,8 @@ const Window = ({ myWindow, settings }: Props) => {
           <Label
             key={tab.id}
             tab={tab}
-            // updateKey={tab.updateKey}
+            updateKey={tab.updateKey}
+            windowUpdKey={updateKey}
             settings={settings}
           />,
         );
@@ -61,7 +62,8 @@ const Window = ({ myWindow, settings }: Props) => {
       <Label
         key={tab.id}
         tab={tab}
-        // updateKey={tab.updateKey}
+        updateKey={tab.updateKey}
+        windowUpdKey={updateKey}
         settings={settings}
       />,
     );
