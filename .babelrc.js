@@ -3,7 +3,7 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2021-02-20 14:18:21
- * @LastEditTime: 2021-02-20 21:49:17
+ * @LastEditTime: 2021-02-23 09:55:36
  * @Description: file content
  */
 const { resolve } = require('path')
@@ -37,7 +37,8 @@ module.exports = (api) => {
     env: {
       development: {
         presets: [['@babel/preset-react', { development: true }]],
-        plugins: ['react-hot-loader/babel'],
+        // plugins: ['react-hot-loader/babel'],
+        plugins: ['react-refresh/babel'],
       },
       production: {
         presets: ['@babel/preset-react'],

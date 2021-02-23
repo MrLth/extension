@@ -2,7 +2,7 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2020-05-29 17:30:01
- * @LastEditTime: 2021-02-23 00:47:50
+ * @LastEditTime: 2021-02-23 10:00:48
  * @Description: 整个项目会用到的方法和api
  */
 
@@ -372,7 +372,6 @@ export function proxyMethods<T>({
   const set = new Set(keys);
   if (ignoreKeys) ignoreKeys.forEach((k) => set.delete(k));
   keys = Array.from(set);
-
   // 4. 为这些函数添加代理
   const fnMap = new Map<Key, Fn>();
   for (const k of keys) {

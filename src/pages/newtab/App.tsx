@@ -2,13 +2,13 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2020-12-11 14:57:20
- * @LastEditTime: 2021-02-21 23:32:47
+ * @LastEditTime: 2021-02-23 09:59:38
  * @Description: file content
  */
 import React, { useEffect } from 'react';
 import { debounce } from 'lodash-es';
 import { useConcent } from 'concent';
-import { hot } from 'react-hot-loader/root';
+// import { hot } from 'react-hot-loader/root';
 
 import 'normalize.css/normalize.css';
 import 'src/index.scss';
@@ -45,4 +45,5 @@ function App(): JSX.Element {
   );
 }
 
-export default hot(App);
+// export default hot(App);
+export default App;

@@ -3,13 +3,12 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2020-05-27 15:30:26
- * @LastEditTime: 2021-02-23 09:54:04
+ * @LastEditTime: 2021-02-23 09:41:29
  * @Description: file content
  */
 const { HotModuleReplacementPlugin } = require('webpack');
-const ReactRefreshPlugin = require('@pmmmwh/react-refresh-webpack-plugin');
 const { merge } = require('webpack-merge');
-const { HOST, PORT, HRM_PATH } = require('../server/config')
+const { HOST, PORT, HRM_PATH } = require('../../server/config')
 
 const config = require('./webpack.common')
 
@@ -17,6 +16,7 @@ const entry = Object.entries(config.entry).reduce((obj, [k, v]) => ({
   ...obj,
   [k]: [
     `webpack-hot-middleware/client?path=http://${HOST}:${PORT}${HRM_PATH}&reload=true&overlay=true`,
+    'react-hot-loader/patch',
     v,
   ],
 }), {})
@@ -56,11 +56,5 @@ module.exports = merge(config, {
   },
   plugins: [
     new HotModuleReplacementPlugin(),
-
-    new ReactRefreshPlugin({
-      overlay: {
-        sockIntegration: 'whm',
-      },
-    }),
   ],
 })
