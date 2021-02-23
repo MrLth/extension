@@ -1,7 +1,7 @@
 import React, { memo } from 'react';
 import { moduleClassnames } from 'utils';
 import { Tab } from 'utils/type';
-import IconFont from 'modules/IconFont';
+import IconFont from 'components/IconFont';
 import defaultIcon from '@img/defaultIcon.svg';
 import { Settings } from '../setup';
 

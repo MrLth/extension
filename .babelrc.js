@@ -3,7 +3,7 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2021-02-20 14:18:21
- * @LastEditTime: 2021-02-23 17:13:47
+ * @LastEditTime: 2021-02-23 23:41:33
  * @Description: file content
  */
 const { resolve } = require('path')
@@ -28,6 +28,7 @@ module.exports = (api) => {
       ]
     ],
     plugins: [
+      './public/plugin/plugin-log.js',
       '@babel/plugin-transform-runtime',
       '@babel/plugin-syntax-dynamic-import',
       '@babel/plugin-proposal-optional-chaining',
@@ -39,7 +40,6 @@ module.exports = (api) => {
         presets: [['@babel/preset-react', { development: true }]],
         // plugins: ['react-hot-loader/babel'],
         plugins: [
-          './public/plugin/plugin-log3.js',
           'react-refresh/babel'
         ],
       },

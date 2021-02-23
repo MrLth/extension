@@ -2,13 +2,13 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2021-02-20 19:59:04
- * @LastEditTime: 2021-02-22 00:52:28
+ * @LastEditTime: 2021-02-23 23:32:55
  * @Description: file content
  */
 import React, { memo } from 'react';
 import { moduleClassnames } from 'utils';
 import defaultIcon from '@img/defaultIcon.svg';
-import IconFont from 'modules/IconFont';
+import IconFont from 'components/IconFont';
 import { RecordUrl } from '../model/state';
 import { Settings } from '../setup';
 

@@ -2,14 +2,14 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2021-02-23 09:35:55
- * @LastEditTime: 2021-02-23 11:45:32
+ * @LastEditTime: 2021-02-23 23:39:31
  * @Description: file content
  */
 import React from 'react';
 import { NoMap, useConcent } from 'concent';
 import { EmptyObject } from 'utils/type';
+import PopupFrame from 'components/PopupFrame';
 import Window from './components/Window';
-import PopupFrame from '../PopupFrame';
 import useViewable from './hooks/useViewable';
 import c from './index.m.scss';
 import {
@@ -30,6 +30,8 @@ const TabComponent = (): JSX.Element => {
   console.log('__DEV__', __DEV__);
   if (__DEV__) {
     console.log('this is development')
+  } else {
+    console.log('this is production')
   }
 
   return (

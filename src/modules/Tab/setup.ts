@@ -2,7 +2,7 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2021-02-22 23:45:29
- * @LastEditTime: 2021-02-22 23:57:32
+ * @LastEditTime: 2021-02-23 23:33:34
  * @Description: file content
  */
 import { SettingsType } from 'concent';
@@ -10,7 +10,7 @@ import {
   Windows, WindowsAttach, EmptyObject,
 } from 'utils/type';
 import { CtxMSConn, ItemsType } from 'utils/concent';
-import { PopupFrameProps, PopupOption } from '../PopupFrame';
+import { PopupFrameProps, PopupOption } from 'components/PopupFrame';
 
 export const moduleName = 'tab';
 export const connect = ['record'] as const;

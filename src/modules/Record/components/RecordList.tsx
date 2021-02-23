@@ -8,7 +8,7 @@
 import React, { memo, useEffect, useState } from 'react';
 import { moduleClassnames } from 'utils';
 import { useRefVal } from 'utils/hooks';
-import IconFont from 'modules/IconFont';
+import IconFont from 'components/IconFont';
 import Label from './Label';
 import { Recording } from '../model/state';
 import { Settings } from '../setup';
