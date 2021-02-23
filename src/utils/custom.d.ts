@@ -2,7 +2,7 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2020-10-04 18:52:15
- * @LastEditTime: 2021-02-22 23:17:35
+ * @LastEditTime: 2021-02-23 11:39:13
  * @Description: file content
  */
 declare module '*.module.scss' {
@@ -24,6 +24,9 @@ declare function log(
   title?: string,
   color?: number | string
 ): void
+
+// eslint-disable-next-line no-underscore-dangle
+declare const __DEV__: string
 
 declare module 'config' {
   export const ignoreLog: string[]

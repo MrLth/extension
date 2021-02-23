@@ -3,7 +3,7 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2020-05-27 15:30:26
- * @LastEditTime: 2021-02-23 11:08:44
+ * @LastEditTime: 2021-02-23 16:45:35
  * @Description: file content
  */
 // const { resolve: _resolve } = require('path');
@@ -45,7 +45,6 @@ if (![undefined, '.', './'].includes(baseUrl)) {
 //   poolTimeout: Infinity
 // }, ['babel-loader']);
 
-// eslint-disable-next-line no-underscore-dangle
 const isDev = process.env.NODE_ENV !== 'production';
 
 const entry = {

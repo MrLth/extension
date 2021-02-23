@@ -2,7 +2,7 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2021-02-23 09:35:55
- * @LastEditTime: 2021-02-23 10:47:40
+ * @LastEditTime: 2021-02-23 11:45:32
  * @Description: file content
  */
 import React from 'react';
@@ -27,6 +27,11 @@ const TabComponent = (): JSX.Element => {
   const { listRef } = useViewable(state);
 
   log({ Tab: 'Tab' }, 'render', 5);
+  console.log('__DEV__', __DEV__);
+  if (__DEV__) {
+    console.log('this is development')
+  }
+
   return (
     <>
       <div className={c.content}>
