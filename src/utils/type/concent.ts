@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/ban-types */
-// import * as moduleCst from "../base/constant/moduleName";
 import {
   ICtx,
   StateType,
@@ -34,9 +33,11 @@ export type RootComputed = {
   [cst.MODULE_VOID]: {};
   [cst.MODULE_DEFAULT]: {};
 } & {
-    [key in keyof Models]: Models[key]['computed'] extends IAnyObj
-    ? ComputedValType<Models[key]['computed']>
-    : {};
+    [key in keyof Models]: 'computed' extends keyof Models[key]
+    ? (Models[key]['computed'] extends IAnyObj
+      ? ComputedValType<Models[key]['computed']>
+      : {})
+    : {}
   };
 
 export type Modules = keyof RootState;

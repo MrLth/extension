@@ -2,24 +2,18 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2021-02-23 09:35:55
- * @LastEditTime: 2021-02-24 12:58:08
+ * @LastEditTime: 2021-02-24 14:31:08
  * @Description: file content
  */
 import React from 'react';
-import { NoMap, useConcent } from 'concent';
-import { EmptyObject } from 'utils/type';
 import PopupFrame from 'components/PopupFrame';
 import Window from './components/Window';
 import useViewable from './hooks/useViewable';
 import c from './index.m.scss';
-import {
-  initState, moduleName, setup, connect, Ctx,
-} from './setup';
+import useCC from './setup';
 
 const TabComponent = (): JSX.Element => {
-  const { state, settings } = useConcent<EmptyObject, Ctx, NoMap>({
-    module: moduleName, setup, state: initState, connect,
-  });
+  const { state, settings } = useCC()
 
   const { windows } = state.tabHandler ?? {};
 

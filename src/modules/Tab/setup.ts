@@ -2,21 +2,20 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2021-02-22 23:45:29
- * @LastEditTime: 2021-02-24 12:57:11
+ * @LastEditTime: 2021-02-24 14:40:04
  * @Description: file content
  */
-import { SettingsType } from 'concent';
+import { NoMap, SettingsType, useConcent } from 'concent';
 import {
   Windows, WindowsAttach, EmptyObject,
 } from 'utils/type';
 import { CtxMSConn, ItemsType } from 'utils/type/concent';
 import { PopupFrameProps, PopupOption } from 'components/PopupFrame';
 
-export const moduleName = 'tab';
-export const connect = ['record'] as const;
+const moduleName = 'tab';
+const connect = ['record'] as const;
 
-// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-export const initState = () => ({
+const initState = () => ({
   popupFrameProps: {
     isShow: false,
     top: 0,
@@ -34,8 +33,7 @@ type Conn = ItemsType<typeof connect>
 type State = ReturnType<typeof initState>
 type CtxPre = CtxMSConn<EmptyObject, Module, State, Conn>
 
-// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-export const setup = (ctx: CtxPre) => {
+const setup = (ctx: CtxPre) => {
   const {
     setState, state, effect, reducer,
   } = ctx;
@@ -233,4 +231,13 @@ export const setup = (ctx: CtxPre) => {
 };
 
 export type Settings = SettingsType<typeof setup>
-export type Ctx = CtxMSConn<EmptyObject, Module, State, Conn, Settings>
+type Ctx = CtxMSConn<EmptyObject, Module, State, Conn, Settings>
+
+const registerOptions = {
+  module: moduleName,
+  connect,
+  state: initState,
+  setup,
+}
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+export default () => useConcent<EmptyObject, Ctx, NoMap>(registerOptions)

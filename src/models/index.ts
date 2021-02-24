@@ -2,7 +2,7 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2020-09-01 20:45:56
- * @LastEditTime: 2020-10-13 17:30:08
+ * @LastEditTime: 2021-02-24 13:30:40
  * @Description: file content
  */
 export { default as $$global } from './global';

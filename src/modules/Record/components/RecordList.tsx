@@ -2,11 +2,11 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2021-02-20 19:59:04
- * @LastEditTime: 2021-02-22 23:43:29
+ * @LastEditTime: 2021-02-24 13:26:56
  * @Description: file content
  */
 import React, { memo, useEffect, useState } from 'react';
-import { moduleClassnames } from 'utils';
+import { format, moduleClassnames } from 'utils';
 import { useRefVal } from 'utils/hooks';
 import IconFont from 'components/IconFont';
 import Label from './Label';
@@ -25,7 +25,7 @@ const RecordList = ({ recordingIndex, recording, settings }: Props) => {
   const recordingIndexRef = useRefVal(recordingIndex);
   // #region 时间更新
   const [timeFormatted, setTimeFormatted] = useState<string>(
-    () => settings.timeAgo.format(recording.recordTime),
+    () => format(recording.recordTime),
   );
   useEffect(() => {
     settings.timeUpdQueue.push({

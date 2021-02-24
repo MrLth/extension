@@ -5,23 +5,22 @@
  * @LastEditTime: 2021-02-23 10:06:17
  * @Description: file content
  */
-import { SettingsType } from 'concent';
+import { SettingsType, useConcent, NoMap } from 'concent';
 import { CtxMSConn, ItemsType } from 'utils/type/concent';
 import { EmptyObject } from 'utils/type';
 import { CARD_TITLE_HEIGHT, FOLDER_TITLE_HEIGHT } from 'utils/const';
 import { BookmarkTreeNode } from './model/state';
 
-export const moduleName = 'bookmark';
-export const connect = [] as const;
-export const initState = (): Record<string, unknown> => ({});
+const moduleName = 'bookmark';
+const connect = [] as const;
+const initState = () => ({});
 
 type Module = typeof moduleName
 type Conn = ItemsType<typeof connect>
 type State = ReturnType<typeof initState>
 type CtxPre = CtxMSConn<EmptyObject, Module, State, Conn>
 
-// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-export const setup = (ctx: CtxPre) => {
+const setup = (ctx: CtxPre) => {
   const { effect, reducer } = ctx;
 
   const common = {
@@ -87,6 +86,13 @@ export const setup = (ctx: CtxPre) => {
 };
 
 export type Settings = SettingsType<typeof setup>
-export type Ctx = CtxMSConn<EmptyObject, Module, State, Conn, Settings>
+type Ctx = CtxMSConn<EmptyObject, Module, State, Conn, Settings>
 
-export default setup
+const registerOptions = {
+  module: moduleName,
+  setup,
+  state: initState,
+  connect,
+}
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+export default () => useConcent<EmptyObject, Ctx, NoMap>(registerOptions)

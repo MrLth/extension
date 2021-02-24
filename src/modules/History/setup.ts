@@ -5,9 +5,9 @@
  * @LastEditTime: 2021-02-24 13:00:53
  * @Description: file content
  */
-import { EmptyObject, Obj } from 'utils/type';
+import { EmptyObject } from 'utils/type';
 import { CtxMSConn, ItemsType } from 'utils/type/concent';
-import { SettingsType } from 'concent';
+import { NoMap, SettingsType, useConcent } from 'concent';
 import { format, sortByKey } from 'utils';
 import { debounce } from 'lodash-es';
 import toString from 'date-format';
@@ -15,9 +15,9 @@ import { LABEL_HEIGHT, DAY } from 'utils/const';
 import { HistorySection } from './model/state';
 import { calcHeight, sortNativeHistory } from './api';
 
-export const moduleName = 'history';
-export const connect = ['tab'] as const;
-export const initState = (): Obj => ({});
+const moduleName = 'history';
+const connect = ['tab'] as const;
+const initState = () => ({});
 
 type Module = typeof moduleName
 type Conn = ItemsType<typeof connect>
@@ -32,8 +32,7 @@ export interface TimeUpdItem {
   title: string
 }
 
-// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-export const setup = (ctx: CtxPre) => {
+const setup = (ctx: CtxPre) => {
   const { effect, reducer, state } = ctx;
 
   const dom = {
@@ -217,4 +216,13 @@ export const setup = (ctx: CtxPre) => {
 };
 
 export type Settings = SettingsType<typeof setup>
-export type Ctx = CtxMSConn<EmptyObject, Module, State, Conn, Settings>
+type Ctx = CtxMSConn<EmptyObject, Module, State, Conn, Settings>
+
+const registerOptions = {
+  module: moduleName,
+  setup,
+  state: initState,
+  connect,
+}
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+export default () => useConcent<EmptyObject, Ctx, NoMap>(registerOptions)

@@ -2,17 +2,17 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2021-02-22 23:35:20
- * @LastEditTime: 2021-02-24 12:59:58
+ * @LastEditTime: 2021-02-24 14:39:36
  * @Description: file content
  */
-import { SettingsType } from 'concent';
-import { EmptyObject, Obj } from 'utils/type';
+import { NoMap, SettingsType, useConcent } from 'concent';
+import { EmptyObject } from 'utils/type';
 import { format } from 'utils';
 import { CtxMSConn, ItemsType } from 'utils/type/concent';
 
-export const moduleName = 'record';
-export const connect = ['tab'] as const;
-export const initState = ():Obj => ({});
+const moduleName = 'record';
+const connect = ['tab'] as const;
+const initState = () => ({});
 
 type Module = typeof moduleName
 type Conn = ItemsType<typeof connect>
@@ -25,8 +25,7 @@ interface TimeUpdItem {
   recordTime: Date
 }
 
-// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-export const setup = (ctx: CtxPre) => {
+const setup = (ctx: CtxPre) => {
   const { effect, reducer } = ctx;
 
   // 数据初始化
@@ -77,4 +76,13 @@ export const setup = (ctx: CtxPre) => {
 };
 
 export type Settings = SettingsType<typeof setup>
-export type Ctx = CtxMSConn<EmptyObject, Module, State, Conn, Settings>
+type Ctx = CtxMSConn<EmptyObject, Module, State, Conn, Settings>
+
+const registerOptions = {
+  module: moduleName,
+  setup,
+  state: initState,
+  connect,
+}
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+export default () => useConcent<EmptyObject, Ctx, NoMap>(registerOptions)

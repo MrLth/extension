@@ -2,10 +2,9 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2020-10-12 08:17:18
- * @LastEditTime: 2021-02-23 00:12:51
+ * @LastEditTime: 2021-02-24 13:25:47
  * @Description: file content
  */
-import { readFromLocal, saveToLocal } from 'utils';
 import { debounce } from 'lodash-es';
 import { IActionCtxBase as IAC } from 'concent';
 import recordState, { Recording } from './state';
@@ -17,7 +16,7 @@ let isSaved = true;
 
 async function save(_new: null, state: RecordState): Promise<void> {
   if (isSaved) return;
-  await saveToLocal(LOCAL_KEY, state);
+  localStorage.setItem(LOCAL_KEY, JSON.stringify(state))
   isSaved = true;
 }
 
@@ -60,10 +59,8 @@ const saveDelay = debounce((state: RecordState) => {
 }, 5000);
 
 async function init(): Promise<{ recording: Recording[] }> {
-  const local = await readFromLocal<RecordState>(LOCAL_KEY, {
-    format: JSON.parse,
-  });
-  return local !== null ? local : { recording: [] };
+  const local = JSON.parse(localStorage.getItem(LOCAL_KEY) ?? null)
+  return local ?? { recording: [] };
 }
 
 function addRecord(newRecording: Recording, state: RecordState): RecordState {

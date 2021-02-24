@@ -2,23 +2,17 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2021-02-20 19:59:04
- * @LastEditTime: 2021-02-22 23:12:19
+ * @LastEditTime: 2021-02-24 14:43:08
  * @Description: file content
  */
 import React from 'react';
-import { EmptyObject } from 'utils/type';
-import { NoMap, useConcent } from 'concent';
-
 import Section from './components/Section';
+import useCC from './setup';
+
 import c from './index.m.scss';
-import {
-  initState, moduleName, setup, connect, Ctx,
-} from './setup';
 
 const History = (): JSX.Element => {
-  const { state, settings } = useConcent<EmptyObject, Ctx, NoMap>({
-    module: moduleName, setup, state: initState, connect,
-  });
+  const { state, settings } = useCC()
   // console.log('history render')
   return (
     <div className={c.content}>
