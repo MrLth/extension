@@ -2,21 +2,18 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2020-05-29 17:30:01
- * @LastEditTime: 2021-02-23 10:43:19
+ * @LastEditTime: 2021-02-24 12:56:20
  * @Description: 整个项目会用到的方法和api
  */
 
-import format from 'date-format';
 import { Key } from 'react';
-import { ignoreLog } from 'config';
 import TimeAgo from 'javascript-time-ago';
 import zh from 'javascript-time-ago/locale/zh';
 import { Fn, Keys, Obj } from './type';
 
 TimeAgo.addLocale(zh);
-export const timeAgo = new TimeAgo('zh');
-
-const DATE_LOCAL_PLACEHOLDER = 'TIMESTAMP';
+const timeAgo = new TimeAgo('zh');
+export const format = timeAgo.format.bind(timeAgo) as typeof timeAgo.format
 
 export const type = (obj: unknown): string => (typeof obj !== 'object'
   ? typeof obj
@@ -25,20 +22,6 @@ export const type = (obj: unknown): string => (typeof obj !== 'object'
 export const isLocal = (hostname: string): boolean => /^((127\.0\.0\.1)|(localhost)|(10\.\d{1,3}\.\d{1,3}\.\d{1,3})|(172\.((1[6-9])|(2\d)|(3[01]))\.\d{1,3}\.\d{1,3})|(192\.168\.\d{1,3}\.\d{1,3}))(:\d{0,5})?$/.test(
   hostname,
 );
-
-export function throttle(
-  fn: (...args: unknown[]) => unknown,
-  interval: number,
-): (...args: unknown[]) => void {
-  let lastTime: number = null;
-  return (...args: unknown[]): void => {
-    const nowTime = +new Date();
-    if (nowTime - lastTime > interval || !lastTime) {
-      fn(...args);
-      lastTime = nowTime;
-    }
-  };
-}
 
 export const moduleClassnames = (
   module: Record<string, string>,
@@ -64,91 +47,6 @@ export const moduleClassnames = (
   }
 
   return classNames.join(' ');
-};
-interface ReadFromLocalCbs {
-  format?: <T>(...args: unknown[]) => T
-  validate?: (...args: unknown[]) => boolean
-}
-export const readFromLocal = <T>(
-  key: string,
-  { format: _format, validate }: ReadFromLocalCbs = {},
-): T | Promise<T> => {
-  // chrome extension storage 和localStorage都无法存储Date类型
-  const fixDateType = (data: unknown) => {
-    if (typeof data === 'string' && data.endsWith(DATE_LOCAL_PLACEHOLDER)) {
-      return new Date(parseInt(data, 10));
-    }
-    if (data === null || typeof data !== 'object') {
-      return data;
-    }
-
-    return Object.entries(data).reduce(
-      (acc, [k, v]) => {
-        acc[k as keyof typeof data] = fixDateType(v);
-        return acc;
-      },
-      type(data) === 'array' ? [] : ({} as Record<string | number, unknown>),
-    );
-  };
-  // //#region 优先从chrome extension storage读取
-  // if (typeof chrome?.storage?.sync?.get === 'function') {
-  // return new Promise((resolve) => {
-  // chrome.storage.sync.get([key], (rst) => {
-  // resolve(fixDateType(rst[key]) as T)
-  // })
-  // })
-  // }
-  // #endregion
-  // #region 无法从chrome extension storage读取时，改为从localStorage读取
-  let info: string | T = localStorage.getItem(key);
-  // 未保存
-  if (info === null) return null;
-  if (typeof _format === 'function') {
-    info = _format(info);
-  }
-  info = fixDateType(info) as T;
-  // 有效性验证
-  if (typeof validate === 'function') {
-    if (validate(info) === false) return null;
-  }
-  return info;
-  // #endregion
-};
-
-export const saveToLocal = (
-  key: string,
-  info: unknown,
-  preTreat?: Fn,
-): void | Promise<unknown> => {
-  // chrome extension storage 一样无法存储Date类型
-  const fixDateType = (data: unknown) => {
-    if (data === null || typeof data !== 'object') {
-      return data;
-    }
-    if (type(data) === 'date') return data.valueOf() + DATE_LOCAL_PLACEHOLDER;
-
-    return Object.entries(data).reduce(
-      (acc, [k, v]) => {
-        acc[k as keyof typeof data] = fixDateType(v);
-        return acc;
-      },
-      type(data) === 'array' ? [] : ({} as Record<string | number, unknown>),
-    );
-  };
-  // //#region 优先存储在chrome extension storage
-  // if (typeof chrome?.storage?.sync?.set === 'function') {
-  // return new Promise((resolve) => {
-  // chrome.storage.sync.set({ [key]: fixDateType(info) }, resolve)
-  // })
-  // }
-  // #endregion
-  // #region 无法存储在chrome extension storage时，改为从localStorage存储
-  let rstInfo = fixDateType(info);
-  if (typeof preTreat === 'function') {
-    rstInfo = preTreat(info);
-  }
-  localStorage.setItem(key, JSON.stringify(rstInfo));
-  // #endregion
 };
 
 export const sortByKey = <T>(key: keyof T, desc = false) => (
@@ -180,161 +78,6 @@ export const queryStrToObj = (str: string): Record<string, string> => {
 
   return obj
 };
-
-interface Debug {
-  title: string
-  para?: unknown
-  multi?: Record<string, unknown>
-  color?: number | string
-  group?: boolean
-  label?: string
-}
-export function debug({
-  color,
-  title,
-  para,
-  multi,
-  group = false,
-  label = '',
-}: Debug): void {
-  let borderColor = '#096dd9';
-  let bgColor = '#1890ff';
-  if (typeof color === 'number' && color > 0 && color < 6) {
-    bgColor = ['#52c41a', '#13c2c2', '#2f54eb', '#722ed1', '#eb2f96'][color - 1];
-    borderColor = ['#389e0d', '#08979c', '#1d39c4', '#531dab', '#c41d7f'][
-      color - 1
-    ];
-  } else if (typeof color === 'string') {
-    bgColor = color;
-  }
-
-  const timeColor = 'color:#595959;font-weight:700;font-size:13px';
-  const time = format('hh:mm:ss.SSS', new Date());
-  const labelColor = label.length > 0
-    ? `border: 1px solid ${borderColor};font-size:13px;background: ${borderColor}; color: rgb(255, 255, 255);font-weight:100;padding:0 4px`
-    : '';
-  const titleColor = `border: 1px solid ${borderColor};font-size:13px;background: ${bgColor}; color: rgb(255, 255, 255);font-weight:100`;
-  const titleText = ` ${title} `;
-  const border = 'border-left: 1px solid #000;padding:2px 0;margin-left:5.5px';
-  const paraColor = 'color:#69c0ff';
-  const multiColor = 'color:#5cdbd3';
-  const entries = Object.entries(multi ?? {});
-  const maxLength = entries.reduce(
-    (a, [k]) => (a < k.length ? k.length : a),
-    typeof para === 'string' ? para.length : 10,
-  );
-  const paraTitle = 'parameters';
-
-  if (group) {
-    console.group(
-      '%c %s %c%s%c%s',
-      timeColor,
-      time,
-      labelColor,
-      label,
-      titleColor,
-      titleText,
-    );
-
-    if (para) console.log('%c %s  %o', paraColor, paraTitle.padEnd(maxLength, ' '), para);
-
-    if (typeof multi === 'object') {
-      for (const [k, v] of Object.entries(multi)) {
-        console.log('%c %s  %o', multiColor, k.padEnd(maxLength, ' '), v);
-      }
-    }
-
-    console.groupEnd();
-  } else {
-    let pattern = '%s%c %s %c%s%c%s%c';
-    const parameters = [
-      '🔰',
-      timeColor,
-      time,
-      labelColor,
-      label,
-      titleColor,
-      titleText,
-      '',
-    ];
-
-    if (para) {
-      pattern += '%s%c%s%c %s  %o';
-      parameters.push(
-        '\n',
-        border,
-        ' ',
-        paraColor,
-        paraTitle.padEnd(maxLength, ' '),
-        para,
-      );
-    }
-
-    if (typeof multi === 'object') {
-      for (const [k, v] of entries) {
-        pattern += '%s%c%s%c %s  %o';
-        parameters.push('\n', border, ' ', multiColor, k.padEnd(maxLength, ' '), v);
-      }
-    }
-
-    console.log(pattern, ...parameters);
-  }
-}
-
-export function log(
-  val: unknown,
-  title = 'log',
-  color?: number | string,
-): void {
-  // 1. 忽略
-  if (ignoreLog.includes(title)) return;
-
-  let borderColor = '#b37feb';
-  let bgColor = '#d3adf7';
-
-  if (typeof color === 'number' && color > 0 && color < 6) {
-    bgColor = ['#52c41a', '#13c2c2', '#2f54eb', '#ff7875', '#eb2f96'][color - 1];
-    borderColor = ['#389e0d', '#08979c', '#1d39c4', '#ff4d4f', '#c41d7f'][
-      color - 1
-    ];
-  } else if (typeof color === 'string') {
-    bgColor = color;
-  }
-
-  const titleColorStr = `border: 2px solid transparent;border-right:none;border-left:none;background: ${borderColor}; color: rgb(255, 255, 255);font-weight:100`;
-  const colorStr = `border: 2px solid transparent;background: ${bgColor}; color: rgb(255, 255, 255);font-weight:100`;
-  let pattern = `%c ${title} %c%s%c %o`;
-  let parameters = [titleColorStr, colorStr, ' noname ', '', val];
-  if (typeof val === 'object') {
-    pattern = `%c ${title} `;
-    parameters = [titleColorStr];
-    const entries = Object.entries(val);
-    const maxLength = entries.reduce(
-      (a, [k]) => (a < k.length ? k.length : a),
-      -Infinity,
-    );
-
-    let first = true;
-    for (const [k, v] of entries) {
-      pattern += '%c%s%c%s%c%s%o%s';
-      parameters.push(
-        titleColorStr,
-        first ? '' : ` ${''.padStart(title.length, ' ')} `,
-        colorStr,
-        ` ${k.padEnd(maxLength, ' ')} `,
-        '',
-        ' ',
-        v,
-        '\n',
-      );
-      first = false;
-    }
-    parameters.pop();
-    parameters.push('');
-  }
-  console.log(pattern, ...parameters);
-}
-window.log = log;
 
 interface ProxyMethods<T> {
   target: T

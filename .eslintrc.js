@@ -2,7 +2,7 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2020-10-11 20:03:45
- * @LastEditTime: 2021-02-23 11:38:37
+ * @LastEditTime: 2021-02-24 11:50:37
  * @Description: file content
  */
 const { resolve } = require('path');
@@ -42,7 +42,8 @@ module.exports = {
     },
   },
   globals: {
-    log: 'readonly',
+    $log: 'readonly',
+    $debug: 'readonly',
     __DEV__: 'readonly'
   },
   rules: {

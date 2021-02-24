@@ -2,23 +2,18 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2021-02-22 23:08:09
- * @LastEditTime: 2021-02-23 10:07:00
+ * @LastEditTime: 2021-02-24 13:00:53
  * @Description: file content
  */
 import { EmptyObject, Obj } from 'utils/type';
-import { CtxMSConn, ItemsType } from 'utils/concent';
+import { CtxMSConn, ItemsType } from 'utils/type/concent';
 import { SettingsType } from 'concent';
-import { sortByKey } from 'utils';
+import { format, sortByKey } from 'utils';
 import { debounce } from 'lodash-es';
-import format from 'date-format';
-import TimeAgo from 'javascript-time-ago';
-import en from 'javascript-time-ago/locale/en';
+import toString from 'date-format';
 import { LABEL_HEIGHT, DAY } from 'utils/const';
 import { HistorySection } from './model/state';
 import { calcHeight, sortNativeHistory } from './api';
-
-TimeAgo.addLocale(en);
-const timeAgo = new TimeAgo('en');
 
 export const moduleName = 'history';
 export const connect = ['tab'] as const;
@@ -29,7 +24,7 @@ type Conn = ItemsType<typeof connect>
 type State = ReturnType<typeof initState>
 type CtxPre = CtxMSConn<EmptyObject, Module, State, Conn>
 
-const timeAgoFormat = (n: number): string => timeAgo.format(n, 'twitter');
+const timeAgoFormat = (n: number) => format(n, 'twitter');
 export interface TimeUpdItem {
   timeFormatted: string,
   setTimeFormatted: React.Dispatch<React.SetStateAction<string>>,
@@ -186,10 +181,10 @@ export const setup = (ctx: CtxPre) => {
     timeUpdMap: new Map<number, TimeUpdItem>(),
     timeAgoFormat,
     test() {
-      console.log(state.historySectionList[0].list.map((v) => [v.list[0].title, v.list[0].visitTime, v.list[0].visitTime && format('hh:mm:ss', new Date(v.list[0].visitTime)), v.list[0].url]));
+      console.log(state.historySectionList[0].list.map((v) => [v.list[0].title, v.list[0].visitTime, v.list[0].visitTime && toString('hh:mm:ss', new Date(v.list[0].visitTime)), v.list[0].url]));
     },
     test1() {
-      console.log(Array.from(settings.timeUpdMap).map(([, v]) => v).sort(sortByKey<TimeUpdItem>('recordTime', true)).map((v) => [v.title, format('hh:mm:ss', new Date(v.recordTime))]));
+      console.log(Array.from(settings.timeUpdMap).map(([, v]) => v).sort(sortByKey<TimeUpdItem>('recordTime', true)).map((v) => [v.title, toString('hh:mm:ss', new Date(v.recordTime))]));
     },
   };
 

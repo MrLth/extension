@@ -2,7 +2,7 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2021-02-22 08:34:51
- * @LastEditTime: 2021-02-22 23:07:16
+ * @LastEditTime: 2021-02-24 12:37:09
  * @Description: file content
  */
 import React from 'react';
@@ -26,7 +26,7 @@ const Bookmark = (): JSX.Element => {
     module: moduleName, setup, state: initState, connect,
   });
 
-  log({ BookMark: 'BookMark' }, 'render', 5);
+  $log({ BookMark: 'BookMark' }, 'render', 5);
   return (
     <div className={c.content}>
       <div className={c.title}>

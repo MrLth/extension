@@ -2,7 +2,7 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2021-02-23 00:15:42
- * @LastEditTime: 2021-02-23 10:44:51
+ * @LastEditTime: 2021-02-24 12:59:12
  * @Description: file content
  */
 import { Fn } from 'utils/type';
@@ -102,7 +102,7 @@ class TabHandler {
         // // 3.更新窗口信息
         // this.updAttach = true
         // TODO: Debug
-        log('createTab', 'error', 4);
+        $log('createTab', 'error', 4);
       } else {
         // 2. 添加到已有窗口
         this.windows.get(tab.windowId).tabs.splice(tab.index, 0, myTab);
@@ -123,7 +123,7 @@ class TabHandler {
         TabHandler.regenerateUpdateKey(myTab);
       } else {
         // TODO: DEBUG
-        log('updateTab', 'error', 4);
+        $log('updateTab', 'error', 4);
       }
       // 2. 更新窗口修改时间
       this.updTimeWindows.add(tab.windowId);
@@ -165,7 +165,7 @@ class TabHandler {
           const i = tabs.findIndex((v) => v.id === tabId);
           if (i === -1) {
             // TODO: DEBUG
-            log('moveTab 1', 'error', 4);
+            $log('moveTab 1', 'error', 4);
             return;
           }
           startIndex = i;
@@ -179,7 +179,7 @@ class TabHandler {
         this.updTabsWindows(windowId, Math.min(startIndex, toIndex));
       } else {
         // TODO: DEBUG
-        log('moveTab 2', 'error', 4);
+        $log('moveTab 2', 'error', 4);
       }
     });
   }
@@ -197,7 +197,7 @@ class TabHandler {
           last.active = false;
           TabHandler.regenerateUpdateKey(last);
         } else {
-          log({ activeTab: myWindow.activeTabId }, 'error', 4);
+          $log({ activeTab: myWindow.activeTabId }, 'error', 4);
         }
         // 3. 更新标签
         TabHandler.regenerateUpdateKey(tab);
@@ -207,7 +207,7 @@ class TabHandler {
         this.updTimeWindows.add(windowId);
       } else {
         // TODO: DEBUG
-        log('activeTab', 'error', 4);
+        $log('activeTab', 'error', 4);
       }
     });
   }
@@ -222,7 +222,7 @@ class TabHandler {
           const i = tabs.findIndex((v) => v.id === tabId);
           if (i === -1) {
             // TODO: DEBUG
-            log('detachTab 1', 'error', 4);
+            $log('detachTab 1', 'error', 4);
             return;
           }
           startIndex = i;
@@ -237,7 +237,7 @@ class TabHandler {
         this.updTabsWindows(windowId, startIndex);
       } else {
         // TODO: DEBUG
-        log('detachTab 2', 'error', 4);
+        $log('detachTab 2', 'error', 4);
       }
     });
   }
@@ -256,7 +256,7 @@ class TabHandler {
         this.updTabsWindows(windowId, position);
       } else {
         // TODO: DEBUG
-        log('attachTab', 'error', 4);
+        $log('attachTab', 'error', 4);
       }
     });
   }

@@ -2,13 +2,13 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2021-02-22 23:35:20
- * @LastEditTime: 2021-02-22 23:49:11
+ * @LastEditTime: 2021-02-24 12:59:58
  * @Description: file content
  */
 import { SettingsType } from 'concent';
 import { EmptyObject, Obj } from 'utils/type';
-import { timeAgo } from 'utils';
-import { CtxMSConn, ItemsType } from 'utils/concent';
+import { format } from 'utils';
+import { CtxMSConn, ItemsType } from 'utils/type/concent';
 
 export const moduleName = 'record';
 export const connect = ['tab'] as const;
@@ -50,7 +50,6 @@ export const setup = (ctx: CtxPre) => {
     closeRecord: reducer.record.closeRecord,
     openLabel: reducer.tab.openTab,
     timeUpdQueue: [] as TimeUpdItem[],
-    timeAgo,
   };
 
   // 时间更新
@@ -60,7 +59,7 @@ export const setup = (ctx: CtxPre) => {
       timerId = window.setTimeout(() => {
         updRecordTimeFormatted();
         for (const v of settings.timeUpdQueue) {
-          const timeFormatted = timeAgo.format(v.recordTime);
+          const timeFormatted = format(v.recordTime);
           if (timeFormatted !== v.timeFormatted) {
             v.setTimeFormatted(timeFormatted);
             v.timeFormatted = timeFormatted;

@@ -25,7 +25,7 @@ const getLabelDom = (dom: HTMLElement): HTMLElement => {
 const Label = ({
   tab, settings, updateKey, windowUpdKey,
 }: Props) => {
-  log({ Label: tab.title, tab }, 'render', 5);
+  $log({ Label: tab.title, tab }, 'render', 5);
 
   return (
     <li

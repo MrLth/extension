@@ -10,7 +10,7 @@ import React, { memo, useEffect, useRef } from 'react';
 import { EmptyObject } from 'utils/type';
 import { NoMap, SettingsType, useConcent } from 'concent';
 import { HistorySection } from 'modules/History/model/state';
-import { CtxDeS } from 'utils/concent';
+import { CtxDeS } from 'utils/type/concent';
 import { sortByKey } from 'utils';
 import { DAY } from 'utils/const';
 import Domain from './Domain';

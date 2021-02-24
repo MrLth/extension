@@ -78,7 +78,7 @@ const Window = ({ myWindow, settings, updateKey }: Props) => {
       ),
     );
   }
-  log({ Window: attach.id, myWindow }, 'render', 5);
+  $log({ Window: attach.id, myWindow }, 'render', 5);
   return (
     <ul
       className={cn('window', {

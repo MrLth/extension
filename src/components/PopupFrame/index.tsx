@@ -8,7 +8,7 @@
 import React, { memo } from 'react';
 import { NoMap, useConcent } from 'concent';
 import { EmptyObject } from 'utils/type';
-import { CtxM } from 'utils/concent';
+import { CtxM } from 'utils/type/concent';
 import { LABEL_HEIGHT, POPUP_WIDTH } from 'utils/const';
 
 import c from './index.m.scss';

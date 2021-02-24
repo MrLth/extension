@@ -2,11 +2,11 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2020-10-13 17:35:56
- * @LastEditTime: 2021-02-23 10:37:31
+ * @LastEditTime: 2021-02-24 12:57:49
  * @Description: file content
  */
 
-import { debug, proxyMethods } from 'utils';
+import { proxyMethods } from 'utils';
 import { IActionCtxBase as IAC } from 'concent';
 import { cloneDeep, debounce } from 'lodash-es';
 import TabHandler from '../TabHandler'
@@ -23,7 +23,7 @@ function batchUpdate(_: unknown, state: TabState): Partial<TabState> {
   updTimeWindows.clear();
 
   const tabHandler = cloneDeep(state.tabHandler);
-  debug({
+  $debug({
     title: 'tab / batchUpdate before',
     multi: {
       tabHandler,
@@ -35,7 +35,7 @@ function batchUpdate(_: unknown, state: TabState): Partial<TabState> {
     try {
       fn();
     } catch (e) {
-      debug({
+      $debug({
         title: 'batchUpdate Error',
         multi: {
           e,
@@ -91,7 +91,7 @@ async function init(
     target: proxyA,
     handler: (target, _thisArg, args) => {
       console.log('123')
-      log({ target: target.name, args }, 'batch', 2);
+      $log({ target: target.name, args }, 'batch', 2);
     },
     ignoreKeys: ['push'],
   });

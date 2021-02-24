@@ -8,7 +8,7 @@
 import React, { forwardRef } from 'react';
 import { BookmarkTreeNode } from 'modules/Bookmark/model/state';
 import { EmptyObject } from 'utils/type';
-import { CtxDeS } from 'utils/concent';
+import { CtxDeS } from 'utils/type/concent';
 import { SettingsType } from 'concent';
 import c from '../index.m.scss';
 import Folder from './Folder';

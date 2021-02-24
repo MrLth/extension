@@ -6,7 +6,7 @@
  * @Description: file content
  */
 import { SettingsType } from 'concent';
-import { CtxMSConn, ItemsType } from 'utils/concent';
+import { CtxMSConn, ItemsType } from 'utils/type/concent';
 import { EmptyObject } from 'utils/type';
 import { CARD_TITLE_HEIGHT, FOLDER_TITLE_HEIGHT } from 'utils/const';
 import { BookmarkTreeNode } from './model/state';

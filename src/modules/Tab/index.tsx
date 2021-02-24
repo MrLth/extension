@@ -2,7 +2,7 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2021-02-23 09:35:55
- * @LastEditTime: 2021-02-23 23:39:31
+ * @LastEditTime: 2021-02-24 12:58:08
  * @Description: file content
  */
 import React from 'react';
@@ -26,7 +26,7 @@ const TabComponent = (): JSX.Element => {
   // 让当前活动标签可视
   const { listRef } = useViewable(state);
 
-  log({ Tab: 'Tab' }, 'render', 5);
+  $log({ Tab: 'Tab' }, 'render', 5);
   console.log('__DEV__', __DEV__);
   if (__DEV__) {
     console.log('this is development')

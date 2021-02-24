@@ -2,14 +2,14 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2021-02-22 23:45:29
- * @LastEditTime: 2021-02-23 23:33:34
+ * @LastEditTime: 2021-02-24 12:57:11
  * @Description: file content
  */
 import { SettingsType } from 'concent';
 import {
   Windows, WindowsAttach, EmptyObject,
 } from 'utils/type';
-import { CtxMSConn, ItemsType } from 'utils/concent';
+import { CtxMSConn, ItemsType } from 'utils/type/concent';
 import { PopupFrameProps, PopupOption } from 'components/PopupFrame';
 
 export const moduleName = 'tab';
