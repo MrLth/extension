@@ -2,13 +2,14 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2020-05-29 17:30:01
- * @LastEditTime: 2021-02-24 12:56:20
+ * @LastEditTime: 2021-02-24 16:58:12
  * @Description: 整个项目会用到的方法和api
  */
 
 import { Key } from 'react';
 import TimeAgo from 'javascript-time-ago';
 import zh from 'javascript-time-ago/locale/zh';
+import { isString } from 'lodash-es';
 import { Fn, Keys, Obj } from './type';
 
 TimeAgo.addLocale(zh);
@@ -23,31 +24,24 @@ export const isLocal = (hostname: string): boolean => /^((127\.0\.0\.1)|(localho
   hostname,
 );
 
-export const moduleClassnames = (
-  module: Record<string, string>,
-  ...para: (string | Record<string, boolean>)[]
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+export const moduleClassnames = <T extends Record<string, string>>(module: T) => (
+  ...paras: (keyof T | Partial<{ [P in keyof T]: boolean }>)[]
 ): string => {
-  const len = para.length - 1;
-  const lastClassName = para[len];
-  const classNames = [] as string[];
-  const pushToClassNames = (className: keyof typeof module) => {
-    if (typeof className === 'string') classNames.push(className);
-  };
+  const classList = new Set<string>();
 
-  for (let i = 0; i < len; i += 1) {
-    pushToClassNames(module[para[i] as string]);
+  for (const para of paras) {
+    if (isString(para)) {
+      classList.add(module[para]);
+    } else {
+      for (const [k, v] of Object.entries(para)) {
+        if (v) classList.add(module[k])
+      }
+    }
   }
 
-  if (typeof lastClassName === 'string') {
-    pushToClassNames(module[lastClassName]);
-  } else if (typeof lastClassName === 'object' && lastClassName !== null) {
-    Object.entries(lastClassName).forEach(([k, v]) => {
-      if (v) pushToClassNames(module[k]);
-    });
-  }
-
-  return classNames.join(' ');
-};
+  return [...classList].join(' ');
+}
 
 export const sortByKey = <T>(key: keyof T, desc = false) => (
   a: T,

@@ -2,7 +2,7 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2021-02-20 19:59:04
- * @LastEditTime: 2021-02-22 23:05:23
+ * @LastEditTime: 2021-02-24 16:43:40
  * @Description: file content
  */
 import React from 'react';
@@ -15,7 +15,7 @@ import { BookmarkTreeNode } from '../model/state';
 import { Settings } from '../setup';
 import c from '../index.m.scss';
 
-const cn = moduleClassnames.bind(null, c);
+const cn = moduleClassnames(c)
 
 interface Props {
   node: BookmarkTreeNode

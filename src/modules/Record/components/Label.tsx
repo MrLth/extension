@@ -2,7 +2,7 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2021-02-20 19:59:04
- * @LastEditTime: 2021-02-23 23:32:55
+ * @LastEditTime: 2021-02-24 16:44:03
  * @Description: file content
  */
 import React, { memo } from 'react';
@@ -14,7 +14,7 @@ import { Settings } from '../setup';
 
 import c from '../index.m.scss';
 
-const cn = moduleClassnames.bind(null, c);
+const cn = moduleClassnames(c);
 
 interface Props {
   recordingIndexRef: React.MutableRefObject<number>

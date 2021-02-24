@@ -12,5 +12,6 @@
         "iconsleepmode",
         "middlewares",
         "xlink"
-    ]
+    ],
+    "typescript.tsdk": "node_modules/typescript/lib"
 }

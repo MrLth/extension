@@ -7,7 +7,7 @@ import { Settings } from '../setup';
 
 import c from '../index.m.scss';
 
-const cn = moduleClassnames.bind(null, c);
+const cn = moduleClassnames(c);
 
 interface Props {
   tab: Tab

@@ -14,7 +14,7 @@ import { Recording } from '../model/state';
 import { Settings } from '../setup';
 import c from '../index.m.scss';
 
-const cn = moduleClassnames.bind(null, c);
+const cn = moduleClassnames(c);
 interface Props {
   recordingIndex: number
   recording: Recording

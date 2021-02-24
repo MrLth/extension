@@ -2,15 +2,15 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2021-02-23 09:35:55
- * @LastEditTime: 2021-02-24 14:31:08
+ * @LastEditTime: 2021-02-24 15:55:57
  * @Description: file content
  */
 import React from 'react';
 import PopupFrame from 'components/PopupFrame';
 import Window from './components/Window';
 import useViewable from './hooks/useViewable';
-import c from './index.m.scss';
 import useCC from './setup';
+import c from './index.m.scss';
 
 const TabComponent = (): JSX.Element => {
   const { state, settings } = useCC()

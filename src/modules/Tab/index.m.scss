@@ -1,96 +1,96 @@
 @import 'utils/index';
 
 .title {
-    @extend %title;
+  @extend %title;
 }
 
 .content {
-    @extend %card;
+  @extend %card;
 
-    display: flex;
-    flex-direction: column;
-    border-left: 1px #efefef solid;
+  display: flex;
+  flex-direction: column;
+  border-left: 1px #efefef solid;
 
-    .window-title {
-        @extend %sub-title;
+  .window-title {
+    @extend %sub-title;
+  }
+
+  .list {
+    flex: 1;
+    overflow: auto;
+  }
+
+  .label {
+    @extend %label;
+
+    .btn-close {
+      background: linear-gradient(to right, transparent, #fafafa);
     }
 
-    .list {
-        flex: 1;
-        overflow: auto;
-    }
+    &.activated {
+      background-color: #eee;
 
+      .btn-close {
+        background: linear-gradient(to right, transparent, #e6f7ff);
+      }
+    }
+  }
+
+  .tab-group {
     .label {
-        @extend %label;
+      // height: 1.75rem;
+      // line-height: 1.75rem;
+      background-image: url('~@img/tabGroupBg.svg');
+      background-repeat: no-repeat;
+      background-position: .8rem 0;
+      background-size: 1.5rem 2rem;
 
-        .btn-close {
-            background: linear-gradient(to right, transparent, #fafafa);
+
+      &:first-of-type {
+        background-image: url('~@img/tabGroupBgFirst.svg');
+      }
+
+      &:last-of-type {
+        background-image: url('~@img/tabGroupBgLast.svg');
+      }
+
+      &.activated {
+        background-image: url('~@img/tabGroupBgActivatedNotFocus.svg');
+
+        &:first-of-type {
+          background-image: url('~@img/tabGroupBgFirstActivatedNotFocus.svg');
         }
 
-        &.activated {
-            background-color: #eee;
-
-            .btn-close {
-                background: linear-gradient(to right, transparent, #e6f7ff);
-            }
+        &:last-of-type {
+          background-image: url('~@img/tabGroupBgLastActivatedNotFocus.svg');
         }
+      }
     }
+  }
+
+  .focused {
+    .label {
+      &.activated {
+        color: #0050b3;
+        background-color: #e6f7ff;
+      }
+    }
+
 
     .tab-group {
-        .label {
-            // height: 1.75rem;
-            // line-height: 1.75rem;
-            background-image: url('~@img/tabGroupBg.svg');
-            background-repeat: no-repeat;
-            background-position: .8rem 0;
-            background-size: 1.5rem 2rem;
+      .label {
+        &.activated {
+          background-image: url('~@img/tabGroupBgActivated.svg');
 
+          &:first-of-type {
+            background-image: url('~@img/tabGroupBgFirstActivated.svg');
+          }
 
-            &:first-of-type {
-                background-image: url('~@img/tabGroupBgFirst.svg');
-            }
-
-            &:last-of-type {
-                background-image: url('~@img/tabGroupBgLast.svg');
-            }
-
-            &.activated {
-                background-image: url('~@img/tabGroupBgActivatedNotFocus.svg');
-
-                &:first-of-type {
-                    background-image: url('~@img/tabGroupBgFirstActivatedNotFocus.svg');
-                }
-
-                &:last-of-type {
-                    background-image: url('~@img/tabGroupBgLastActivatedNotFocus.svg');
-                }
-            }
+          &:last-of-type {
+            background-image: url('~@img/tabGroupBgLastActivated.svg');
+          }
         }
+      }
     }
-
-    .focused {
-        .label {
-            &.activated {
-                color: #0050b3;
-                background-color: #e6f7ff;
-            }
-        }
-
-
-        .tab-group {
-            .label {
-                &.activated {
-                    background-image: url('~@img/tabGroupBgActivated.svg');
-
-                    &:first-of-type {
-                        background-image: url('~@img/tabGroupBgFirstActivated.svg');
-                    }
-
-                    &:last-of-type {
-                        background-image: url('~@img/tabGroupBgLastActivated.svg');
-                    }
-                }
-            }
-        }
-    }
+  }
 }

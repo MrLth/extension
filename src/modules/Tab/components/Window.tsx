@@ -2,7 +2,7 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2020-12-17 08:05:07
- * @LastEditTime: 2021-02-23 10:51:50
+ * @LastEditTime: 2021-02-24 16:55:04
  * @Description: file content
  */
 import React, { memo } from 'react';
@@ -12,7 +12,7 @@ import { Settings } from '../setup';
 import Label from './Label';
 import c from '../index.m.scss';
 
-const cn = moduleClassnames.bind(null, c);
+const cn = moduleClassnames(c);
 
 interface Props {
   myWindow: MyWindow
@@ -78,10 +78,11 @@ const Window = ({ myWindow, settings, updateKey }: Props) => {
       ),
     );
   }
+
   $log({ Window: attach.id, myWindow }, 'render', 5);
   return (
     <ul
-      className={cn('window', {
+      className={cn({
         focused: attach?.focused,
       })}
     >
