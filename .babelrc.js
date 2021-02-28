@@ -3,7 +3,7 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2021-02-20 14:18:21
- * @LastEditTime: 2021-02-24 14:11:05
+ * @LastEditTime: 2021-02-28 23:32:56
  * @Description: file content
  */
 const { resolve } = require('path')
@@ -28,7 +28,7 @@ module.exports = (api) => {
       ]
     ],
     plugins: [
-      ['./public/plugin-log/plugin.js', { remove: true }],
+      ['./public/plugin-log/plugin.js', { remove: false }],
       '@babel/plugin-transform-runtime',
       '@babel/plugin-syntax-dynamic-import',
       '@babel/plugin-proposal-optional-chaining',

@@ -2,7 +2,7 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2021-02-22 17:17:23
- * @LastEditTime: 2021-02-23 10:06:17
+ * @LastEditTime: 2021-02-28 23:41:26
  * @Description: file content
  */
 import { SettingsType, useConcent, NoMap } from 'concent';
@@ -43,7 +43,7 @@ const setup = (ctx: CtxPre) => {
       set current(v: HTMLUListElement) {
         if (!v) return
         dom.wrapper = v.parentElement as HTMLDivElement;
-        common.listHeight = dom.wrapper.clientHeight;
+        common.listHeight = dom.wrapper.clientHeight || window.innerHeight;
         dom.list = v;
       },
       get current() {

@@ -2,7 +2,7 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2021-02-22 23:08:09
- * @LastEditTime: 2021-02-24 13:00:53
+ * @LastEditTime: 2021-02-28 23:45:12
  * @Description: file content
  */
 import { EmptyObject } from 'utils/type';
@@ -144,7 +144,8 @@ const setup = (ctx: CtxPre) => {
     refList: {
       set current(v: HTMLUListElement) {
         if (!v) return
-        common.listHeight = v.clientHeight;
+        common.listHeight = v.clientHeight || window.innerHeight;
+        $log({ 'common.listHeight': common.listHeight })
         common.listCount = Math.ceil(common.listHeight / LABEL_HEIGHT);
         dom.list = v;
       },
