@@ -12,10 +12,6 @@
     }
 }
 
-.title {
-    @extend %title;
-}
-
 .list {
     position: relative;
     flex: 1;
@@ -52,10 +48,6 @@
 
 .domain {
     padding: .25rem 0;
-
-    &:first-child {
-        padding: 0;
-    }
 
     .label {
 

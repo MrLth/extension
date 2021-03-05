@@ -2,7 +2,7 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2021-02-22 08:34:51
- * @LastEditTime: 2021-02-22 17:28:07
+ * @LastEditTime: 2021-03-05 13:45:27
  * @Description: file content
  */
 import { BookmarkTreeNode } from 'modules/Bookmark/model/state';
@@ -18,14 +18,25 @@ interface Props {
   settings: Settings
 }
 const Folder = ({ node, settings }: Props): JSX.Element => (
-  <ul className={c.folder} style={node.depth === 1 ? { position: 'absolute', top: node.top } : {}}>
-    <li className={c['folder-title']}>{assembleTitle(node)}</li>
-    {
-      node.children.map((v) => ('children' in v
-        ? <Folder key={v.id} node={v} settings={settings} />
-        : <Label key={v.id} node={v} settings={settings} />))
+  <li
+    className={c.folder}
+    style={
+      node.depth === 1
+        ? { position: 'absolute', top: node.top }
+        : {}
     }
-  </ul>
+  >
+    <h3 className={c['folder-title']}>
+      {assembleTitle(node)}
+    </h3>
+    <ul>
+      {
+        node.children.map((v) => ('children' in v
+          ? <Folder key={v.id} node={v} settings={settings} />
+          : <Label key={v.id} node={v} settings={settings} />))
+      }
+    </ul>
+  </li>
 );
 
 export default Folder;

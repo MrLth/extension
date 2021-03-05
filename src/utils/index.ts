@@ -2,7 +2,7 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2020-05-29 17:30:01
- * @LastEditTime: 2021-02-24 16:58:12
+ * @LastEditTime: 2021-03-05 14:06:14
  * @Description: 整个项目会用到的方法和api
  */
 
@@ -137,4 +137,8 @@ export function proxyMethods<T>({
       return null
     },
   }) as unknown) as T;
+}
+
+export function preventDefault<T extends React.MouseEvent>(e: T): void {
+  e.preventDefault()
 }

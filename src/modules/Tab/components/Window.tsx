@@ -2,7 +2,7 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2020-12-17 08:05:07
- * @LastEditTime: 2021-02-24 16:55:04
+ * @LastEditTime: 2021-03-05 15:34:03
  * @Description: file content
  */
 import React, { memo } from 'react';
@@ -20,7 +20,7 @@ interface Props {
   updateKey: number
 }
 
-const Window = ({ myWindow, settings, updateKey }: Props) => {
+const Window = ({ myWindow, settings }: Props) => {
   const { tabs, attach } = myWindow;
   const tabArr = [];
 
@@ -45,7 +45,7 @@ const Window = ({ myWindow, settings, updateKey }: Props) => {
             key={tab.id}
             tab={tab}
             updateKey={tab.updateKey}
-            windowUpdKey={updateKey}
+            // windowUpdKey={updateKey}
             settings={settings}
           />,
         );
@@ -63,7 +63,7 @@ const Window = ({ myWindow, settings, updateKey }: Props) => {
         key={tab.id}
         tab={tab}
         updateKey={tab.updateKey}
-        windowUpdKey={updateKey}
+        // windowUpdKey={updateKey}
         settings={settings}
       />,
     );
@@ -72,26 +72,30 @@ const Window = ({ myWindow, settings, updateKey }: Props) => {
       tempArr.length === 1 ? (
         tempArr
       ) : (
-        <div className={c['tab-group']} key={key}>
-          {tempArr}
-        </div>
+        <li className={c['tab-group']} key={key}>
+          <ul>
+            {tempArr}
+          </ul>
+        </li>
       ),
     );
   }
 
   $log({ Window: attach.id, myWindow }, 'render', 5);
   return (
-    <ul
+    <li
       className={cn({
         focused: attach?.focused,
       })}
     >
-      <div className={cn('window-title')}>
+      <h3 className={cn('window-title')}>
         window #
         {attach?.id}
-      </div>
-      {tabArr}
-    </ul>
+      </h3>
+      <ul>
+        {tabArr}
+      </ul>
+    </li>
   );
 };
 

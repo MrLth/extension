@@ -3,7 +3,7 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2020-10-14 08:40:09
- * @LastEditTime: 2021-02-22 23:24:20
+ * @LastEditTime: 2021-03-05 14:44:22
  * @Description: file content
  */
 import React, { memo, useEffect, useRef } from 'react';
@@ -125,44 +125,38 @@ const Section = ({ section, settings, top }: Props) => {
   }, [section.status, updVisitTime]);
 
   return (
-    <ul className={c.section} style={{ top }}>
-      <li
-        role="presentation"
-        className={c.date}
-        onClick={() => {
-          test();
-          console.log('section', section);
-        }}
-      >
+    <li className={c.section} style={{ top }}>
+      <h3 className={c.date}>
         {dayFormat(section.startTime)}
-      </li>
-      {
-        section.list.map((item) => {
-          const firstLabel = item.list[0];
-          setLabelVisitTime(firstLabel, section);
-
-          return item.list.length > 1
-            ? (
-              <Domain
-                key={firstLabel.id}
-                list={item.list}
-                refreshCount={refreshCount}
-                settings={settings}
-                refPrevTimeStr={refPrevTimeStr}
-              />
-            )
-            : (
-              <Label
-                key={firstLabel.id}
-                item={item.list[0]}
-                refreshCount={refreshCount}
-                settings={settings}
-                refPrevTimeStr={refPrevTimeStr}
-              />
-            );
-        })
-      }
-    </ul>
+      </h3>
+      <ul>
+        {
+          section.list.map((item) => {
+            const firstLabel = item.list[0];
+            setLabelVisitTime(firstLabel, section);
+            return item.list.length > 1
+              ? (
+                <Domain
+                  key={firstLabel.id}
+                  list={item.list}
+                  refreshCount={refreshCount}
+                  settings={settings}
+                  refPrevTimeStr={refPrevTimeStr}
+                />
+              )
+              : (
+                <Label
+                  key={firstLabel.id}
+                  item={item.list[0]}
+                  refreshCount={refreshCount}
+                  settings={settings}
+                  refPrevTimeStr={refPrevTimeStr}
+                />
+              );
+          })
+        }
+      </ul>
+    </li>
   );
 };
 

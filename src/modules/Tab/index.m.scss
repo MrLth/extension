@@ -1,9 +1,5 @@
 @import 'utils/index';
 
-.title {
-  @extend %title;
-}
-
 .content {
   @extend %card;
 
@@ -31,7 +27,8 @@
       background-color: #eee;
 
       .btn-close {
-        background: linear-gradient(to right, transparent, #e6f7ff);
+        background: linear-gradient(to right, transparent, #eee);
+        transform: translateX(0);
       }
     }
   }
@@ -69,6 +66,10 @@
   }
 
   .focused {
+    .activated .btn-close {
+      background: linear-gradient(to right, transparent, #e6f7ff);
+    }
+
     .label {
       &.activated {
         color: #0050b3;

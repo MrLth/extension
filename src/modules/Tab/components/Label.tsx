@@ -1,5 +1,5 @@
 import React, { memo } from 'react';
-import { moduleClassnames } from 'utils';
+import { moduleClassnames, preventDefault } from 'utils';
 import { Tab } from 'utils/type';
 import IconFont from 'components/IconFont';
 import defaultIcon from '@img/defaultIcon.svg';
@@ -9,81 +9,91 @@ import c from '../index.m.scss';
 
 const cn = moduleClassnames(c);
 
+// const getLabelDom = (dom: HTMLElement): HTMLElement => {
+//   if (dom === document.body) return null;
+//   if (dom.tagName.toLowerCase() === 'li') return dom;
+//   return getLabelDom(dom.parentElement);
+// };
+
 interface Props {
   tab: Tab
   settings: Settings
   updateKey: number
-  windowUpdKey: number
+  // windowUpdKey: number
 }
-
-const getLabelDom = (dom: HTMLElement): HTMLElement => {
-  if (dom === document.body) return null;
-  if (dom.tagName.toLowerCase() === 'li') return dom;
-  return getLabelDom(dom.parentElement);
-};
-
 const Label = ({
-  tab, settings, updateKey, windowUpdKey,
+  tab, settings, updateKey,
 }: Props) => {
   $log({ Label: tab.title, tab }, 'render', 5);
 
   return (
     <li
-      role="presentation"
       data-upd-time={updateKey}
-      data-window-upd-time={windowUpdKey}
+      // data-window-upd-time={windowUpdKey}
       className={cn('label', {
         activated: tab.active,
       })}
-      onClick={(e) => {
-        e.stopPropagation();
-        settings.openTab(tab);
-      }}
-      // #region 右键事件
-      onMouseUpCapture={(e) => {
-        e.preventDefault();
-        if (e.button === 2) {
-          const dom = getLabelDom(e.target as HTMLElement);
-          const {
-            bottom, left, right, top,
-          } = dom.getBoundingClientRect();
-          settings.updPopupFrameProps(
-            {
-              isShow: true,
-              top: bottom,
-              left: e.clientX,
-              targetTop: top,
-              minLeft: left,
-              maxRight: right,
-              options: [
-                {
-                  title: '取消',
-                  icon: <IconFont type="iconcancel1f" />,
-                  cb: () => settings.updPopupFrameProps({ isShow: false }),
-                },
-                {
-                  title: '记录',
-                  icon: <IconFont type="iconrecord_on" />,
-                  cb: () => console.log(2),
-                },
-                {
-                  title: '休眠',
-                  icon: <IconFont type="iconsleepmode" />,
-                  cb: () => console.log(3),
-                },
-                {
-                  title: '分组',
-                  icon: <IconFont type="icongit-merge-line" />,
-                  cb: () => console.log(4),
-                },
-              ],
-            },
-          );
-        }
-      }}
-      onContextMenu={(e) => e.preventDefault()}
+
+    // #region 右键事件
+    // onMouseUpCapture={(e) => {
+    //   e.preventDefault();
+    //   return
+    //   if (e.button === 2) {
+    //     const dom = getLabelDom(e.target as HTMLElement);
+    //     const {
+    //       bottom, left, right, top,
+    //     } = dom.getBoundingClientRect();
+    //     settings.updPopupFrameProps(
+    //       {
+    //         isShow: true,
+    //         top: bottom,
+    //         left: e.clientX,
+    //         targetTop: top,
+    //         minLeft: left,
+    //         maxRight: right,
+    //         options: [
+    //           {
+    //             title: '取消',
+    //             icon: <IconFont type="iconcancel1f" />,
+    //             cb: () => settings.updPopupFrameProps({ isShow: false }),
+    //           },
+    //           {
+    //             title: '记录',
+    //             icon: <IconFont type="iconrecord_on" />,
+    //             cb: () => console.log(2),
+    //           },
+    //           {
+    //             title: '休眠',
+    //             icon: <IconFont type="iconsleepmode" />,
+    //             cb: () => console.log(3),
+    //           },
+    //           {
+    //             title: '分组',
+    //             icon: <IconFont type="icongit-merge-line" />,
+    //             cb: () => console.log(4),
+    //           },
+    //         ],
+    //       },
+    //     );
+    //   }
+    // }}
+    // onContextMenu={preventDefault}
+    // #endregion
     >
-      <div className={c['unit-tab']}>
+      <div
+        role="presentation"
+        className={c['unit-tab']}
+        onClick={(e) => {
+          e.stopPropagation();
+          settings.openTab(tab);
+        }}
+        onMouseDown={(e) => {
+          // middle button clicked
+          if (e.button === 1) {
+            settings.closeTab(tab.id);
+          }
+        }}
+      >
         <img
           src={
             tab.url !== ''
@@ -92,8 +102,9 @@ const Label = ({
           }
           alt={tab.url}
         />
-        {tab.title}
+        <a href={tab.url} onClick={preventDefault}>{tab.title}</a>
       </div>
+
       <div className={c['btn-close']}>
         <IconFont
           type="iconclose"

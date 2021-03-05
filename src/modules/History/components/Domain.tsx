@@ -2,7 +2,7 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2020-10-14 08:40:09
- * @LastEditTime: 2021-02-23 10:14:56
+ * @LastEditTime: 2021-03-05 14:28:02
  * @Description: file content
  */
 
@@ -33,16 +33,18 @@ const Domain = ({
   }, [list, settings]);
 
   return (
-    <ul className={c.domain}>
-      <Label
-        key={list[0].id}
-        item={list[0]}
-        refreshCount={refreshCount}
-        settings={settings}
-        refPrevTimeStr={refPrevTimeStr}
-      />
-      {jsxList}
-    </ul>
+    <li className={c.domain}>
+      <ul>
+        <Label
+          key={list[0].id}
+          item={list[0]}
+          refreshCount={refreshCount}
+          settings={settings}
+          refPrevTimeStr={refPrevTimeStr}
+        />
+        {jsxList}
+      </ul>
+    </li>
   );
 };
 

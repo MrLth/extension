@@ -3,7 +3,7 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2020-05-27 15:30:26
- * @LastEditTime: 2021-02-23 09:54:04
+ * @LastEditTime: 2021-03-05 11:54:28
  * @Description: file content
  */
 const { HotModuleReplacementPlugin } = require('webpack');
@@ -46,6 +46,7 @@ module.exports = merge(config, {
             options: {
               modules: {
                 auto: /\.(local|module|m)\.s?css$/,
+                localIdentName: '[folder]_[hash:base64:5]__[local]',
               },
             },
           },

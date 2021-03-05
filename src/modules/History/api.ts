@@ -2,9 +2,13 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2020-10-09 16:09:49
- * @LastEditTime: 2021-02-22 01:23:54
+ * @LastEditTime: 2021-03-05 15:47:46
  * @Description: file content
  */
+
+import {
+  FOLDER_TITLE_HEIGHT, HISTORY_DOMAIN_LABEL_MARGIN, HISTORY_DOMAIN_LABEL_HEIGHT, LABEL_HEIGHT,
+} from 'utils/const';
 
 const DOMAIN_MERGE_TIME_INTERVAL = 1000 * 60 * 30; // 半个小时
 
@@ -58,10 +62,10 @@ export function sortNativeHistory(
 }
 
 export function calcHeight(list: DomainHistoryItem[]): number {
-  let h = 36;
+  let h = FOLDER_TITLE_HEIGHT;
   for (const item of list) {
     const len = item.list.length;
-    h += len > 1 ? 8 + len * 28 : 32;
+    h += len > 1 ? HISTORY_DOMAIN_LABEL_MARGIN + len * HISTORY_DOMAIN_LABEL_HEIGHT : LABEL_HEIGHT;
   }
   return h;
 }

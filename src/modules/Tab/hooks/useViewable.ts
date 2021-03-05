@@ -2,7 +2,7 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2020-12-17 14:32:20
- * @LastEditTime: 2021-02-21 20:02:14
+ * @LastEditTime: 2021-03-05 13:58:56
  * @Description: 让当前活动标签可视
  */
 
@@ -12,7 +12,7 @@ import { FOLDER_TITLE_HEIGHT, LABEL_HEIGHT } from 'utils/const';
 import { TabState } from '../model/reducer';
 
 const effect = debounce(
-  (state: TabState, listRef: MutableRefObject<HTMLDivElement>) => {
+  (state: TabState, listRef: MutableRefObject<HTMLUListElement>) => {
     if (!state.tabHandler || !listRef.current) return;
     const { windows, tabMap } = state.tabHandler;
 
@@ -51,9 +51,9 @@ const effect = debounce(
 export default (
   state: TabState,
 ): {
-  listRef: MutableRefObject<HTMLDivElement>
+  listRef: MutableRefObject<HTMLUListElement>
 } => {
-  const listRef = useRef<HTMLDivElement>();
+  const listRef = useRef<HTMLUListElement>();
 
   const focusWindowId = state.tabHandler?.focusWindow;
   const focusTabId = state.tabHandler?.windows.get(focusWindowId)?.activeTabId;

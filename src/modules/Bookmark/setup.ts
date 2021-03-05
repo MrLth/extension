@@ -2,7 +2,7 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2021-02-22 17:17:23
- * @LastEditTime: 2021-02-28 23:41:26
+ * @LastEditTime: 2021-03-05 14:56:19
  * @Description: file content
  */
 import { SettingsType, useConcent, NoMap } from 'concent';
@@ -76,7 +76,7 @@ const setup = (ctx: CtxPre) => {
       if (folder === null) return;
 
       dom.wrapper.scrollTo({
-        top: folder.top - li.getBoundingClientRect().top + CARD_TITLE_HEIGHT + FOLDER_TITLE_HEIGHT,
+        top: folder.top - li.getBoundingClientRect().top + FOLDER_TITLE_HEIGHT,
       });
     },
     openTab: reducer.tab.openTab,

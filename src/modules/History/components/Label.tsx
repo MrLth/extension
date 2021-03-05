@@ -2,7 +2,7 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2020-10-14 08:40:09
- * @LastEditTime: 2021-02-22 23:26:27
+ * @LastEditTime: 2021-03-05 14:24:26
  * @Description: file content
  */
 import React, {
@@ -11,6 +11,7 @@ import React, {
 import { useRefVal } from 'utils/hooks';
 import { HOUR } from 'utils/const'
 import defaultIcon from '@img/defaultIcon.svg';
+import { preventDefault } from 'utils';
 import { Settings } from '../setup';
 import { HistoryItem } from '../api';
 
@@ -111,18 +112,22 @@ const Label = ({
               ? `chrome://favicon/size/18@2x/${item.url}`
               : defaultIcon
           }
-          alt={item.url}
+          alt="favicon"
         />
-        {item.title === '' ? item.url : item.title}
+        <a href={item.url} onClick={preventDefault}>
+          {item.title === '' ? item.url : item.title}
+        </a>
       </div>
-      { timeStr !== ''
+      {
+        timeStr !== ''
         && (
           <div className={c.time}>
             {
               timeStr
             }
           </div>
-        )}
+        )
+      }
     </li>
 
   );
