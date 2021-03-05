@@ -2,7 +2,7 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2021-02-23 00:15:42
- * @LastEditTime: 2021-02-24 12:59:12
+ * @LastEditTime: 2021-03-06 01:52:56
  * @Description: file content
  */
 import { Fn } from 'utils/type';
@@ -36,23 +36,31 @@ class TabHandler {
     nativeTabs: chrome.tabs.Tab[],
     windowsAttaches: chrome.windows.Window[],
   ) {
+    const newTabMap = new Map<number, chrome.tabs.Tab[]>()
     // 1. 更新 windows
-    this.windows = nativeTabs.reduce((map, c) => {
-      const myTab = TabHandler.initTab(c);
-      // hashmap
-      this.tabMap.set(c.id, myTab);
+    this.windows = nativeTabs.reduce((map, tab) => {
+      if (tab.url === 'chrome://newtab/') {
+        if (!newTabMap.has(tab.windowId)) {
+          newTabMap.set(tab.windowId, [])
+        }
+        newTabMap.get(tab.windowId).push(tab)
+      }
 
-      if (map.has(c.windowId)) {
-        const myWindow = map.get(c.windowId);
+      const myTab = TabHandler.initTab(tab);
+      // hashmap
+      this.tabMap.set(tab.id, myTab);
+
+      if (map.has(tab.windowId)) {
+        const myWindow = map.get(tab.windowId);
         // 2. 更新 tabs
         myWindow.tabs.push(myTab);
         // 3. 更新 activeTabId
         if (myTab.active) myWindow.activeTabId = myTab.id;
       } else {
         // initial myWindow
-        map.set(c.windowId, {
+        map.set(tab.windowId, {
           tabs: [myTab],
-          attach: windowsAttaches.find((v) => v.id === c.windowId),
+          attach: windowsAttaches.find((v) => v.id === tab.windowId),
           updateKey: +new Date(),
           activeTabId: myTab.id,
         });
@@ -63,6 +71,21 @@ class TabHandler {
     // 2. 更新当前焦点窗口
     const focusWindow = windowsAttaches.find((v) => v.focused);
     this.focusWindow = focusWindow ? focusWindow.id : -1;
+
+    // 3. 删去重复的 newTab 页面
+    // 3.1 每个窗口保留一个
+    const willRemoveTabIds = []
+    for (const [windowId, tabs] of newTabMap) {
+      if (tabs.length > 1) {
+        let haveSelected = false;
+        for (const tab of tabs) {
+          if (tab.selected) haveSelected = true
+          else willRemoveTabIds.push(tab.id)
+        }
+        if (!haveSelected) willRemoveTabIds.pop()
+      }
+    }
+    chrome.tabs.remove(willRemoveTabIds)
   }
 
   static initTab(tab: chrome.tabs.Tab): MyTab {
