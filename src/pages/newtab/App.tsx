@@ -2,7 +2,7 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2020-12-11 14:57:20
- * @LastEditTime: 2021-03-07 02:41:41
+ * @LastEditTime: 2021-03-07 03:31:25
  * @Description: file content
  */
 import React, { useEffect, useState } from 'react';
@@ -54,21 +54,10 @@ function App(): JSX.Element {
         <div className={c.tab}><Tab /></div>
         <div className={c.record}>
           <div className={c.arrow}>
-            {
-              isHide
-                ? (
-                  <IconFont
-                    type="iconArrow-up"
-                    onClick={() => setIsHide(false)}
-                  />
-                )
-                : (
-                  <IconFont
-                    type="iconArrow-down"
-                    onClick={() => setIsHide(true)}
-                  />
-                )
-            }
+            <span role="presentation" onClick={() => setIsHide(!isHide)}>
+              <IconFont type={isHide ? 'iconArrow-up' : 'iconArrow-down'} />
+            </span>
+
           </div>
           <Record />
 

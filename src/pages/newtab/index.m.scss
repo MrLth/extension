@@ -28,8 +28,17 @@
   border-left: 1px solid #efefef;
   user-select: none;
 
-  svg {
+  span {
+    position: relative;
     cursor: pointer;
+    &::before {
+      position: absolute;
+      top: -0.5rem;
+      right: -1rem;
+      bottom: -0.5rem;
+      left: -1rem;
+      content: ' ';
+    }
   }
 }
 
@@ -47,9 +56,8 @@
   .record {
     height: 2rem;
   }
-  .arrow{
+  .arrow {
     padding-bottom: 1rem;
     background-color: #fff;
-
   }
 }
