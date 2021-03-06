@@ -2,13 +2,14 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2021-02-22 23:35:20
- * @LastEditTime: 2021-02-24 16:25:13
+ * @LastEditTime: 2021-03-07 01:57:38
  * @Description: file content
  */
 import { NoMap, SettingsType, useConcent } from 'concent';
 import { EmptyObject } from 'utils/type';
 import { format } from 'utils';
 import { CtxMSConn, ItemsType } from 'utils/type/concent';
+import { RecordUrl } from './model/state';
 
 const moduleName = 'record';
 const connect = ['tab'] as const;
@@ -49,6 +50,11 @@ const setup = (ctx: CtxPre) => {
     closeRecord: reducer.record.closeRecord,
     openLabel: reducer.tab.openTab,
     timeUpdQueue: [] as TimeUpdItem[],
+    openAllTab: (urls: RecordUrl[]) => {
+      chrome.windows.create({
+        url: urls.map((v) => v.url),
+      })
+    },
   };
 
   // 时间更新

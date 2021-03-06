@@ -2,13 +2,25 @@
 
 .content {
   @extend %card;
-
   display: flex;
   flex-direction: column;
   border-left: 1px #efefef solid;
 
   .window-title {
     @extend %sub-title;
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+
+    .buttons {
+      @extend %btn-close, %sub-title;
+      color: #000;
+      font-size: 1rem;
+    }
+
+    &:hover .buttons{
+      opacity: 1;
+    }
   }
 
   .list {
@@ -19,17 +31,24 @@
   .label {
     @extend %label;
 
-    .btn-close {
+    .buttons {
       background: linear-gradient(to right, transparent, #fafafa);
     }
 
     &.activated {
       background-color: #eee;
 
-      .btn-close {
+      .buttons {
         background: linear-gradient(to right, transparent, #eee);
         transform: translateX(0);
       }
+    }
+    &-selected {
+      background-color: #b5f5ec;
+    }
+
+    &-selected.activated {
+      background-color: #87e8de;
     }
   }
 
@@ -39,9 +58,8 @@
       // line-height: 1.75rem;
       background-image: url('~@img/tabGroupBg.svg');
       background-repeat: no-repeat;
-      background-position: .8rem 0;
+      background-position: 0.8rem 0;
       background-size: 1.5rem 2rem;
-
 
       &:first-of-type {
         background-image: url('~@img/tabGroupBgFirst.svg');
@@ -66,7 +84,7 @@
   }
 
   .focused {
-    .activated .btn-close {
+    .activated .buttons {
       background: linear-gradient(to right, transparent, #e6f7ff);
     }
 
@@ -75,8 +93,10 @@
         color: #0050b3;
         background-color: #e6f7ff;
       }
+      &-selected.activated {
+        background-color: #5cdbd3;
+      }
     }
-
 
     .tab-group {
       .label {

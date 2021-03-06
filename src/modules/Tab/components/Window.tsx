@@ -2,11 +2,13 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2020-12-17 08:05:07
- * @LastEditTime: 2021-03-05 15:34:03
+ * @LastEditTime: 2021-03-07 01:03:11
  * @Description: file content
  */
 import React, { memo } from 'react';
 import { moduleClassnames } from 'utils';
+import { Tab } from 'utils/type';
+import IconFont from 'components/IconFont';
 import { MyWindow } from '../model/type';
 import { Settings } from '../setup';
 import Label from './Label';
@@ -17,10 +19,11 @@ const cn = moduleClassnames(c);
 interface Props {
   myWindow: MyWindow
   settings: Settings
+  selectedTabs: Set<Tab>
   updateKey: number
 }
 
-const Window = ({ myWindow, settings }: Props) => {
+const Window = ({ myWindow, settings, selectedTabs }: Props) => {
   const { tabs, attach } = myWindow;
   const tabArr = [];
 
@@ -45,6 +48,7 @@ const Window = ({ myWindow, settings }: Props) => {
             key={tab.id}
             tab={tab}
             updateKey={tab.updateKey}
+            selectedTabs={selectedTabs}
             // windowUpdKey={updateKey}
             settings={settings}
           />,
@@ -63,6 +67,7 @@ const Window = ({ myWindow, settings }: Props) => {
         key={tab.id}
         tab={tab}
         updateKey={tab.updateKey}
+        selectedTabs={selectedTabs}
         // windowUpdKey={updateKey}
         settings={settings}
       />,
@@ -72,7 +77,10 @@ const Window = ({ myWindow, settings }: Props) => {
       tempArr.length === 1 ? (
         tempArr
       ) : (
-        <li className={c['tab-group']} key={key}>
+        <li
+          className={c['tab-group']}
+          key={key}
+        >
           <ul>
             {tempArr}
           </ul>
@@ -88,10 +96,29 @@ const Window = ({ myWindow, settings }: Props) => {
         focused: attach?.focused,
       })}
     >
-      <h3 className={cn('window-title')}>
-        window #
-        {attach?.id}
-      </h3>
+      <header className={cn('window-title')}>
+
+        <h3>
+          window #
+          {attach.id}
+        </h3>
+        <div className={c.buttons}>
+          <IconFont
+            type="iconrecord_on"
+            onClick={(e: MouseEvent) => {
+              e.stopPropagation();
+              settings.recordWindow(attach.id)
+            }}
+          />
+          <IconFont
+            type="iconclose"
+            onClick={(e: MouseEvent) => {
+              e.stopPropagation();
+              settings.closeWindow(attach.id)
+            }}
+          />
+        </div>
+      </header>
       <ul>
         {tabArr}
       </ul>

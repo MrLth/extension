@@ -2,7 +2,7 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2021-02-23 00:15:42
- * @LastEditTime: 2021-03-06 01:52:56
+ * @LastEditTime: 2021-03-07 00:12:10
  * @Description: file content
  */
 import { Fn } from 'utils/type';
@@ -75,7 +75,7 @@ class TabHandler {
     // 3. 删去重复的 newTab 页面
     // 3.1 每个窗口保留一个
     const willRemoveTabIds = []
-    for (const [windowId, tabs] of newTabMap) {
+    for (const tabs of newTabMap.values()) {
       if (tabs.length > 1) {
         let haveSelected = false;
         for (const tab of tabs) {

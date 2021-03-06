@@ -2,7 +2,7 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2021-02-23 09:35:55
- * @LastEditTime: 2021-03-05 14:58:11
+ * @LastEditTime: 2021-03-06 20:40:01
  * @Description: file content
  */
 import React from 'react';
@@ -32,6 +32,7 @@ const TabComponent = (): JSX.Element => {
                 key={k}
                 myWindow={v}
                 settings={settings}
+                selectedTabs={state.selectedTabs}
                 updateKey={v.updateKey}
               />
             ))

@@ -2,7 +2,7 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2021-02-20 19:59:04
- * @LastEditTime: 2021-02-24 13:26:56
+ * @LastEditTime: 2021-03-07 02:24:30
  * @Description: file content
  */
 import React, { memo, useEffect, useState } from 'react';
@@ -43,12 +43,17 @@ const RecordList = ({ recordingIndex, recording, settings }: Props) => {
   // #endregion
 
   return (
-    <ul
-      className={cn()}
-    >
-      <div className={cn('record-title')}>
-        <div>{timeFormatted}</div>
+    <li>
+      <header className={cn('record-title')}>
+        <h3>{timeFormatted}</h3>
         <div className={c['btn-close']}>
+          <IconFont
+            type="iconopen"
+            onClick={(e: MouseEvent) => {
+              e.stopPropagation();
+              settings.openAllTab(recording.urls)
+            }}
+          />
           <IconFont
             type="iconclose"
             onClick={(e: MouseEvent) => {
@@ -57,17 +62,19 @@ const RecordList = ({ recordingIndex, recording, settings }: Props) => {
             }}
           />
         </div>
-      </div>
-      {recording.urls.map((v, i) => (
-        <Label
-          recordingIndexRef={recordingIndexRef}
-          labelIndex={i}
-          key={v.url}
-          recordUrl={v}
-          settings={settings}
-        />
-      ))}
-    </ul>
+      </header>
+      <ul>
+        {recording.urls.map((v, i) => (
+          <Label
+            recordingIndexRef={recordingIndexRef}
+            labelIndex={i}
+            key={v.url}
+            recordUrl={v}
+            settings={settings}
+          />
+        ))}
+      </ul>
+    </li>
   );
 };
 

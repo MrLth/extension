@@ -1,41 +1,35 @@
 @import 'utils/index';
 
 .content {
-	@extend %card;
-	display: flex;
-	flex-direction: column;
-	border-left: 1px #efefef solid;
-	box-shadow: none;
+  @extend %card;
+  display: flex;
+  flex-direction: column;
+  border-left: 1px #efefef solid;
+  box-shadow: none;
 
-	.record-title {
+  .record-title {
+    @extend %sub-title;
+    position: relative;
+    display: flex;
+    justify-content: space-between;
 
-		@extend %sub-title;
-		position: relative;
-		display: flex;
-		justify-content: space-between;
+    .btn-close {
+      @extend %btn-close, %sub-title;
+      color: #000;
+      font-size: 1rem;
+    }
 
-		.btn-close {
-			@extend %btn-close,
-			%sub-title;
-			color: #000;
-			font-size: 1rem;
-		}
-
-		&:hover .btn-close {
-			opacity: 1;
-		}
-	}
+    &:hover .btn-close {
+      opacity: 1;
+    }
+  }
 }
 
 .list {
-	flex: 1;
-	overflow-y: auto;
-}
-
-.title {
-	@extend %title;
+  flex: 1;
+  overflow-y: auto;
 }
 
 .label {
-	@extend %label;
+  @extend %label;
 }

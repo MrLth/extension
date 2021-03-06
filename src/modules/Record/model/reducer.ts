@@ -2,11 +2,12 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2020-10-12 08:17:18
- * @LastEditTime: 2021-02-24 13:25:47
+ * @LastEditTime: 2021-03-06 17:02:28
  * @Description: file content
  */
-import { debounce } from 'lodash-es';
+import { debounce, isArray, isObject } from 'lodash-es';
 import { IActionCtxBase as IAC } from 'concent';
+import { Obj } from 'utils/type';
 import recordState, { Recording } from './state';
 
 export type RecordState = typeof recordState
@@ -14,9 +15,28 @@ export type RecordState = typeof recordState
 const LOCAL_KEY = 'record';
 let isSaved = true;
 
+function fixDate(source: unknown): unknown {
+  if (source instanceof Date) {
+    return source.valueOf()
+  }
+
+  if (Array.isArray(source)) {
+    return source.map((v) => fixDate(v))
+  }
+
+  if (isObject(source)) {
+    return Object.entries(source).reduce((acc, [k, v]) => {
+      acc[k] = fixDate(v)
+      return acc
+    }, {} as Obj)
+  }
+
+  return source
+}
+
 async function save(_new: null, state: RecordState): Promise<void> {
   if (isSaved) return;
-  localStorage.setItem(LOCAL_KEY, JSON.stringify(state))
+  localStorage.setItem(LOCAL_KEY, JSON.stringify(fixDate(state)))
   isSaved = true;
 }
 
