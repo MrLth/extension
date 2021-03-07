@@ -2,7 +2,7 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2020-12-11 14:57:20
- * @LastEditTime: 2021-03-07 03:31:25
+ * @LastEditTime: 2021-03-07 23:35:15
  * @Description: file content
  */
 import React, { useEffect, useState } from 'react';
@@ -19,6 +19,7 @@ import Bookmark from 'modules/Bookmark';
 import Record from 'modules/Record';
 import { moduleClassnames } from 'utils';
 import IconFont from 'components/IconFont';
+import { LOCAL_KEY } from 'utils/const';
 import c from './index.m.scss'
 import Tab from '../../modules/Tab';
 
@@ -27,7 +28,15 @@ const cn = moduleClassnames(c);
 function App(): JSX.Element {
   const { setState } = useConcent('$$global');
 
-  const [isHide, setIsHide] = useState(false)
+  const [isHide, setIsHide] = useState(
+    () => Boolean(JSON.parse(localStorage.getItem(LOCAL_KEY.RecordIsHidden))),
+  )
+
+  function toggleIsHide() {
+    const newIsHide = !isHide
+    localStorage.setItem(LOCAL_KEY.RecordIsHidden, JSON.stringify(newIsHide))
+    setIsHide(newIsHide)
+  }
 
   useEffect(() => {
     const windowResizeListener = debounce(() => {
@@ -54,7 +63,10 @@ function App(): JSX.Element {
         <div className={c.tab}><Tab /></div>
         <div className={c.record}>
           <div className={c.arrow}>
-            <span role="presentation" onClick={() => setIsHide(!isHide)}>
+            <span
+              role="presentation"
+              onClick={toggleIsHide}
+            >
               <IconFont type={isHide ? 'iconArrow-up' : 'iconArrow-down'} />
             </span>
 

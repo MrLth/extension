@@ -66,6 +66,7 @@
     "@types/md5": "^2.3.0",
     "autoprefixer": "^10.2.4",
     "babel-loader": "^8.2.2",
+    "babel-plugin-const-enum": "^1.0.1",
     "babel-plugin-dev-expression": "^0.2.2",
     "core-js": "^3.9.0",
     "cross-env": "^7.0.3",

@@ -3,7 +3,7 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2021-02-20 14:18:21
- * @LastEditTime: 2021-03-07 03:26:17
+ * @LastEditTime: 2021-03-07 23:28:36
  * @Description: file content
  */
 const { resolve } = require('path')
@@ -29,6 +29,7 @@ module.exports = (api) => {
     ],
     plugins: [
       ['./public/plugin-log/plugin.js', { remove: false }],
+      "const-enum",
       '@babel/plugin-transform-runtime',
       '@babel/plugin-syntax-dynamic-import',
       '@babel/plugin-proposal-optional-chaining',
