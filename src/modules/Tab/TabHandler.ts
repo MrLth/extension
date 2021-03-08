@@ -2,7 +2,7 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2021-02-23 00:15:42
- * @LastEditTime: 2021-03-07 00:12:10
+ * @LastEditTime: 2021-03-08 08:34:47
  * @Description: file content
  */
 import { Fn } from 'utils/type';
@@ -39,7 +39,7 @@ class TabHandler {
     const newTabMap = new Map<number, chrome.tabs.Tab[]>()
     // 1. 更新 windows
     this.windows = nativeTabs.reduce((map, tab) => {
-      if (tab.url === 'chrome://newtab/') {
+      if (tab.url.match(/^(edge|chrome):\/\/newtab\/?$/)) {
         if (!newTabMap.has(tab.windowId)) {
           newTabMap.set(tab.windowId, [])
         }
