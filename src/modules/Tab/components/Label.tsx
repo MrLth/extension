@@ -1,5 +1,5 @@
 import React, { memo, useCallback } from 'react';
-import { moduleClassnames, preventDefault } from 'utils';
+import { loop, moduleClassnames, preventDefault } from 'utils';
 import { Tab } from 'utils/type';
 import IconFont from 'components/IconFont';
 import defaultIcon from '@img/defaultIcon.svg';
@@ -110,7 +110,15 @@ const Label = ({
           }
           alt={tab.url}
         />
-        <a href={tab.url} onClick={preventDefault}>{tab.title}</a>
+        <span
+          role="link"
+          tabIndex={0}
+          data-href={tab.url}
+          onClick={preventDefault}
+          onKeyDown={loop}
+        >
+          {tab.title}
+        </span>
       </div>
 
       <div className={c['btn-close']}>
