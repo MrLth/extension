@@ -1,4 +1,4 @@
-import React, { memo, useCallback } from 'react';
+import React, { memo } from 'react';
 import { loop, moduleClassnames, preventDefault } from 'utils';
 import { Tab } from 'utils/type';
 import IconFont from 'components/IconFont';
@@ -110,6 +110,9 @@ const Label = ({
           }
           alt={tab.url}
         />
+        {/* 使用 a 标签无法阻止 mac os 上的 MiddleClick-catalina 工具的 触摸板三指轻触 模拟 鼠标中键点击 的默认行为，
+            即中键点击一个 a 标签会新建一个标签页。所以这里使用 aria 尽量模拟 a 标签的行为
+        */}
         <span
           role="link"
           tabIndex={0}
