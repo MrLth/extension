@@ -2,7 +2,7 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2021-02-22 23:45:29
- * @LastEditTime: 2021-03-07 01:01:53
+ * @LastEditTime: 2021-04-26 16:41:14
  * @Description: file content
  */
 import { NoMap, SettingsType, useConcent } from 'concent';
@@ -12,6 +12,7 @@ import {
 import { CtxMSConn, ItemsType } from 'utils/type/concent';
 import { PopupFrameProps, PopupOption } from 'components/PopupFrame';
 import { RecordUrl } from 'modules/Record/model/state';
+import { FOLDER_TITLE_HEIGHT, LABEL_HEIGHT } from 'utils/const';
 import { TabStatus } from './model/type';
 
 const moduleName = 'tab';
@@ -30,6 +31,7 @@ const initState = () => ({
   isSearching: false,
   selectedTabs: new Set<Tab>(),
   status: 'normal' as TabStatus,
+  dragHoverTop: -1,
 });
 
 type Module = typeof moduleName
@@ -46,6 +48,27 @@ const setup = (ctx: CtxPre) => {
     isEventSleep: false,
     selectedStartTab: null as Tab,
   };
+
+  function computedTabTop(tab: Tab, windowId?: number): number {
+    const { windows } = state.tabHandler
+
+    let windowCount = 0
+    let tabCount = 0
+
+    for (const [_windowId, windowObj] of windows) {
+      windowCount += 1
+      if (windowId === _windowId) {
+        break;
+      }
+      if (_windowId === tab.windowId) {
+        tabCount += tab.index + 1
+        break;
+      }
+      tabCount += windowObj.tabs.length;
+    }
+
+    return windowCount * FOLDER_TITLE_HEIGHT + tabCount * LABEL_HEIGHT
+  }
 
   effect(() => {
     reducer.tab.init(null);
@@ -185,8 +208,8 @@ const setup = (ctx: CtxPre) => {
     closeWindow: (windowId: number) => {
       chrome.windows.remove(windowId);
     },
-
     // #endregion
+
     // #region 标签按钮
     duplicateTab: (tabId: number) => {
       chrome.tabs.duplicate(tabId);
@@ -318,6 +341,20 @@ const setup = (ctx: CtxPre) => {
       }
     },
     isSelected: (tab: Tab) => state.selectedTabs.has(tab),
+    // #endregion
+
+    // #region 拖动
+    updateDragHoverTop(tab: Tab, windowId?: number) {
+      setState({ dragHoverTop: computedTabTop(tab, windowId) })
+    },
+    handleDrop(sourceTabId: number, targetProps: Pick<Tab, 'index' | 'windowId'>) {
+      chrome.tabs.move(sourceTabId, targetProps, () => {
+        setState({ dragHoverTop: -1 })
+      })
+    },
+    hideDragHover() {
+      setState({ dragHoverTop: -1 })
+    },
   };
 };
 

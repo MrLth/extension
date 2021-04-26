@@ -2,13 +2,15 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2020-12-17 08:05:07
- * @LastEditTime: 2021-03-07 01:03:11
+ * @LastEditTime: 2021-04-26 16:27:41
  * @Description: file content
  */
-import React, { memo } from 'react';
+import React, { memo, useEffect } from 'react';
 import { moduleClassnames } from 'utils';
 import { Tab } from 'utils/type';
 import IconFont from 'components/IconFont';
+import { useDrop } from 'ahooks';
+import { isNumber } from 'lodash-es';
 import { MyWindow } from '../model/type';
 import { Settings } from '../setup';
 import Label from './Label';
@@ -89,6 +91,24 @@ const Window = ({ myWindow, settings, selectedTabs }: Props) => {
     );
   }
 
+  const [dropProps, { isHovering }] = useDrop({
+    onUri: (uri, e) => {
+      alert(`uri: ${uri} dropped`);
+    },
+    onDom: (content: string) => {
+      const sourceTabId = JSON.parse(content)?.tabId
+      if (isNumber(sourceTabId)) {
+        settings.handleDrop(sourceTabId, { index: 0, windowId: attach.id })
+      }
+    },
+  });
+
+  useEffect(() => {
+    if (isHovering) {
+      settings.updateDragHoverTop(null, attach.id)
+    }
+  }, [attach.id, isHovering, settings])
+
   $log({ Window: attach.id, myWindow }, 'render', 5);
   return (
     <li
@@ -96,7 +116,10 @@ const Window = ({ myWindow, settings, selectedTabs }: Props) => {
         focused: attach?.focused,
       })}
     >
-      <header className={cn('window-title')}>
+      <header
+        className={cn('window-title')}
+        {...dropProps}
+      >
 
         <h3>
           window #

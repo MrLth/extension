@@ -1,33 +1,39 @@
-import React, { memo } from 'react';
+import React, { memo, useEffect, useState } from 'react';
 import { loop, moduleClassnames, preventDefault } from 'utils';
 import { Tab } from 'utils/type';
 import IconFont from 'components/IconFont';
 import defaultIcon from '@img/defaultIcon.svg';
+import { useDrop, useDrag } from 'ahooks';
+import { isNumber, pick } from 'lodash-es';
 import { Settings } from '../setup';
-
 import c from '../index.m.scss';
 
 const cn = moduleClassnames(c);
 
-const getLabelDom = (dom: HTMLElement): HTMLElement => {
+function getLabelDom(dom: HTMLElement): HTMLElement {
   if (dom === document.body) return null;
   if (dom.tagName.toLowerCase() === 'li') return dom;
   return getLabelDom(dom.parentElement);
-};
+}
 
 interface Props {
   tab: Tab
   settings: Settings
   selectedTabs: Set<Tab>
   updateKey: number
-  // windowUpdKey: number
 }
-const Label = ({
-  tab, settings, updateKey, selectedTabs,
-}: Props) => {
+
+function Label(
+  {
+    tab,
+    settings,
+    updateKey,
+    selectedTabs,
+  }: Props,
+) {
   $log({ Label: tab.title, tab }, 'render', 5);
 
-  const onMouseUpCapture = (e: React.MouseEvent<HTMLLIElement, MouseEvent>) => {
+  function onMouseUpCapture(e: React.MouseEvent<HTMLLIElement, MouseEvent>) {
     e.preventDefault();
     // right click
     if (e.button === 2) {
@@ -70,6 +76,27 @@ const Label = ({
     }
   }
 
+  const getDragProps = useDrag({
+    onDragEnd: settings.hideDragHover,
+  });
+  const [dropProps, { isHovering }] = useDrop({
+    onUri: (uri, e) => {
+      alert(`uri: ${uri} dropped`);
+    },
+    onDom: (content: string) => {
+      const sourceTabId = JSON.parse(content)?.tabId
+      if (isNumber(sourceTabId)) {
+        settings.handleDrop(sourceTabId, pick(tab, ['index', 'windowId']))
+      }
+    },
+  });
+
+  useEffect(() => {
+    if (isHovering) {
+      settings.updateDragHoverTop(tab)
+    }
+  }, [isHovering, settings, tab])
+
   return (
     <li
       data-upd-time={updateKey}
@@ -81,7 +108,11 @@ const Label = ({
       // #region 右键事件
       onMouseUpCapture={onMouseUpCapture}
       onContextMenu={preventDefault}
-    // #endregion
+      // #endregion
+      {...getDragProps(JSON.stringify({
+        tabId: tab.id,
+      }))}
+      {...dropProps}
     >
       <div
         role="presentation"
@@ -111,8 +142,8 @@ const Label = ({
           alt={tab.url}
         />
         {/* 使用 a 标签无法阻止 mac os 上的 MiddleClick-catalina 工具的 触摸板三指轻触 模拟 鼠标中键点击 的默认行为，
-            即中键点击一个 a 标签会新建一个标签页。所以这里使用 aria 尽量模拟 a 标签的行为
-        */}
+              即中键点击一个 a 标签会新建一个标签页。所以这里使用 aria 尽量模拟 a 标签的行为
+          */}
         <span
           role="link"
           tabIndex={0}
@@ -135,6 +166,6 @@ const Label = ({
       </div>
     </li>
   );
-};
+}
 
 export default memo(Label);
