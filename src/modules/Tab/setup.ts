@@ -2,7 +2,7 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2021-02-22 23:45:29
- * @LastEditTime: 2021-04-27 15:08:01
+ * @LastEditTime: 2021-04-27 15:37:50
  * @Description: file content
  */
 import { NoMap, SettingsType, useConcent } from 'concent';
@@ -348,6 +348,9 @@ const setup = (ctx: CtxPre) => {
       setState({ dragHoverTop: computedTabTop(tab, windowId) })
     },
     handleDrop(sourceTabId: number, targetProps: Pick<Tab, 'index' | 'windowId'>) {
+      // eslint-disable-next-line no-param-reassign
+      targetProps.index += 1
+
       chrome.tabs.move(sourceTabId, targetProps, () => {
         setState({ dragHoverTop: -1 })
       })

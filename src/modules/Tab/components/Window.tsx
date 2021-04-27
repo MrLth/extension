@@ -2,7 +2,7 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2020-12-17 08:05:07
- * @LastEditTime: 2021-04-26 16:27:41
+ * @LastEditTime: 2021-04-27 15:35:52
  * @Description: file content
  */
 import React, { memo, useEffect } from 'react';
@@ -98,7 +98,7 @@ const Window = ({ myWindow, settings, selectedTabs }: Props) => {
     onDom: (content: string) => {
       const sourceTabId = JSON.parse(content)?.tabId
       if (isNumber(sourceTabId)) {
-        settings.handleDrop(sourceTabId, { index: 0, windowId: attach.id })
+        settings.handleDrop(sourceTabId, { index: -1, windowId: attach.id })
       }
     },
   });
