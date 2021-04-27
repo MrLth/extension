@@ -1,10 +1,10 @@
+@use "sass:map";
 @import 'utils/index';
 
 .content {
   @extend %card;
   display: flex;
   flex-direction: column;
-  border-left: 1px #efefef solid;
 
   .window-title {
     @extend %sub-title;
@@ -14,7 +14,7 @@
 
     .buttons {
       @extend %btn-close, %sub-title;
-      color: #000;
+      @include dark(color, 'btn-bg');
       font-size: 1rem;
     }
 
@@ -41,94 +41,53 @@
     will-change: top;
 
     .buttons {
-      background: linear-gradient(to right, transparent, #fafafa);
+      @include darkProp(
+        background,
+        linear-gradient(to right, transparent, map.get($colors, 'bg')),
+        linear-gradient(to right, transparent, map.get($dark-colors, 'bg'))
+      );
     }
 
     &.activated {
+      @include dark(background-color, 'blue-4');
+
       background-color: #eee;
 
       .buttons {
-        background: linear-gradient(to right, transparent, #eee);
+        @include darkProp(
+          background,
+          linear-gradient(to right, transparent, map.get($colors, 'blue-4')),
+          linear-gradient(to right, transparent, map.get($dark-colors, 'blue-4'))
+        );
         transform: translateX(0);
       }
     }
     &-selected {
-      background-color: #b5f5ec;
+      @include dark(background-color, 'gray-4');
     }
 
     &-selected.activated {
-      background-color: #87e8de;
-    }
-  }
-
-  .tab-group {
-    .label {
-      background-image: url('~@img/tabGroupBg.svg');
-      background-repeat: no-repeat;
-      background-position: 0.8rem 0;
-      background-size: 1.5rem 2rem;
-
-      &:first-of-type {
-        background-image: url('~@img/tabGroupBgFirst.svg');
-      }
-
-      &:last-of-type {
-        background-image: url('~@img/tabGroupBgLast.svg');
-      }
-
-      &.activated {
-        background-image: url('~@img/tabGroupBgActivatedNotFocus.svg');
-
-        &:first-of-type {
-          background-image: url('~@img/tabGroupBgFirstActivatedNotFocus.svg');
-        }
-
-        &:last-of-type {
-          background-image: url('~@img/tabGroupBgLastActivatedNotFocus.svg');
-        }
-      }
+      @include dark(background-color, 'gray-5');
     }
   }
 
   .focused {
     .activated .buttons {
-      background: linear-gradient(to right, transparent, #e6f7ff);
-    }
-
-    .label {
-      &.activated {
-        color: #0050b3;
-        background-color: #e6f7ff;
-      }
-      &-selected.activated {
-        background-color: #5cdbd3;
-      }
-    }
-
-    .tab-group {
-      .label {
-        &.activated {
-          background-image: url('~@img/tabGroupBgActivated.svg');
-
-          &:first-of-type {
-            background-image: url('~@img/tabGroupBgFirstActivated.svg');
-          }
-
-          &:last-of-type {
-            background-image: url('~@img/tabGroupBgLastActivated.svg');
-          }
-        }
-      }
+      @include darkProp(
+        background,
+        linear-gradient(to right, transparent, map.get($colors, 'btn-text')),
+        linear-gradient(to right, transparent, map.get($dark-colors, 'btn-text'))
+      );
     }
   }
 }
 
 .darg-hover {
+  @include dark(background-color, 'link');
   position: absolute;
   left: 0;
   width: 100%;
   height: 2px;
-  background-color: blue;
   transition: top ease 0.2s;
   pointer-events: none;
 }

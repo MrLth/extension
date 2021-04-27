@@ -1,22 +1,115 @@
+@use "sass:map";
+
+$colors: (
+  'primary': #24292e,
+  'bg': #fafafa,
+  'border': #efefef,
+  'secondary': #586069,
+  'tertiary': #6a737d,
+  'placeholder': #6a737d,
+  'disabled': #959da5,
+  'inverse': #fff,
+  'link': #0366d6,
+  'danger': #cb2431,
+  'success': #22863a,
+  'warning': #b08800,
+  'gray-0': #fafbfc,
+  'gray-1': #f6f8fa,
+  'gray-2': #e1e4e8,
+  'gray-3': #d1d5da,
+  'gray-4': #959da5,
+  'gray-5': #6a737d,
+  'gray-6': #586069,
+  'gray-7': #444d56,
+  'gray-8': #2f363d,
+  'gray-9': #24292e,
+  'blue-0': #f1f8ff,
+  'blue-1': #dbedff,
+  'blue-2': #c8e1ff,
+  'blue-3': #79b8ff,
+  'blue-4': #2188ff,
+  'blue-5': #0366d6,
+  'blue-6': #005cc5,
+  'blue-7': #044289,
+  'blue-8': #032f62,
+  'blue-9': #05264c,
+  'btn-text': #24292e,
+  'btn-bg': #fafbfc,
+);
+
+$dark-colors: (
+  'primary': #c9d1d9,
+  'bg': #0c0e12,
+  'border': #161b22,
+  'secondary': #8b949e,
+  'tertiary': #8b949e,
+  'placeholder': #484f58,
+  'disabled': #484f58,
+  'inverse': #0d1117,
+  'link': #58a6ff,
+  'danger': #f85149,
+  'success': #56d364,
+  'warning': #e3b341,
+  'gray-0': #f0f6fc,
+  'gray-1': #c9d1d9,
+  'gray-2': #b1bac4,
+  'gray-3': #8b949e,
+  'gray-4': #6e7681,
+  'gray-5': #484f58,
+  'gray-6': #30363d,
+  'gray-7': #21262d,
+  'gray-8': #161b22,
+  'gray-9': #0d1117,
+  'blue-0': #cae8ff,
+  'blue-1': #a5d6ff,
+  'blue-2': #79c0ff,
+  'blue-3': #58a6ff,
+  'blue-4': #388bfd,
+  'blue-5': #1f6feb,
+  'blue-6': #1158c7,
+  'blue-7': #0d419d,
+  'blue-8': #0c2d6b,
+  'blue-9': #051d4d,
+  'btn-text': #c9d1d9,
+  'btn-bg': #21262d,
+);
+
+@mixin dark($property, $key) {
+  #{$property}: map.get($colors, $key);
+
+  @media (prefers-color-scheme: dark) {
+    #{$property}: map.get($dark-colors, $key);
+  }
+}
+
+@mixin darkProp($property, $light-value, $dark-value) {
+  #{$property}: $light-value;
+
+  @media (prefers-color-scheme: dark) {
+    #{$property}: $dark-value;
+  }
+}
+
 %card {
+  @include dark(color, 'primary');
+  @include dark(background, 'bg');
+  @include darkProp(
+    border-left,
+    1px map.get($colors, 'border') solid,
+    1px map.get($dark-colors, 'border') solid
+  );
   flex: 1 0 300px;
   height: 100%;
-  background: rgba(250, 250, 250, 1);
 
   .focused {
     %sub-title {
-      color: #0050b3;
+      @include dark(color, 'link');
     }
   }
 
   a {
-    color: rgba(0, 0, 0, 0.85);
+    @include dark(color, 'primary');
     text-decoration: none;
-
-    &:active,
-    &:visited {
-      color: rgba(0, 0, 0, 0.85);
-    }
   }
 }
 
@@ -72,11 +165,11 @@
 }
 
 %sub-title {
+  @include dark(color, 'primary');
   height: 2.5rem;
   margin: 0;
   padding-top: 0.75rem;
   padding-left: 0.75rem;
-  color: rgba(0, 0, 0, 0.85);
   font-size: 0.9375rem;
   line-height: 2.5rem;
 
