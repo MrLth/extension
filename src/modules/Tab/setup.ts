@@ -2,7 +2,7 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2021-02-22 23:45:29
- * @LastEditTime: 2021-04-27 13:44:44
+ * @LastEditTime: 2021-04-27 15:08:01
  * @Description: file content
  */
 import { NoMap, SettingsType, useConcent } from 'concent';
@@ -180,7 +180,7 @@ const setup = (ctx: CtxPre) => {
     },
     // popupFrame
     updPopupFrameProps: (obj: PopupFrameProps) => {
-      setState({ popupFrameProps: obj });
+      setState({ popupFrameProps: { ...state.popupFrameProps, ...obj } });
     },
     printWindowAttach: () => {
       console.log('window Attach', state.windowsAttach);

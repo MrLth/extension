@@ -2,11 +2,12 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2021-02-23 09:35:55
- * @LastEditTime: 2021-04-26 16:36:57
+ * @LastEditTime: 2021-04-27 15:06:16
  * @Description: file content
  */
-import React from 'react';
+import React, { useRef } from 'react';
 import PopupFrame from 'components/PopupFrame';
+import { useOnClickOutside } from 'use-hooks';
 import Window from './components/Window';
 import useViewable from './hooks/useViewable';
 import useCC from './setup';
@@ -21,6 +22,11 @@ const TabComponent = (): JSX.Element => {
   const { listRef } = useViewable(state);
 
   $log({ Tab: 'Tab' }, 'render', 5);
+
+  const popFrameRef = useRef()
+  useOnClickOutside(popFrameRef, () => {
+    settings.updPopupFrameProps({ isShow: false })
+  })
 
   return (
     <>
@@ -39,7 +45,7 @@ const TabComponent = (): JSX.Element => {
           }
         </ul>
       </section>
-      <PopupFrame {...state.popupFrameProps} />
+      <PopupFrame {...state.popupFrameProps} ref={popFrameRef} />
       <div
         className={c['darg-hover']}
         style={{ top: state.dragHoverTop, display: state.dragHoverTop < 0 ? 'none' : 'block' }}

@@ -3,8 +3,11 @@
   width: 120px;
   background-color: #fff;
   border-radius: 0.3125rem;
-  box-shadow: rgba(0, 0, 0, 0.09) 0 5px 12px 4px;
-  transition: top 0.1s ease-in-out, left 0.1s ease-in-out;
+  // box-shadow: rgba(0, 0, 0, 0.09) 0 5px 12px 4px;
+
+  box-shadow: 0 1.5px 3.5px rgba(0, 0, 0, 0.2), 0 5.1px 11.8px rgba(0, 0, 0, 0.119),
+    0 23px 53px rgba(0, 0, 0, 0.081);
+  transition: top 0.05s ease, left 0.06s ease;
   will-change: top, left;
 
   li {
@@ -25,6 +28,10 @@
     &:last-child {
       border: none;
       border-radius: 0 0 0.3125rem 0.3125rem;
+    }
+
+    &:only-child {
+      border-radius: 0.3125rem;
     }
 
     div:first-child {

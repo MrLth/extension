@@ -2,14 +2,17 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2021-01-11 10:11:06
- * @LastEditTime: 2021-03-06 16:38:13
+ * @LastEditTime: 2021-04-27 14:58:12
  * @Description: file content
  */
-import React, { memo } from 'react';
+import React, {
+  forwardRef, memo, MutableRefObject, useRef,
+} from 'react';
 import { NoMap, useConcent } from 'concent';
 import { EmptyObject } from 'utils/type';
 import { CtxM } from 'utils/type/concent';
 import { LABEL_HEIGHT, POPUP_WIDTH } from 'utils/const';
+import { useOnClickOutside } from 'use-hooks'
 
 import c from './index.m.scss';
 
@@ -22,8 +25,7 @@ export interface PopupOption {
 export interface PopupFrameProps {
   isShow: boolean
   left?: number
-  minLeft?: number
-  maxRight?: number
+  width?: number
   top?: number
   minTop?: number
   maxBottom?: number
@@ -33,12 +35,12 @@ export interface PopupFrameProps {
 
 type Ctx = CtxM<EmptyObject, '$$global'>
 
-const PopupFrame = (props: PopupFrameProps): JSX.Element => {
+function PopupFrame(props: PopupFrameProps, ref: MutableRefObject<HTMLUListElement>): JSX.Element {
   const {
-    targetTop, isShow, minLeft = 0, minTop = 0,
+    targetTop, isShow, minTop = 0,
   } = props
   let {
-    top, left, options, maxRight, maxBottom,
+    top, left, options, width, maxBottom,
   } = props
   const {
     globalState: { windowSize },
@@ -46,15 +48,14 @@ const PopupFrame = (props: PopupFrameProps): JSX.Element => {
 
   if (typeof options === 'function') options = options();
 
-  maxRight = maxRight === undefined
+  width = width === undefined
     ? windowSize.width
-    : Math.min(windowSize.width, maxRight);
+    : Math.min(windowSize.width, width);
   maxBottom = maxBottom === undefined
     ? windowSize.height
     : Math.min(windowSize.height, maxBottom);
 
-  left = left + POPUP_WIDTH > maxRight ? maxRight - POPUP_WIDTH : left;
-  left = left < minLeft ? minLeft : left;
+  left = left + POPUP_WIDTH > width ? width - POPUP_WIDTH : left;
 
   const height = LABEL_HEIGHT * options.length;
 
@@ -65,7 +66,7 @@ const PopupFrame = (props: PopupFrameProps): JSX.Element => {
   }
 
   return (
-    <ul className={c.content} style={{ top, left, display: isShow ? 'block' : 'none' }}>
+    <ul ref={ref} className={c.content} style={{ top, left, display: isShow ? 'block' : 'none' }}>
       {options.map((v, i) => (
         <li
           role="presentation"
@@ -78,6 +79,6 @@ const PopupFrame = (props: PopupFrameProps): JSX.Element => {
       ))}
     </ul>
   );
-};
+}
 
-export default memo(PopupFrame);
+export default memo(forwardRef(PopupFrame));

@@ -38,17 +38,22 @@ function Label(
     // right click
     if (e.button === 2) {
       const dom = getLabelDom(e.target as HTMLElement);
+
       const {
-        bottom, left, right, top,
+        bottom, left, top, width,
       } = dom.getBoundingClientRect();
+
+      $log({
+        target: e.target, dom, left, clientX: e.clientX,
+      })
+
       settings.updPopupFrameProps(
         {
           isShow: true,
           top: bottom,
-          left: e.clientX,
+          left: e.clientX - left,
           targetTop: top,
-          minLeft: left,
-          maxRight: right,
+          width,
           options: [
             // {
             //   title: '取消',
