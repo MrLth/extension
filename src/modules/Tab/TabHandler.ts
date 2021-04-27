@@ -2,7 +2,7 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2021-02-23 00:15:42
- * @LastEditTime: 2021-04-26 15:15:19
+ * @LastEditTime: 2021-04-27 17:05:07
  * @Description: file content
  */
 import { Fn } from 'utils/type';
@@ -36,16 +36,8 @@ class TabHandler {
     nativeTabs: chrome.tabs.Tab[],
     windowsAttaches: chrome.windows.Window[],
   ) {
-    const newTabMap = new Map<number, chrome.tabs.Tab[]>()
     // 1. 更新 windows
     this.windows = nativeTabs.reduce((map, tab) => {
-      if (tab.url.match(/^(edge|chrome):\/\/newtab\/?$/)) {
-        if (!newTabMap.has(tab.windowId)) {
-          newTabMap.set(tab.windowId, [])
-        }
-        newTabMap.get(tab.windowId).push(tab)
-      }
-
       const myTab = TabHandler.initTab(tab);
       // hashmap
       this.tabMap.set(tab.id, myTab);
@@ -72,20 +64,7 @@ class TabHandler {
     const focusWindow = windowsAttaches.find((v) => v.focused);
     this.focusWindow = focusWindow ? focusWindow.id : -1;
 
-    // 3. 删去重复的 newTab 页面
-    // 3.1 每个窗口保留一个
-    const willRemoveTabIds = []
-    for (const tabs of newTabMap.values()) {
-      if (tabs.length > 1) {
-        let haveSelected = false;
-        for (const tab of tabs) {
-          if (tab.selected) haveSelected = true
-          else willRemoveTabIds.push(tab.id)
-        }
-        if (!haveSelected) willRemoveTabIds.pop()
-      }
-    }
-    chrome.tabs.remove(willRemoveTabIds)
+    this.removeDuplicates()
   }
 
   static initTab(tab: chrome.tabs.Tab): MyTab {
@@ -116,14 +95,6 @@ class TabHandler {
       const myTab = TabHandler.initTab(tab);
       this.tabMap.set(tab.id, myTab);
       if (!this.windows.has(tab.windowId)) {
-        // 2. 新建窗口
-        // this.windows.set(tab.windowId, {
-        //  tabs: [myTab],
-        //  attach: null,
-        //  updateKey: +new Date(),
-        // })
-        // // 3.更新窗口信息
-        // this.updAttach = true
         // TODO: Debug
         $log('createTab', 'error', 4);
       } else {
@@ -334,6 +305,31 @@ class TabHandler {
     // FIXME: if not use updateKey, fix it。
     // eslint-disable-next-line no-param-reassign
     obj.updateKey = newKey;
+  }
+
+  // 删去重复的 newTab 页面, 使每个窗口只保留一个
+  private removeDuplicates() {
+    const willRemoveTabIds = []
+    for (const { tabs } of this.windows.values()) {
+      if (tabs.length < 2) break;
+
+      let isActive = false;
+
+      for (const tab of tabs) {
+        if (tab.url.match(/^(edge|chrome):\/\/newtab\/?$/)) {
+          if (tab.active) {
+            isActive = true
+          } else {
+            willRemoveTabIds.push(tab.id)
+          }
+        }
+      }
+
+      if (!isActive) {
+        willRemoveTabIds.pop()
+      }
+    }
+    chrome.tabs.remove(willRemoveTabIds)
   }
 }
 

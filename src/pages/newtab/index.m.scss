@@ -10,6 +10,7 @@
 }
 
 .tab {
+  position: relative;
   flex: 1;
   height: 50%;
   // border-bottom: 2px solid #efefef;
@@ -51,7 +52,6 @@
 
 .hidden-record {
   .tab {
-    position: relative;
     height: calc(100% - 2rem);
   }
   .record {

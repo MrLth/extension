@@ -2,7 +2,7 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2020-10-13 17:35:56
- * @LastEditTime: 2021-02-24 12:57:49
+ * @LastEditTime: 2021-04-27 16:40:30
  * @Description: file content
  */
 
@@ -79,7 +79,7 @@ async function init(
 
   const tabHandler = new TabHandler(nativeTabs, windowsAttaches);
 
-  const proxyA = proxyMethods({
+  let proxy = proxyMethods({
     target: tabHandler,
     handler: debounce(() => {
       ctx.dispatch(batchUpdate);
@@ -87,16 +87,18 @@ async function init(
     proxyKeys: ['push'],
   });
 
-  const proxyB = proxyMethods({
-    target: proxyA,
-    handler: (target, _thisArg, args) => {
-      console.log('123')
-      $log({ target: target.name, args }, 'batch', 2);
-    },
-    ignoreKeys: ['push'],
-  });
+  if (__DEV__) {
+    proxy = proxyMethods({
+      target: proxy,
+      handler: (target, _thisArg, args) => {
+        console.log('123')
+        $log({ target: target.name, args }, 'batch', 2);
+      },
+      ignoreKeys: ['push'],
+    });
+  }
 
-  return { tabHandler: proxyB };
+  return { tabHandler: proxy };
 }
 
 function openTab(tab: chrome.tabs.Tab | string, state: TabState): void {
