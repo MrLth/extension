@@ -2,7 +2,7 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2021-02-22 23:45:29
- * @LastEditTime: 2021-04-26 16:41:14
+ * @LastEditTime: 2021-04-27 13:44:44
  * @Description: file content
  */
 import { NoMap, SettingsType, useConcent } from 'concent';
@@ -60,7 +60,7 @@ const setup = (ctx: CtxPre) => {
       if (windowId === _windowId) {
         break;
       }
-      if (_windowId === tab.windowId) {
+      if (tab && _windowId === tab.windowId) {
         tabCount += tab.index + 1
         break;
       }
