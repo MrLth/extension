@@ -2,14 +2,13 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2020-10-13 17:35:56
- * @LastEditTime: 2021-04-27 19:52:20
+ * @LastEditTime: 2021-04-27 20:17:05
  * @Description: file content
  */
 
 import { proxyMethods } from 'utils';
 import { IActionCtxBase as IAC } from 'concent';
 import { cloneDeep, debounce } from 'lodash-es';
-import { LABEL_HEIGHT, FOLDER_TITLE_HEIGHT } from 'utils/const';
 import TabHandler from '../TabHandler'
 import tabState from './state';
 

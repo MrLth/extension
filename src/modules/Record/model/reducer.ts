@@ -2,10 +2,10 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2020-10-12 08:17:18
- * @LastEditTime: 2021-03-06 17:02:28
+ * @LastEditTime: 2021-04-27 20:18:39
  * @Description: file content
  */
-import { debounce, isArray, isObject } from 'lodash-es';
+import { debounce, isObject } from 'lodash-es';
 import { IActionCtxBase as IAC } from 'concent';
 import { Obj } from 'utils/type';
 import recordState, { Recording } from './state';

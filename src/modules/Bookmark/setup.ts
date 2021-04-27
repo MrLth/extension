@@ -2,13 +2,13 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2021-02-22 17:17:23
- * @LastEditTime: 2021-03-05 14:56:19
+ * @LastEditTime: 2021-04-27 20:18:18
  * @Description: file content
  */
 import { SettingsType, useConcent, NoMap } from 'concent';
 import { CtxMSConn, ItemsType } from 'utils/type/concent';
 import { EmptyObject } from 'utils/type';
-import { CARD_TITLE_HEIGHT, FOLDER_TITLE_HEIGHT } from 'utils/const';
+import { FOLDER_TITLE_HEIGHT } from 'utils/const';
 import { BookmarkTreeNode } from './model/state';
 
 const moduleName = 'bookmark';

@@ -2,11 +2,11 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2020-12-17 08:05:07
- * @LastEditTime: 2021-04-27 20:05:35
+ * @LastEditTime: 2021-04-27 20:16:58
  * @Description: file content
  */
 import React, { memo, useEffect } from 'react';
-import { moduleClassnames } from 'utils';
+import { moduleClassnames, loop } from 'utils';
 import IconFont from 'components/IconFont';
 import { useDrop } from 'ahooks';
 import { isNumber } from 'lodash-es';
@@ -31,9 +31,7 @@ function Window({
   const { tabs, attach } = myWindow;
 
   const [dropProps, { isHovering }] = useDrop({
-    onUri: (uri, e) => {
-      alert(`uri: ${uri} dropped`);
-    },
+    onUri: loop,
     onDom: (content: string) => {
       const sourceTabId = JSON.parse(content)?.tabId
       if (isNumber(sourceTabId)) {

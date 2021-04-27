@@ -3,7 +3,7 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2020-10-14 08:40:09
- * @LastEditTime: 2021-03-05 14:44:22
+ * @LastEditTime: 2021-04-27 20:18:29
  * @Description: file content
  */
 import React, { memo, useEffect, useRef } from 'react';
@@ -112,7 +112,7 @@ interface Props {
 }
 const Section = ({ section, settings, top }: Props) => {
   const ctx = useConcent<EmptyObject, Ctx, NoMap>({ setup, state: initState });
-  const { updVisitTime, setLabelVisitTime, test } = ctx.settings;
+  const { updVisitTime, setLabelVisitTime } = ctx.settings;
   const { refreshCount } = ctx.state;
 
   const refPrevTimeStr = useRef<string>();

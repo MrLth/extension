@@ -1,4 +1,4 @@
-import React, { memo, useEffect, useState } from 'react';
+import React, { memo, useEffect } from 'react';
 import { loop, moduleClassnames, preventDefault } from 'utils';
 import IconFont from 'components/IconFont';
 import defaultIcon from '@img/defaultIcon.svg';
@@ -86,9 +86,7 @@ function Label(
     onDragEnd: settings.hideDragHover,
   });
   const [dropProps, { isHovering }] = useDrop({
-    onUri: (uri, e) => {
-      alert(`uri: ${uri} dropped`);
-    },
+    onUri: loop,
     onDom: (content: string) => {
       const sourceTabId = JSON.parse(content)?.tabId
       if (isNumber(sourceTabId)) {

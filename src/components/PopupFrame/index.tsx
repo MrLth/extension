@@ -2,7 +2,7 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2021-01-11 10:11:06
- * @LastEditTime: 2021-04-27 16:28:46
+ * @LastEditTime: 2021-04-27 20:17:59
  * @Description: file content
  */
 import React, {
@@ -13,6 +13,7 @@ import { EmptyObject } from 'utils/type';
 import { CtxM } from 'utils/type/concent';
 import { LABEL_HEIGHT, POPUP_WIDTH } from 'utils/const';
 
+import { isString } from 'lodash-es';
 import c from './index.m.scss';
 
 export interface PopupOption {
@@ -69,7 +70,7 @@ function PopupFrame(props: PopupFrameProps, ref: MutableRefObject<HTMLUListEleme
       {options.map((v, i) => (
         <li
           role="presentation"
-          key={i}
+          key={isString(v.title) ? v.title : i}
           onClick={v.cb}
         >
           <div>{v.icon}</div>
