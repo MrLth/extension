@@ -2,7 +2,7 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2021-02-23 09:35:55
- * @LastEditTime: 2021-04-27 15:06:16
+ * @LastEditTime: 2021-04-27 19:29:09
  * @Description: file content
  */
 import React, { useRef } from 'react';
@@ -31,19 +31,22 @@ const TabComponent = (): JSX.Element => {
   return (
     <>
       <section className={c.content}>
-        <ul className={c.list} ref={listRef}>
-          {
-            windows && [...windows.entries()].map(([k, v]) => (
-              <Window
-                key={k}
-                myWindow={v}
-                settings={settings}
-                selectedTabs={state.selectedTabs}
-                updateKey={v.updateKey}
-              />
-            ))
-          }
-        </ul>
+        <div className={c['list-wp']}>
+          <ul className={c.list} ref={listRef}>
+            {
+              windows && [...windows.entries()].map(([k, v]) => (
+                <Window
+                  key={k}
+                  myWindow={v}
+                  settings={settings}
+                  selectedTabs={state.selectedTabs}
+                  updateKey={v.updateKey}
+                  position={v.position}
+                />
+              ))
+            }
+          </ul>
+        </div>
       </section>
       <PopupFrame {...state.popupFrameProps} ref={popFrameRef} />
       <div

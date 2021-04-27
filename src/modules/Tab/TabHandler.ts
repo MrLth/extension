@@ -2,10 +2,11 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2021-02-23 00:15:42
- * @LastEditTime: 2021-04-27 17:05:07
+ * @LastEditTime: 2021-04-27 19:47:44
  * @Description: file content
  */
 import { Fn } from 'utils/type';
+import { LABEL_HEIGHT, FOLDER_TITLE_HEIGHT } from 'utils/const';
 import {
   AttachTab,
   ActiveTab,
@@ -55,6 +56,10 @@ class TabHandler {
           attach: windowsAttaches.find((v) => v.id === tab.windowId),
           updateKey: +new Date(),
           activeTabId: myTab.id,
+          position: {
+            top: NaN,
+            height: NaN,
+          },
         });
       }
       return map;
@@ -65,6 +70,9 @@ class TabHandler {
     this.focusWindow = focusWindow ? focusWindow.id : -1;
 
     this.removeDuplicates()
+
+    this.updateWindowPosition()
+    this.updateAllTabsPosition()
   }
 
   static initTab(tab: chrome.tabs.Tab): MyTab {
@@ -75,6 +83,9 @@ class TabHandler {
     return Object.assign(tab, {
       updateKey: +new Date(),
       urlInfo,
+      position: {
+        top: NaN,
+      },
     });
   }
 
@@ -85,6 +96,10 @@ class TabHandler {
         attach,
         updateKey: +new Date(),
         activeTabId: -1,
+        position: {
+          top: NaN,
+          height: NaN,
+        },
       });
     });
   }
@@ -286,6 +301,34 @@ class TabHandler {
       // 5. update cache
       this.focusWindow = windowId;
     });
+  }
+
+  updateWindowPosition(): void {
+    let newHeight; let
+      newTop = 0
+    for (const windowsItem of this.windows) {
+      const window = windowsItem[1]
+      newHeight = FOLDER_TITLE_HEIGHT + window.tabs.length * LABEL_HEIGHT
+      const { top, height } = window.position
+
+      if (top !== newTop || height !== newHeight) {
+        window.position = {
+          top: newTop,
+          height: newHeight,
+        }
+      }
+      newTop += newHeight
+    }
+  }
+
+  updateAllTabsPosition(): void {
+    for (const windowsItem of this.windows) {
+      const { tabs, position: { top: windowTop } } = windowsItem[1]
+      for (const tab of tabs) {
+        $log({ tab: tab.title, i: tab.index })
+        tab.position.top = windowTop + tab.index * LABEL_HEIGHT + FOLDER_TITLE_HEIGHT
+      }
+    }
   }
 
   private updTabsWindows(windowId: number, position: number): void {

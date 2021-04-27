@@ -2,16 +2,15 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2020-12-17 08:05:07
- * @LastEditTime: 2021-04-27 15:35:52
+ * @LastEditTime: 2021-04-27 20:05:35
  * @Description: file content
  */
 import React, { memo, useEffect } from 'react';
 import { moduleClassnames } from 'utils';
-import { Tab } from 'utils/type';
 import IconFont from 'components/IconFont';
 import { useDrop } from 'ahooks';
 import { isNumber } from 'lodash-es';
-import { MyWindow } from '../model/type';
+import { MyWindow, MyTab } from '../model/type';
 import { Settings } from '../setup';
 import Label from './Label';
 import c from '../index.m.scss';
@@ -21,75 +20,15 @@ const cn = moduleClassnames(c);
 interface Props {
   myWindow: MyWindow
   settings: Settings
-  selectedTabs: Set<Tab>
+  selectedTabs: Set<MyTab>
   updateKey: number
+  position: MyWindow['position']
 }
 
-const Window = ({ myWindow, settings, selectedTabs }: Props) => {
+function Window({
+  myWindow, settings, selectedTabs, position,
+}: Props) {
   const { tabs, attach } = myWindow;
-  const tabArr = [];
-
-  const len = tabs.length;
-  let nextHost: string | number; let
-    host: string | number;
-
-  for (let i = 0; i < len; i += 1) {
-    let tab = tabs[i];
-    let nextTab = i + 1 !== len && tabs[i + 1];
-
-    const tempArr = [];
-    const key = tab.id;
-
-    nextHost = nextTab.urlInfo?.host ?? NaN;
-    host = tab.urlInfo?.host ?? NaN;
-
-    if (nextHost === host) {
-      do {
-        tempArr.push(
-          <Label
-            key={tab.id}
-            tab={tab}
-            updateKey={tab.updateKey}
-            selectedTabs={selectedTabs}
-            // windowUpdKey={updateKey}
-            settings={settings}
-          />,
-        );
-        i += 1;
-        tab = nextTab;
-        nextTab = i + 1 !== tabs.length && tabs[i + 1];
-
-        host = nextHost;
-        nextHost = nextTab.urlInfo?.host ?? NaN;
-      } while (i + 1 < len && nextHost === host);
-    }
-
-    tempArr.push(
-      <Label
-        key={tab.id}
-        tab={tab}
-        updateKey={tab.updateKey}
-        selectedTabs={selectedTabs}
-        // windowUpdKey={updateKey}
-        settings={settings}
-      />,
-    );
-
-    tabArr.push(
-      tempArr.length === 1 ? (
-        tempArr
-      ) : (
-        <li
-          className={c['tab-group']}
-          key={key}
-        >
-          <ul>
-            {tempArr}
-          </ul>
-        </li>
-      ),
-    );
-  }
 
   const [dropProps, { isHovering }] = useDrop({
     onUri: (uri, e) => {
@@ -112,9 +51,10 @@ const Window = ({ myWindow, settings, selectedTabs }: Props) => {
   $log({ Window: attach.id, myWindow }, 'render', 5);
   return (
     <li
-      className={cn({
+      className={cn('trans-top', {
         focused: attach?.focused,
       })}
+      style={{ ...position }}
     >
       <header
         className={cn('window-title')}
@@ -143,10 +83,19 @@ const Window = ({ myWindow, settings, selectedTabs }: Props) => {
         </div>
       </header>
       <ul>
-        {tabArr}
+        {tabs.map((tab) => (
+          <Label
+            key={tab.id}
+            tab={tab}
+            updateKey={tab.updateKey}
+            selectedTabs={selectedTabs}
+            settings={settings}
+            top={tab.position.top}
+          />
+        ))}
       </ul>
     </li>
   );
-};
+}
 
 export default memo(Window);

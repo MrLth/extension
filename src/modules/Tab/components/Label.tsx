@@ -1,12 +1,12 @@
 import React, { memo, useEffect, useState } from 'react';
 import { loop, moduleClassnames, preventDefault } from 'utils';
-import { Tab } from 'utils/type';
 import IconFont from 'components/IconFont';
 import defaultIcon from '@img/defaultIcon.svg';
 import { useDrop, useDrag } from 'ahooks';
 import { isNumber, pick } from 'lodash-es';
 import { Settings } from '../setup';
 import c from '../index.m.scss';
+import { MyTab } from '../model/type';
 
 const cn = moduleClassnames(c);
 
@@ -17,10 +17,11 @@ function getLabelDom(dom: HTMLElement): HTMLElement {
 }
 
 interface Props {
-  tab: Tab
+  tab: MyTab
   settings: Settings
-  selectedTabs: Set<Tab>
+  selectedTabs: Set<MyTab>
   updateKey: number
+  top: number
 }
 
 function Label(
@@ -105,7 +106,7 @@ function Label(
   return (
     <li
       data-upd-time={updateKey}
-      // data-window-upd-time={windowUpdKey}
+      style={{ ...tab.position }}
       className={cn('label', {
         activated: tab.active,
         'label-selected': selectedTabs.has(tab),

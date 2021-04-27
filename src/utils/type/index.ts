@@ -2,28 +2,14 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2020-05-29 18:00:07
- * @LastEditTime: 2021-04-26 15:20:57
+ * @LastEditTime: 2021-04-27 19:03:52
  * @Description: 整个项目会用到的接口和类型定义
  */
-export type Windows = Record<string | number, Tab[]>
-
 export type WindowsAttach = Record<string | number, chrome.windows.Window>
 
 export interface Action {
   type: string | number
   payload: unknown
-}
-
-export interface TabsAction extends Action {
-  payload: Tab[]
-}
-
-export interface Tab extends chrome.tabs.Tab {
-  userSelected?: boolean
-  userProtocol?: string
-  userHost?: string
-  userRoute?: string
-  userPara?: string
 }
 
 export interface SelectObj {

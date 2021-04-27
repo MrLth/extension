@@ -2,19 +2,26 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2020-12-12 14:44:53
- * @LastEditTime: 2021-03-07 00:11:24
+ * @LastEditTime: 2021-04-27 18:23:55
  * @Description: tab component's type defined file
  */
 
 export interface MyTab extends chrome.tabs.Tab {
   updateKey: number
   urlInfo: URL
+  position: {
+    top: number
+  }
 }
 
 export type WindowMap = Map<number, MyWindow>
 
 export interface MyWindow {
   tabs: MyTab[]
+  position: {
+    top: number,
+    height: number
+  }
   attach?: chrome.windows.Window
   updateKey: number
   activeTabId: number

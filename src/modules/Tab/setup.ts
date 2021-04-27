@@ -2,18 +2,18 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2021-02-22 23:45:29
- * @LastEditTime: 2021-04-27 16:45:24
+ * @LastEditTime: 2021-04-27 19:24:55
  * @Description: file content
  */
 import { NoMap, SettingsType, useConcent } from 'concent';
 import {
-  Windows, WindowsAttach, EmptyObject, Tab,
+  WindowsAttach, EmptyObject,
 } from 'utils/type';
 import { CtxMSConn, ItemsType } from 'utils/type/concent';
 import { PopupFrameProps, PopupOption } from 'components/PopupFrame';
 import { RecordUrl } from 'modules/Record/model/state';
 import { FOLDER_TITLE_HEIGHT, LABEL_HEIGHT } from 'utils/const';
-import { TabStatus } from './model/type';
+import { TabStatus, MyTab } from './model/type';
 
 const moduleName = 'tab';
 const connect = ['record'] as const;
@@ -25,11 +25,9 @@ const initState = () => ({
     left: 0,
     options: [] as PopupOption[],
   },
-  // windowsObj: {} as Windows,
   windowsAttach: {} as WindowsAttach,
-  windowsFiltered: {} as Windows,
   isSearching: false,
-  selectedTabs: new Set<Tab>(),
+  selectedTabs: new Set<MyTab>(),
   status: 'normal' as TabStatus,
   dragHoverTop: -1,
 });
@@ -46,10 +44,10 @@ const setup = (ctx: CtxPre) => {
 
   const common = {
     isEventSleep: false,
-    selectedStartTab: null as Tab,
+    selectedStartTab: null as MyTab,
   };
 
-  function computedTabTop(tab: Tab, windowId?: number): number {
+  function computedTabTop(tab: MyTab, windowId?: number): number {
     const { windows } = state.tabHandler
 
     let windowCount = 0
@@ -170,10 +168,10 @@ const setup = (ctx: CtxPre) => {
     closeTab: (tabId: number) => {
       chrome.tabs.remove(tabId);
     },
-    openTab: (tab: Tab) => {
+    openTab: (tab: MyTab) => {
       if (state.status === 'selected') {
         common.selectedStartTab = null
-        setState({ selectedTabs: new Set<Tab>(), status: 'normal' })
+        setState({ selectedTabs: new Set<MyTab>(), status: 'normal' })
       } else {
         reducer.tab.openTab(tab)
       }
@@ -214,7 +212,7 @@ const setup = (ctx: CtxPre) => {
     duplicateTab: (tabId: number) => {
       chrome.tabs.duplicate(tabId);
     },
-    recordTab: (tab: Tab) => {
+    recordTab: (tab: MyTab) => {
       const urls: RecordUrl[] = state.selectedTabs.size === 0 || !state.selectedTabs.has(tab)
         ? [{
           title: tab.title,
@@ -232,7 +230,7 @@ const setup = (ctx: CtxPre) => {
 
       common.selectedStartTab = null
       setState({
-        selectedTabs: new Set<Tab>(),
+        selectedTabs: new Set<MyTab>(),
         status: 'normal',
         popupFrameProps: {
           ...state.popupFrameProps,
@@ -250,7 +248,7 @@ const setup = (ctx: CtxPre) => {
         recordTime: new Date(),
       })
     },
-    selectTab: (tab: Tab) => {
+    selectTab: (tab: MyTab) => {
       if (state.selectedTabs.size > 0) {
         if (common.selectedStartTab) {
           // get selected tabs
@@ -259,7 +257,7 @@ const setup = (ctx: CtxPre) => {
           let startTab = common.selectedStartTab
           let endTab = tab
           let valve = false
-          const selectedTabs = new Set<Tab>()
+          const selectedTabs = new Set<MyTab>()
 
           if (startTab.windowId === endTab.windowId) {
             const { tabs } = windows.get(endTab.windowId)
@@ -340,16 +338,19 @@ const setup = (ctx: CtxPre) => {
         setState({ selectedTabs: new Set([tab]), status: 'selected' })
       }
     },
-    isSelected: (tab: Tab) => state.selectedTabs.has(tab),
+    isSelected: (tab: MyTab) => state.selectedTabs.has(tab),
     // #endregion
 
     // #region 拖动
-    updateDragHoverTop(tab: Tab, windowId?: number) {
+    updateDragHoverTop(tab: MyTab, windowId?: number) {
       setState({ dragHoverTop: computedTabTop(tab, windowId) })
     },
-    handleDrop(sourceTabId: number, targetProps: Pick<Tab, 'index' | 'windowId'>) {
-      // eslint-disable-next-line no-param-reassign
-      targetProps.index += 1
+    handleDrop(sourceTabId: number, targetProps: Pick<MyTab, 'index' | 'windowId'>) {
+      const sourceTab = state.tabHandler.tabMap.get(sourceTabId)
+      if (sourceTab.windowId !== targetProps.windowId || sourceTab.index > targetProps.index) {
+        // eslint-disable-next-line no-param-reassign
+        targetProps.index += 1
+      }
 
       chrome.tabs.move(sourceTabId, targetProps, () => {
         setState({ dragHoverTop: -1 })
