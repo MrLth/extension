@@ -2,7 +2,7 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2021-02-22 23:45:29
- * @LastEditTime: 2021-04-27 19:24:55
+ * @LastEditTime: 2021-04-28 14:40:31
  * @Description: file content
  */
 import { NoMap, SettingsType, useConcent } from 'concent';
@@ -30,6 +30,7 @@ const initState = () => ({
   selectedTabs: new Set<MyTab>(),
   status: 'normal' as TabStatus,
   dragHoverTop: -1,
+  displayMode: 'tiled' as 'tiled' | 'tree',
 });
 
 type Module = typeof moduleName
