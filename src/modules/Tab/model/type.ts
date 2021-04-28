@@ -2,7 +2,7 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2020-12-12 14:44:53
- * @LastEditTime: 2021-04-27 18:23:55
+ * @LastEditTime: 2021-04-28 18:54:07
  * @Description: tab component's type defined file
  */
 
@@ -12,6 +12,7 @@ export interface MyTab extends chrome.tabs.Tab {
   position: {
     top: number
   }
+  openedTabIds?: Set<number>
 }
 
 export type DisplayMode = 'tiled' | 'tree'

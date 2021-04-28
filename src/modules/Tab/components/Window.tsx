@@ -2,7 +2,7 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2020-12-17 08:05:07
- * @LastEditTime: 2021-04-28 16:49:00
+ * @LastEditTime: 2021-04-28 18:28:38
  * @Description: file content
  */
 import React, { memo, useEffect } from 'react';
@@ -30,7 +30,7 @@ interface Props {
 }
 
 function Window({
-  myWindow, settings, selectedTabs, position, displayMode,
+  myWindow, settings, selectedTabs, position, displayMode, updateKey,
 }: Props) {
   const { tabs, attach } = myWindow;
 
@@ -87,15 +87,23 @@ function Window({
       <ul>
 
         {
-          displayMode === 'tiled'
+          displayMode !== 'tiled'
             ? (
               <DisplayModeTiled
                 settings={settings}
                 selectedTabs={selectedTabs}
                 tabs={tabs}
+                updateKey={updateKey}
               />
             )
-            : <DisplayModeTree />
+            : (
+              <DisplayModeTree
+                settings={settings}
+                selectedTabs={selectedTabs}
+                tabs={tabs}
+                updateKey={updateKey}
+              />
+            )
         }
       </ul>
     </li>

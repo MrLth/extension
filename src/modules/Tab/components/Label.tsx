@@ -4,9 +4,13 @@ import IconFont from 'components/IconFont';
 import defaultIcon from '@img/defaultIcon.svg';
 import { useDrop, useDrag } from 'ahooks';
 import { isNumber, pick } from 'lodash-es';
+import treeOver from '@img/tree-over.svg';
+import treeSub from '@img/tree-sub.svg';
+import treeCol from '@img/tree-col.svg';
 import { Settings } from '../setup';
 import c from '../index.m.scss';
 import { MyTab } from '../model/type';
+import TreeStructure from './TreeStructure';
 
 const cn = moduleClassnames(c);
 
@@ -22,6 +26,7 @@ interface Props {
   selectedTabs: Set<MyTab>
   updateKey: number
   top: number
+  structure?: string
 }
 
 function Label(
@@ -30,6 +35,7 @@ function Label(
     settings,
     updateKey,
     selectedTabs,
+    structure,
   }: Props,
 ) {
   $log({ Label: tab.title, tab }, 'render', 5);
@@ -137,6 +143,8 @@ function Label(
           }
         }}
       >
+        <TreeStructure structure={structure} />
+
         <img
           src={
             tab.url !== ''
@@ -170,6 +178,10 @@ function Label(
       </div>
     </li>
   );
+}
+
+Label.defaultProps = {
+  structure: '',
 }
 
 export default memo(Label);

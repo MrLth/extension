@@ -2,7 +2,7 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2021-04-28 14:48:18
- * @LastEditTime: 2021-04-28 15:00:31
+ * @LastEditTime: 2021-04-28 17:53:32
  * @Description: file content
  */
 import React, { memo } from 'react'
@@ -14,9 +14,12 @@ interface Props {
   tabs: MyTab[]
   selectedTabs: Set<MyTab>
   settings: Settings
+  updateKey: number
 }
 
-function DisplayModeTiled({ tabs, selectedTabs, settings }: Props) {
+function DisplayModeTiled({
+  tabs, selectedTabs, settings, updateKey,
+}: Props) {
   return (
     <>
       {tabs.map((tab) => (

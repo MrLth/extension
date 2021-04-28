@@ -2,11 +2,12 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2021-02-23 00:15:42
- * @LastEditTime: 2021-04-27 19:47:44
+ * @LastEditTime: 2021-04-28 23:26:07
  * @Description: file content
  */
 import { Fn } from 'utils/type';
 import { LABEL_HEIGHT, FOLDER_TITLE_HEIGHT } from 'utils/const';
+import { isNewtab } from 'utils';
 import {
   AttachTab,
   ActiveTab,
@@ -359,7 +360,7 @@ class TabHandler {
       let isActive = false;
 
       for (const tab of tabs) {
-        if (tab.url.match(/^(edge|chrome):\/\/newtab\/?$/)) {
+        if (isNewtab(tab.url)) {
           if (tab.active) {
             isActive = true
           } else {

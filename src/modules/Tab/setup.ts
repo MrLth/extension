@@ -2,7 +2,7 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2021-02-22 23:45:29
- * @LastEditTime: 2021-04-28 14:57:16
+ * @LastEditTime: 2021-04-28 18:41:29
  * @Description: file content
  */
 import { NoMap, SettingsType, useConcent } from 'concent';
@@ -359,6 +359,12 @@ const setup = (ctx: CtxPre) => {
     },
     hideDragHover() {
       setState({ dragHoverTop: -1 })
+    },
+    // #endregion
+
+    // #region displayMode
+    getTabMap() {
+      return state.tabHandler.tabMap
     },
   };
 };

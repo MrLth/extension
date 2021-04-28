@@ -55,7 +55,19 @@
         map.get($dark-colors, 'gray-1'),
         map.get($dark-colors, 'gray-5')
       );
+      transition: background-color ease 0.4s;
 
+      &:hover {
+        @include darkProp(
+          background-color,
+          map.get($dark-colors, 'gray-2'),
+          map.get($dark-colors, 'gray-6')
+        );
+      }
+
+      .unit-tab {
+        padding-left: 0.7rem;
+      }
       .buttons {
         @include darkProp(
           background,
@@ -74,6 +86,10 @@
       border-radius: 0;
       @include dark(background-color, 'blue-5');
     }
+
+    // .tree-structure {
+    //   display: inline-block;
+    //   height: 100%;
   }
 
   .focused {
@@ -99,4 +115,13 @@
 
 .trans-top {
   transition: top ease 0.1s;
+}
+
+.tree-img {
+  width: 2rem;
+  height: 2rem;
+  margin-top: -1px;
+  margin-left: -0.4rem;
+  vertical-align: middle;
+  @include dark(fill, 'border-hl');
 }
