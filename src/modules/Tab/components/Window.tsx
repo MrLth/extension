@@ -65,14 +65,14 @@ function Window({
         </h3>
         <div className={c.buttons}>
           <IconFont
-            type="iconrecord_on"
+            type="icon-record"
             onClick={(e: MouseEvent) => {
               e.stopPropagation();
               settings.recordWindow(attach.id)
             }}
           />
           <IconFont
-            type="iconclose"
+            type="icon-close"
             onClick={(e: MouseEvent) => {
               e.stopPropagation();
               settings.closeWindow(attach.id)

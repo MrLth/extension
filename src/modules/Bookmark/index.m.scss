@@ -15,15 +15,13 @@
 }
 
 .folder-list {
-  // min-width: 150px;
   height: 100%;
-  padding: 0.25rem 0.5rem;
+  padding: 0.25rem 0.1vw;
   overflow-y: auto;
-  border-right: 1px #efefef solid;
 
   .folder-name {
     @extend %unit-tab;
-    padding-right: 1.5rem;
+    padding-right: 1.5vw;
 
     img {
       margin-right: 0.75rem;

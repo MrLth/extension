@@ -14,7 +14,6 @@
 
     .buttons {
       @extend %btn-close, %sub-title;
-      @include dark(color, 'btn-bg');
       font-size: 1rem;
     }
 
@@ -33,12 +32,12 @@
   }
 
   .label {
-    @extend %label;
     position: absolute;
     right: 0;
     left: 0;
     transition: top ease 0.1s;
     will-change: top;
+    @extend %label;
 
     .buttons {
       @include darkProp(
@@ -49,9 +48,13 @@
     }
 
     &.activated {
-      @include dark(background-color, 'blue-4');
-
-      background-color: #eee;
+      margin: 0 0.3rem;
+      border-radius: 0.3rem;
+      @include darkProp(
+        background-color,
+        map.get($dark-colors, 'gray-1'),
+        map.get($dark-colors, 'gray-5')
+      );
 
       .buttons {
         @include darkProp(
@@ -63,11 +66,13 @@
       }
     }
     &-selected {
-      @include dark(background-color, 'gray-4');
+      @include dark(background-color, 'blue-4');
     }
 
     &-selected.activated {
-      @include dark(background-color, 'gray-5');
+      margin: 0;
+      border-radius: 0;
+      @include dark(background-color, 'blue-5');
     }
   }
 
@@ -83,7 +88,7 @@
 }
 
 .darg-hover {
-  @include dark(background-color, 'link');
+  @include dark(background-color, 'blue-5');
   position: absolute;
   left: 0;
   width: 100%;

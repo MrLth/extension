@@ -63,7 +63,7 @@ function Label(
             // },
             {
               title: '记录',
-              icon: <IconFont type="iconrecord_on" />,
+              icon: <IconFont type="icon-record" />,
               cb: () => settings.recordTab(tab),
             },
             // {
@@ -161,7 +161,7 @@ function Label(
 
       <div className={c['btn-close']}>
         <IconFont
-          type="iconclose"
+          type="icon-close"
           onClick={(e: MouseEvent) => {
             e.stopPropagation();
             settings.closeTab(tab.id);

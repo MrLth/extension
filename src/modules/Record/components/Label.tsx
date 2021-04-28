@@ -44,7 +44,7 @@ const Label = ({
     </div>
     <div className={c['btn-close']}>
       <IconFont
-        type="iconclose"
+        type="icon-close"
         onClick={(e: MouseEvent) => {
           e.stopPropagation();
           settings.closeLabel({ recordingIndex: recordingIndexRef.current, labelIndex });

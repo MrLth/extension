@@ -18,15 +18,3 @@ const render = (Component: React.FC) => {
 };
 
 render(App);
-
-// // ReactDOM.render(
-// //     <App />,
-// //     document.getElementById('root')
-// // )
-
-// if ((module as any).hot) {
-//     // 接受模块的更新，并更新页面中的内容
-//     (module as any).hot.accept('./App', () => {
-//         render(App)
-//     })
-// }

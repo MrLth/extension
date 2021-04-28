@@ -1,69 +1,71 @@
 @import 'utils/index';
 
 .content {
-    @extend %card;
+  @extend %card;
 
-    display: flex;
-    flex-direction: column;
-    border-left: 1px #efefef solid;
+  display: flex;
+  flex-direction: column;
 
-    .date {
-        @extend %sub-title;
-    }
+  .date {
+    @extend %sub-title;
+  }
 }
 
 .list {
-    position: relative;
-    flex: 1;
+  position: relative;
+  flex: 1;
 
-    padding-bottom: .75rem;
+  padding-bottom: 0.75rem;
 
-    overflow-y: auto;
+  overflow-y: auto;
 
-    .section {
-        position: absolute;
-        width: 100%;
-    }
+  .section {
+    position: absolute;
+    width: 100%;
+  }
 }
 
 .label {
-    @extend %label;
+  @extend %label;
 
-    display: flex;
-    justify-content: space-between;
+  display: flex;
+  justify-content: space-between;
+
+  .unit-tab {
+    flex: 1 1;
+  }
+
+  .time {
+    padding-right: 0.5rem;
+    color: #bfbfbf;
+    line-height: 2rem;
+  }
+}
+
+.domain {
+  padding: 0.25rem 0;
+
+  .label {
+    height: 1.75rem;
+    line-height: 1.75rem;
 
     .unit-tab {
-        flex: 1 1;
+      height: 1.75rem;
+      line-height: 1.75rem;
     }
 
     .time {
-
-        padding-right: .5rem;
-        color: #bfbfbf;
-        line-height: 2rem;
+      height: 1.75rem;
+      line-height: 1.75rem;
     }
+  }
 }
 
-
-
-.domain {
-    padding: .25rem 0;
-
-    .label {
-
-        height: 1.75rem;
-        line-height: 1.75rem;
-
-        .unit-tab {
-
-            height: 1.75rem;
-            line-height: 1.75rem;
-        }
-
-        .time {
-
-            height: 1.75rem;
-            line-height: 1.75rem;
-        }
-    }
+.no-icon {
+  display: inline-block;
+  width: 1.125rem;
+  height: 1.125rem;
+  margin-right: 0.875rem;
+  text-align: center;
+  @include dark(color, 'bg-hl');
 }

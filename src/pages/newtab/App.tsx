@@ -2,7 +2,7 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2020-12-11 14:57:20
- * @LastEditTime: 2021-03-07 23:35:15
+ * @LastEditTime: 2021-04-28 09:10:49
  * @Description: file content
  */
 import React, { useEffect, useState } from 'react';
@@ -67,7 +67,7 @@ function App(): JSX.Element {
               role="presentation"
               onClick={toggleIsHide}
             >
-              <IconFont type={isHide ? 'iconArrow-up' : 'iconArrow-down'} />
+              <IconFont type={isHide ? 'icon-arrow-up' : 'icon-arrow-down'} />
             </span>
 
           </div>

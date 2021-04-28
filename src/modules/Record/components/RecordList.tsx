@@ -2,7 +2,7 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2021-02-20 19:59:04
- * @LastEditTime: 2021-03-07 02:24:30
+ * @LastEditTime: 2021-04-28 09:10:30
  * @Description: file content
  */
 import React, { memo, useEffect, useState } from 'react';
@@ -48,14 +48,14 @@ const RecordList = ({ recordingIndex, recording, settings }: Props) => {
         <h3>{timeFormatted}</h3>
         <div className={c['btn-close']}>
           <IconFont
-            type="iconopen"
+            type="icon-open"
             onClick={(e: MouseEvent) => {
               e.stopPropagation();
               settings.openAllTab(recording.urls)
             }}
           />
           <IconFont
-            type="iconclose"
+            type="icon-close"
             onClick={(e: MouseEvent) => {
               e.stopPropagation();
               settings.closeRecord(recordingIndex);

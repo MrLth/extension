@@ -1,9 +1,12 @@
+@use "sass:map";
+@import 'utils/index';
+
 .content {
   position: absolute;
   width: 120px;
-  background-color: #fff;
+
+  @include dark(background-color, 'bg-hl');
   border-radius: 0.3125rem;
-  // box-shadow: rgba(0, 0, 0, 0.09) 0 5px 12px 4px;
 
   box-shadow: 0 1.5px 3.5px rgba(0, 0, 0, 0.2), 0 5.1px 11.8px rgba(0, 0, 0, 0.119),
     0 23px 53px rgba(0, 0, 0, 0.081);
@@ -13,10 +16,14 @@
   li {
     display: flex;
     height: 2rem;
-    color: #434343;
     line-height: 2rem;
-    background-color: #fff;
-    border-bottom: 1px #f7f7f7 solid;
+
+    @include dark(color, 'text-1');
+    @include darkProp(
+      border-bottom,
+      1px map.get($colors, 'border') solid,
+      1px map.get($dark-colors, 'border') solid
+    );
     transition: color 0.1s ease-in-out, background-color 0.1s ease-in-out;
     user-select: none;
     will-change: color, background-color;
@@ -44,11 +51,10 @@
     }
 
     &:hover {
-      color: #1890ff;
-      // background-color: #E6F7FF;
+      @include dark(color, 'blue-5');
 
       div:first-child {
-        color: #1890ff;
+        @include dark(color, 'blue-5');
       }
     }
   }

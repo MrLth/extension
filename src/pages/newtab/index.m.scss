@@ -1,5 +1,7 @@
+@use "sass:map";
+@import 'utils/index';
+
 .part {
-  // flex: 1 0 300px;
   width: calc((100vw - 171px) / 3);
   height: 100vh;
 }
@@ -13,7 +15,6 @@
   position: relative;
   flex: 1;
   height: 50%;
-  // border-bottom: 2px solid #efefef;
 }
 
 .arrow {
@@ -24,9 +25,24 @@
   height: 1rem;
   font-size: 1rem;
   text-align: center;
-  background: linear-gradient(to top, transparent, #f9f9f9);
-  border-right: 1px solid #efefef;
-  border-left: 1px solid #efefef;
+  @include dark(color, 'text');
+
+  @include darkProp(
+    background,
+    linear-gradient(to top, transparent, map.get($colors, 'bg')),
+    linear-gradient(to top, transparent, map.get($dark-colors, 'bg'))
+  );
+  @include darkProp(
+    border-right,
+    1px solid map.get($colors, 'border'),
+    1px solid map.get($dark-colors, 'border')
+  );
+  @include darkProp(
+    border-left,
+    1px solid map.get($colors, 'border'),
+    1px solid map.get($dark-colors, 'border')
+  );
+
   user-select: none;
 
   span {
@@ -47,7 +63,11 @@
   position: relative;
   flex: 1;
   height: 50%;
-  border-top: 1px solid #d9d9d9;
+  @include darkProp(
+    border-top,
+    1px solid map.get($colors, 'border'),
+    1px solid map.get($dark-colors, 'border')
+  );
 }
 
 .hidden-record {
@@ -58,7 +78,12 @@
     height: 2rem;
   }
   .arrow {
+    @include dark(color, 'text');
     padding-bottom: 1rem;
-    background-color: #fff;
+    @include darkProp(
+      background,
+      linear-gradient(to right, transparent, map.get($colors, 'bg')),
+      linear-gradient(to right, transparent, map.get($dark-colors, 'bg'))
+    );
   }
 }
