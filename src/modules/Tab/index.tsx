@@ -2,7 +2,7 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2021-02-23 09:35:55
- * @LastEditTime: 2021-04-27 19:29:09
+ * @LastEditTime: 2021-04-28 14:58:05
  * @Description: file content
  */
 import React, { useRef } from 'react';
@@ -42,6 +42,7 @@ const TabComponent = (): JSX.Element => {
                   selectedTabs={state.selectedTabs}
                   updateKey={v.updateKey}
                   position={v.position}
+                  displayMode={state.displayMode}
                 />
               ))
             }

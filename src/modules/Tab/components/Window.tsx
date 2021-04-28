@@ -2,7 +2,7 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2020-12-17 08:05:07
- * @LastEditTime: 2021-04-27 20:16:58
+ * @LastEditTime: 2021-04-28 16:49:00
  * @Description: file content
  */
 import React, { memo, useEffect } from 'react';
@@ -10,10 +10,13 @@ import { moduleClassnames, loop } from 'utils';
 import IconFont from 'components/IconFont';
 import { useDrop } from 'ahooks';
 import { isNumber } from 'lodash-es';
-import { MyWindow, MyTab } from '../model/type';
+import { MyWindow, MyTab, DisplayMode } from '../model/type';
 import { Settings } from '../setup';
 import Label from './Label';
 import c from '../index.m.scss';
+
+import DisplayModeTiled from './DM-tiled'
+import DisplayModeTree from './DM-tree'
 
 const cn = moduleClassnames(c);
 
@@ -23,10 +26,11 @@ interface Props {
   selectedTabs: Set<MyTab>
   updateKey: number
   position: MyWindow['position']
+  displayMode: DisplayMode
 }
 
 function Window({
-  myWindow, settings, selectedTabs, position,
+  myWindow, settings, selectedTabs, position, displayMode,
 }: Props) {
   const { tabs, attach } = myWindow;
 
@@ -81,16 +85,18 @@ function Window({
         </div>
       </header>
       <ul>
-        {tabs.map((tab) => (
-          <Label
-            key={tab.id}
-            tab={tab}
-            updateKey={tab.updateKey}
-            selectedTabs={selectedTabs}
-            settings={settings}
-            top={tab.position.top}
-          />
-        ))}
+
+        {
+          displayMode === 'tiled'
+            ? (
+              <DisplayModeTiled
+                settings={settings}
+                selectedTabs={selectedTabs}
+                tabs={tabs}
+              />
+            )
+            : <DisplayModeTree />
+        }
       </ul>
     </li>
   );

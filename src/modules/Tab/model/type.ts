@@ -14,6 +14,8 @@ export interface MyTab extends chrome.tabs.Tab {
   }
 }
 
+export type DisplayMode = 'tiled' | 'tree'
+
 export type WindowMap = Map<number, MyWindow>
 
 export interface MyWindow {

@@ -2,7 +2,7 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2021-02-22 23:45:29
- * @LastEditTime: 2021-04-28 14:40:31
+ * @LastEditTime: 2021-04-28 14:57:16
  * @Description: file content
  */
 import { NoMap, SettingsType, useConcent } from 'concent';
@@ -13,7 +13,7 @@ import { CtxMSConn, ItemsType } from 'utils/type/concent';
 import { PopupFrameProps, PopupOption } from 'components/PopupFrame';
 import { RecordUrl } from 'modules/Record/model/state';
 import { FOLDER_TITLE_HEIGHT, LABEL_HEIGHT } from 'utils/const';
-import { TabStatus, MyTab } from './model/type';
+import { TabStatus, MyTab, DisplayMode } from './model/type';
 
 const moduleName = 'tab';
 const connect = ['record'] as const;
@@ -30,7 +30,7 @@ const initState = () => ({
   selectedTabs: new Set<MyTab>(),
   status: 'normal' as TabStatus,
   dragHoverTop: -1,
-  displayMode: 'tiled' as 'tiled' | 'tree',
+  displayMode: 'tiled' as DisplayMode,
 });
 
 type Module = typeof moduleName
