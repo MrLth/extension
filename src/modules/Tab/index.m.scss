@@ -39,6 +39,11 @@
     will-change: top;
     @extend %label;
 
+    .unit-tab {
+      display: flex;
+      align-items: center;
+    }
+
     .buttons {
       @include darkProp(
         background,
@@ -118,10 +123,9 @@
 }
 
 .tree-img {
-  width: 2rem;
-  height: 2rem;
-  margin-top: -1px;
-  margin-left: -0.4rem;
+  flex-shrink: 0;
+  width: 18px;
+  height: 32px;
   vertical-align: middle;
-  @include dark(fill, 'border-hl');
+  @include dark(fill, 'bg-hl');
 }

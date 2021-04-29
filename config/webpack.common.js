@@ -3,7 +3,7 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2020-05-27 15:30:26
- * @LastEditTime: 2021-02-23 16:45:35
+ * @LastEditTime: 2021-04-29 15:34:13
  * @Description: file content
  */
 // const { resolve: _resolve } = require('path');
@@ -48,11 +48,12 @@ if (![undefined, '.', './'].includes(baseUrl)) {
 const isDev = process.env.NODE_ENV !== 'production';
 
 const entry = {
+  background: resolve('src/pages/background/index.ts'),
   newtab: resolve('src/pages/newtab/index.tsx'),
   popup: resolve('src/pages/popup/index.tsx'),
 };
 
-const htmlWebpackPluginList = Object.keys(entry).map((key) => new HtmlWebpackPlugin({
+const htmlWebpackPluginList = ['newtab', 'popup'].map((key) => new HtmlWebpackPlugin({
   inject: true,
   chunks: [key],
   filename: `${key}.html`,
@@ -63,7 +64,7 @@ module.exports = {
   entry,
   output: {
     path: resolve('build'),
-    filename: '[name].[contenthash:8].bundle.js',
+    filename: (pathData) => (pathData.chunk.name === 'background' ? '[name].js' : '[name].[contenthash:8].bundle.js'),
     publicPath: '/',
   },
   resolve: {

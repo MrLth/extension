@@ -2,7 +2,7 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2021-02-23 00:15:42
- * @LastEditTime: 2021-04-28 23:26:07
+ * @LastEditTime: 2021-04-29 16:46:35
  * @Description: file content
  */
 import { Fn } from 'utils/type';
@@ -41,7 +41,7 @@ class TabHandler {
     // 1. 更新 windows
     this.windows = nativeTabs.reduce((map, tab) => {
       const myTab = TabHandler.initTab(tab);
-      // hashmap
+
       this.tabMap.set(tab.id, myTab);
 
       if (map.has(tab.windowId)) {
@@ -74,6 +74,8 @@ class TabHandler {
 
     this.updateWindowPosition()
     this.updateAllTabsPosition()
+
+    this.refillOpenerTabId()
   }
 
   static initTab(tab: chrome.tabs.Tab): MyTab {
@@ -330,6 +332,22 @@ class TabHandler {
         tab.position.top = windowTop + tab.index * LABEL_HEIGHT + FOLDER_TITLE_HEIGHT
       }
     }
+  }
+
+  // 3. 补齐 opener 关系，因为新打开的 newTab 不会获得之前的 opener 的关系
+  refillOpenerTabId(): void {
+    const { openerIdMap = new Map<number, number>() } = chrome.extension.getBackgroundPage()
+
+    for (const tab of this.tabMap.values()) {
+      if (!tab.openerTabId && openerIdMap.has(tab.id)) {
+        const openerTabId = openerIdMap.get(tab.id)
+        if (this.tabMap.has(openerTabId)) {
+          tab.openerTabId = openerTabId
+        }
+      }
+    }
+
+    $log({ openerIdMap })
   }
 
   private updTabsWindows(windowId: number, position: number): void {

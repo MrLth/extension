@@ -2,7 +2,7 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2020-05-29 18:00:07
- * @LastEditTime: 2021-04-27 19:03:52
+ * @LastEditTime: 2021-04-29 16:07:31
  * @Description: 整个项目会用到的接口和类型定义
  */
 export type WindowsAttach = Record<string | number, chrome.windows.Window>

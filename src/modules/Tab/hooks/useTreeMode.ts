@@ -2,11 +2,13 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2021-04-28 17:55:21
- * @LastEditTime: 2021-04-28 23:31:25
+ * @LastEditTime: 2021-04-29 14:35:27
  * @Description: file content
  */
 
+import { isFunction } from 'lodash-es'
 import { isNewtab } from 'utils'
+import { Fn } from 'utils/type'
 import { MyTab } from '../model/type'
 
 function flat(
@@ -54,14 +56,7 @@ function arrayStructureToString(array: [boolean[], MyTab][]): [string, MyTab][] 
   return rstArray
 }
 
-function useTreeMode(tabs: MyTab[]): [string, MyTab][] {
-  const tabMap = new Map<number, MyTab>()
-
-  for (const tab of tabs) {
-    tab.openedTabIds = new Set()
-    tabMap.set(tab.id, tab)
-  }
-
+function generateMap(tabs: MyTab[], tabMap: Map<number, MyTab>): Map<number, MyTab> {
   const copyMap = new Map(tabMap)
   for (const tab of tabs) {
     if (tab.openerTabId && !isNewtab(tab.url)) {
@@ -72,12 +67,83 @@ function useTreeMode(tabs: MyTab[]): [string, MyTab][] {
       }
     }
   }
+  return copyMap
+}
 
-  console.log(copyMap)
+function addTabId(
+  tabMap: Map<number, MyTab>,
+  openerTab: MyTab,
+  tab: MyTab,
+  addCb?: Fn,
+): void {
+  if (!isNewtab(openerTab.url) && !isNewtab(tab.url)) {
+    openerTab.openedTabIds.add(tab.id)
+    if (isFunction(addCb)) {
+      addCb()
+    }
+  }
+}
+
+function findOpener(tabMap: Map<number, MyTab>, tab: MyTab, prevTab: MyTab): MyTab | false {
+  while (prevTab.openerTabId) {
+    const tempTab = tabMap.get(prevTab.openerTabId)
+    if (!tempTab.openedTabIds.has(prevTab.id)) {
+      return false
+    }
+
+    if (tab.openerTabId === prevTab.openerTabId) {
+      return tabMap.get(prevTab.openerTabId)
+    }
+
+    // eslint-disable-next-line no-param-reassign
+    prevTab = tempTab
+  }
+  return false
+}
+
+function generateMapByOrder(
+  tabs: MyTab[],
+  tabMap: Map<number, MyTab>,
+): Map<number, MyTab> {
+  const copyMap = new Map(tabMap)
+
+  for (let i = 0; i < tabs.length; i += 1) {
+    const tab = tabs[i];
+    const prevTab = tabs[i - 1]
+
+    if (prevTab && tab.openerTabId) {
+      const addCb = () => {
+        copyMap.delete(tab.id)
+      }
+      if (tab.openerTabId === prevTab.id) {
+        addTabId(tabMap, prevTab, tab, addCb)
+      } else {
+        const opener = findOpener(tabMap, tab, prevTab)
+        if (opener) {
+          addTabId(tabMap, opener, tab, addCb)
+        }
+      }
+    }
+  }
+
+  return copyMap
+}
+
+function useTreeMode(tabs: MyTab[]): [string, MyTab][] {
+  const tabMap = new Map<number, MyTab>()
+
+  for (const tab of tabs) {
+    tab.openedTabIds = new Set()
+    tabMap.set(tab.id, tab)
+  }
+
+  const copyMap = generateMapByOrder(tabs, tabMap)
 
   const array = flat(tabMap, copyMap)
+  const string = arrayStructureToString(array)
+  $log({ copyMap, array, string })
 
-  return arrayStructureToString(array)
+  return string
 }
 
 export default useTreeMode
