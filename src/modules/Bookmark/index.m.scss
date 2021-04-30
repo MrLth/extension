@@ -15,12 +15,22 @@
 
 .folder-list {
   position: relative;
+  width: 12.5rem;
   height: 100%;
   padding: 0.25rem 0.1vw;
   overflow-y: auto;
 
+  @include dark(background-color, 'bg-1');
+  // background-color: #010409;
+
+  &::-webkit-scrollbar {
+    @include dark(background-color, 'bg');
+  }
+
   .folder-name {
     @extend %unit-tab;
+    position: relative;
+    z-index: 10;
     padding-right: 1.5vw;
 
     img {
@@ -74,4 +84,11 @@
     opacity: 0;
     transition: opacity 1s ease, right 1s ease;
   }
+}
+
+.ref-box{
+  position: absolute;
+  right: 0;
+  left: 0;
+  @include dark(background-color, 'bg');
 }

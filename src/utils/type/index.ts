@@ -2,7 +2,7 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2020-05-29 18:00:07
- * @LastEditTime: 2021-04-29 16:07:31
+ * @LastEditTime: 2021-04-30 20:37:20
  * @Description: 整个项目会用到的接口和类型定义
  */
 export type WindowsAttach = Record<string | number, chrome.windows.Window>
@@ -37,3 +37,11 @@ export type Keys = Array<string | number>
 
 export type NoElements<T> = { [P in keyof T]: never }
 export type EmptyObject = NoElements<Record<string, never>>
+
+export type ParametersPick<
+  ClassType,
+  RequiredOptions extends keyof ClassType,
+  PartialOptions extends keyof ClassType
+  > =
+  Pick<ClassType, RequiredOptions> &
+  Partial<Pick<ClassType, PartialOptions>>

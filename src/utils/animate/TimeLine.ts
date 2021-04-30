@@ -2,7 +2,7 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2021-04-30 09:03:55
- * @LastEditTime: 2021-04-30 10:45:29
+ * @LastEditTime: 2021-04-30 20:41:04
  * @Description: file content
  */
 import Animation from './Animation'
@@ -62,8 +62,8 @@ class TimeLine {
     this[TICK]()
   }
 
-  add(animation: Animation): TimeLine {
-    this[TASKS].add({ animation, startTime: Date.now() })
+  add(animation: Animation, delay = animation.delay ?? 0): TimeLine {
+    this[TASKS].add({ animation, startTime: Date.now() + delay })
     return this
   }
 
