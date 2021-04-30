@@ -2,7 +2,7 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2021-04-30 19:17:56
- * @LastEditTime: 2021-04-30 23:42:03
+ * @LastEditTime: 2021-05-01 00:51:28
  * @Description: file content
  */
 
@@ -19,11 +19,6 @@ import c from '../index.m.scss'
 
 interface Props {
   reactiveRef: MutableRefObject<HTMLElement>
-}
-
-interface Info {
-  top: number,
-  generateTime: number
 }
 
 function ReferenceBox({ reactiveRef }: Props): JSX.Element {
@@ -72,7 +67,8 @@ function ReferenceBox({ reactiveRef }: Props): JSX.Element {
   const topTimelineRef = useRef(new TimeLine())
 
   useEffect(() => {
-    if (scrollTop !== prevScrollTop) {
+    $log({ prevScrollTop, scrollTop })
+    if (prevScrollTop !== undefined && scrollTop !== prevScrollTop) {
       const animation = new Animation({
         start: prevScrollTop,
         end: scrollTop,
@@ -88,14 +84,14 @@ function ReferenceBox({ reactiveRef }: Props): JSX.Element {
     }
   }, [prevScrollTop, scrollTop])
 
+  $log({ top })
+
   return (
-    <>
-      <div
-        ref={absoluteRef}
-        className={c['ref-box']}
-        style={{ top, height }}
-      />
-    </>
+    <div
+      ref={absoluteRef}
+      className={c['ref-box']}
+      style={{ top, height }}
+    />
   )
 }
 

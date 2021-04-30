@@ -2,7 +2,7 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2021-01-11 10:11:06
- * @LastEditTime: 2021-04-28 10:19:29
+ * @LastEditTime: 2021-05-01 00:00:35
  * @Description: file content
  */
 import React, {
@@ -57,6 +57,7 @@ function PopupFrame(props: PopupFrameProps, ref: MutableRefObject<HTMLUListEleme
 
   left -= 30
   left = left + POPUP_WIDTH > width ? width - POPUP_WIDTH : left;
+  left = Math.max(left, 0)
 
   const height = LABEL_HEIGHT * options.length;
 
