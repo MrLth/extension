@@ -2,7 +2,7 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2021-02-22 08:34:51
- * @LastEditTime: 2021-04-30 22:59:25
+ * @LastEditTime: 2021-04-30 23:43:28
  * @Description: file content
  */
 import React, { useRef } from 'react';
@@ -12,7 +12,6 @@ import useCC from './setup'
 
 import c from './index.m.scss';
 import FolderNameList from './components/FolderNameList';
-import ReferenceLine from './components/ReferenceLine';
 import ReferenceBox from './components/ReferenceBox';
 
 const cn = moduleClassnames(c);
@@ -29,7 +28,6 @@ const Bookmark = (): JSX.Element => {
       <aside className={cn('content', 'content-left')}>
         <ul className={c['folder-list']} ref={reactiveRef}>
           <ReferenceBox reactiveRef={reactiveRef} />
-          {/* <ReferenceLine reactiveRef={reactiveRef} /> */}
           <FolderNameList
             folders={state.bookmarkTree?.folders}
             settings={settings}
