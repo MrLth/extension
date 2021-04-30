@@ -2,13 +2,16 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2021-02-22 17:17:23
- * @LastEditTime: 2021-04-27 20:18:18
+ * @LastEditTime: 2021-04-30 10:02:57
  * @Description: file content
  */
 import { SettingsType, useConcent, NoMap } from 'concent';
 import { CtxMSConn, ItemsType } from 'utils/type/concent';
 import { EmptyObject } from 'utils/type';
 import { FOLDER_TITLE_HEIGHT } from 'utils/const';
+import TimeLine from 'utils/animate/TimeLine';
+import Animation from 'utils/animate/Animation';
+import { ease } from 'utils/animate/timing-function';
 import { BookmarkTreeNode } from './model/state';
 
 const moduleName = 'bookmark';
@@ -25,11 +28,32 @@ const setup = (ctx: CtxPre) => {
 
   const common = {
     listHeight: 0,
+    timeline: new TimeLine(),
   };
   const dom = {
     list: null as HTMLUListElement,
     wrapper: null as HTMLDivElement,
   };
+
+  function updateCallback(newTop: number) {
+    // 原生的 scrollTop 加上 smooth 滚动有延迟，并且配合 raf 严重的性能问题
+    dom.wrapper.scrollTop = newTop
+  }
+
+  function scrollTo(target: HTMLElement, top: number) {
+    const animation = new Animation({
+      start: target.scrollTop,
+      end: top,
+      duration: 100,
+      timingFunction: ease,
+      updateCallback,
+    })
+
+    common.timeline
+      .reset()
+      .add(animation)
+      .start()
+  }
 
   // 初始化获取 bookmarkTree
   effect(() => {
@@ -75,9 +99,7 @@ const setup = (ctx: CtxPre) => {
       const folder = getFolder(node);
       if (folder === null) return;
 
-      dom.wrapper.scrollTo({
-        top: folder.top - li.getBoundingClientRect().top + FOLDER_TITLE_HEIGHT,
-      });
+      scrollTo(dom.wrapper, folder.top - li.getBoundingClientRect().top + FOLDER_TITLE_HEIGHT)
     },
     openTab: reducer.tab.openTab,
   };

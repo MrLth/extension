@@ -2,7 +2,7 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2021-04-28 17:55:21
- * @LastEditTime: 2021-04-29 14:35:27
+ * @LastEditTime: 2021-04-30 07:54:24
  * @Description: file content
  */
 
@@ -87,7 +87,7 @@ function addTabId(
 function findOpener(tabMap: Map<number, MyTab>, tab: MyTab, prevTab: MyTab): MyTab | false {
   while (prevTab.openerTabId) {
     const tempTab = tabMap.get(prevTab.openerTabId)
-    if (!tempTab.openedTabIds.has(prevTab.id)) {
+    if (!tempTab || !tempTab.openedTabIds.has(prevTab.id)) {
       return false
     }
 
