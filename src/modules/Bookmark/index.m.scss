@@ -1,6 +1,5 @@
 @import 'utils/index';
 
-
 .content {
   @extend %card;
 
@@ -8,13 +7,14 @@
   flex-direction: column;
 
   &-left {
+    position: relative;
     flex: none;
     width: auto;
   }
-
 }
 
 .folder-list {
+  position: relative;
   height: 100%;
   padding: 0.25rem 0.1vw;
   overflow-y: auto;
@@ -38,7 +38,6 @@
 }
 
 .bookmark-wrapper {
-
   flex: 1;
   height: 100%;
   overflow-y: auto;
@@ -60,5 +59,19 @@
       @extend %label;
       width: 100%;
     }
+  }
+}
+
+.delimiter {
+  position: absolute;
+  right: 0;
+  left: 0;
+  height: 2px;
+  @include dark(background-color, 'blue-4');
+
+  &-hide {
+    right: 100%;
+    opacity: 0;
+    transition: opacity 1s ease, right 1s ease;
   }
 }

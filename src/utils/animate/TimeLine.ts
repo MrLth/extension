@@ -2,7 +2,7 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2021-04-30 09:03:55
- * @LastEditTime: 2021-04-30 09:49:38
+ * @LastEditTime: 2021-04-30 10:45:29
  * @Description: file content
  */
 import Animation from './Animation'

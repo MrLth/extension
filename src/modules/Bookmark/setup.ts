@@ -2,7 +2,7 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2021-02-22 17:17:23
- * @LastEditTime: 2021-04-30 10:02:57
+ * @LastEditTime: 2021-04-30 15:28:45
  * @Description: file content
  */
 import { SettingsType, useConcent, NoMap } from 'concent';
@@ -36,7 +36,7 @@ const setup = (ctx: CtxPre) => {
   };
 
   function updateCallback(newTop: number) {
-    // 原生的 scrollTop 加上 smooth 滚动有延迟，并且配合 raf 严重的性能问题
+    // 原生的 scrollTo 加上 smooth 滚动有延迟，不加 smooth 配合 raf 又有严重的性能问题
     dom.wrapper.scrollTop = newTop
   }
 
