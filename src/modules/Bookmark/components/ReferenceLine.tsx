@@ -2,7 +2,7 @@
 * @Author: mrlthf11
  * @LastEditors: mrlthf11
 * @Date: 2021-04-30 15:37:11
- * @LastEditTime: 2021-04-30 16:56:48
+ * @LastEditTime: 2021-04-30 18:20:04
 * @Description: file content
 */
 import React, {
@@ -12,6 +12,7 @@ import React, {
 import { usePrevious, useScroll } from 'ahooks';
 import { moduleClassnames } from 'utils';
 
+import { LABEL_HEIGHT } from 'utils/const';
 import c from '../index.m.scss'
 
 const cn = moduleClassnames(c)
@@ -33,6 +34,8 @@ function ReferenceLine({ reactiveRef }: Props): JSX.Element {
 
   const top = useMemo(() => {
     if (!reactiveRef.current) return 0
+    // 触摸板的滚动过于平滑，效果不是很好，需要过滤一下
+    if (Math.abs(scrollTop - prevTop) < 3 * LABEL_HEIGHT) return 0
 
     const direction = scrollTop > prevTop ? 'down' : 'up'
 
