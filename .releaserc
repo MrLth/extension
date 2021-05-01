@@ -3,6 +3,7 @@
   "prepare": [
     {
       "path": "semantic-release-chrome",
+      "distFolder": "build",
       "asset": "my-extension.zip"
     }
   ],
@@ -20,16 +21,6 @@
         "message": "chore(release): ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}"
       }
     ],
-    [
-      "@semantic-release/github",
-      {
-        "assets": [
-          {
-            "path": "build",
-            "label": "chrome extension folder"
-          }
-        ]
-      }
-    ]
+    "@semantic-release/github"
   ]
 }
