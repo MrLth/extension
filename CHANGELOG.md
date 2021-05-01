@@ -1,3 +1,10 @@
+## [1.0.6](https://github.com/MrLth/extension/compare/v1.0.5...v1.0.6) (2021-05-01)
+
+
+### Performance Improvements
+
+* 删除一些无效引用 ([1c1d860](https://github.com/MrLth/extension/commit/1c1d860c5c37a360b825f55e8406db93026597c7))
+
 ## [1.0.5](https://github.com/MrLth/extension/compare/v1.0.4...v1.0.5) (2021-05-01)
 
 
