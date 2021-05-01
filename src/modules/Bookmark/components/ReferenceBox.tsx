@@ -2,7 +2,7 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2021-04-30 19:17:56
- * @LastEditTime: 2021-05-01 18:38:12
+ * @LastEditTime: 2021-05-01 18:41:13
  * @Description: file content
  */
 
@@ -31,9 +31,6 @@ function ReferenceBox({ reactiveRef }: Props): JSX.Element {
   const [scrollTop, setScrollTop] = useState(0)
   const prevScrollTop = usePrevious(scrollTop)
 
-  // const heightTimelineRef = useRef(new TimeLine())
-  // const topTimelineRef = useRef(new TimeLine())
-
   useEffect(() => {
     const relativeDom = reactiveRef.current
 
@@ -44,18 +41,6 @@ function ReferenceBox({ reactiveRef }: Props): JSX.Element {
 
     const onResize = debounce(() => {
       setHeight(window.innerHeight)
-      // const animation = new Animation({
-      //   start: heightRef.current,
-      //   end: window.innerHeight,
-      //   duration: 500,
-      //   delay: 1000,
-      //   timingFunction: ease,
-      //   updateCallback: setHeight,
-      // })
-      // heightTimelineRef.current
-      //   .reset()
-      //   .add(animation)
-      //   .start()
     }, 300)
 
     relativeDom.addEventListener('scroll', onScroll)
@@ -70,18 +55,6 @@ function ReferenceBox({ reactiveRef }: Props): JSX.Element {
     $log({ prevScrollTop, scrollTop })
     if (prevScrollTop !== undefined && scrollTop !== prevScrollTop) {
       setTop(scrollTop)
-      // const animation = new Animation({
-      //   start: prevScrollTop,
-      //   end: scrollTop,
-      //   duration: 500,
-      //   delay: 2000,
-      //   timingFunction: ease,
-      //   updateCallback: setTop,
-      // })
-      // topTimelineRef.current
-      //   .reset()
-      //   .add(animation)
-      //   .start()
     }
   }, [prevScrollTop, scrollTop])
 
