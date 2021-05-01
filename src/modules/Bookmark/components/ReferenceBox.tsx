@@ -2,7 +2,7 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2021-04-30 19:17:56
- * @LastEditTime: 2021-05-01 00:51:28
+ * @LastEditTime: 2021-05-01 18:38:12
  * @Description: file content
  */
 
@@ -31,7 +31,8 @@ function ReferenceBox({ reactiveRef }: Props): JSX.Element {
   const [scrollTop, setScrollTop] = useState(0)
   const prevScrollTop = usePrevious(scrollTop)
 
-  const heightTimelineRef = useRef(new TimeLine())
+  // const heightTimelineRef = useRef(new TimeLine())
+  // const topTimelineRef = useRef(new TimeLine())
 
   useEffect(() => {
     const relativeDom = reactiveRef.current
@@ -39,21 +40,22 @@ function ReferenceBox({ reactiveRef }: Props): JSX.Element {
     const onScroll = debounce(() => {
       $log({ scrollTop: relativeDom.scrollTop }, 'scrolled')
       setScrollTop(relativeDom.scrollTop)
-    }, 300)
+    }, 1000)
 
     const onResize = debounce(() => {
-      const animation = new Animation({
-        start: heightRef.current,
-        end: window.innerHeight,
-        duration: 500,
-        delay: 1000,
-        timingFunction: ease,
-        updateCallback: setHeight,
-      })
-      heightTimelineRef.current
-        .reset()
-        .add(animation)
-        .start()
+      setHeight(window.innerHeight)
+      // const animation = new Animation({
+      //   start: heightRef.current,
+      //   end: window.innerHeight,
+      //   duration: 500,
+      //   delay: 1000,
+      //   timingFunction: ease,
+      //   updateCallback: setHeight,
+      // })
+      // heightTimelineRef.current
+      //   .reset()
+      //   .add(animation)
+      //   .start()
     }, 300)
 
     relativeDom.addEventListener('scroll', onScroll)
@@ -64,23 +66,22 @@ function ReferenceBox({ reactiveRef }: Props): JSX.Element {
     }
   }, [heightRef, reactiveRef])
 
-  const topTimelineRef = useRef(new TimeLine())
-
   useEffect(() => {
     $log({ prevScrollTop, scrollTop })
     if (prevScrollTop !== undefined && scrollTop !== prevScrollTop) {
-      const animation = new Animation({
-        start: prevScrollTop,
-        end: scrollTop,
-        duration: 500,
-        delay: 1500,
-        timingFunction: ease,
-        updateCallback: setTop,
-      })
-      topTimelineRef.current
-        .reset()
-        .add(animation)
-        .start()
+      setTop(scrollTop)
+      // const animation = new Animation({
+      //   start: prevScrollTop,
+      //   end: scrollTop,
+      //   duration: 500,
+      //   delay: 2000,
+      //   timingFunction: ease,
+      //   updateCallback: setTop,
+      // })
+      // topTimelineRef.current
+      //   .reset()
+      //   .add(animation)
+      //   .start()
     }
   }, [prevScrollTop, scrollTop])
 

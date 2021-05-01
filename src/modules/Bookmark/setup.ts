@@ -2,7 +2,7 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2021-02-22 17:17:23
- * @LastEditTime: 2021-04-30 15:28:45
+ * @LastEditTime: 2021-05-01 18:32:09
  * @Description: file content
  */
 import { SettingsType, useConcent, NoMap } from 'concent';
@@ -11,7 +11,7 @@ import { EmptyObject } from 'utils/type';
 import { FOLDER_TITLE_HEIGHT } from 'utils/const';
 import TimeLine from 'utils/animate/TimeLine';
 import Animation from 'utils/animate/Animation';
-import { ease } from 'utils/animate/timing-function';
+import { ease, linear } from 'utils/animate/timing-function';
 import { BookmarkTreeNode } from './model/state';
 
 const moduleName = 'bookmark';
@@ -34,16 +34,86 @@ const setup = (ctx: CtxPre) => {
     list: null as HTMLUListElement,
     wrapper: null as HTMLDivElement,
   };
+  const scrollInfo = {
+    rafId: 0,
+    currentTop: 0,
+    targetTop: 0,
+    unit: window.innerHeight / 175,
+    dynamicSpeed: 0,
+    baseSpeed: 30,
+    direction: 'down' as 'down' | 'up',
+  }
+
+  function rafRun() {
+    if (!dom.wrapper) {
+      return
+    }
+
+    const {
+      unit,
+      baseSpeed,
+      currentTop,
+      targetTop,
+      direction,
+    } = scrollInfo
+
+    if (currentTop !== targetTop) {
+      scrollInfo.dynamicSpeed += unit
+      const moveHeight = scrollInfo.dynamicSpeed + baseSpeed
+
+      const isDone = direction === 'down'
+        ? currentTop >= targetTop
+        : currentTop <= targetTop
+
+      // eslint-disable-next-line no-nested-ternary
+      const newTop = isDone
+        ? targetTop
+        : (direction === 'down'
+          ? Math.min(targetTop, currentTop + moveHeight)
+          : Math.max(targetTop, currentTop - moveHeight))
+
+      scrollInfo.currentTop = newTop
+      dom.wrapper.scrollTop = newTop
+
+      scrollInfo.rafId = requestAnimationFrame(rafRun)
+
+      $log(scrollInfo)
+
+      return
+    }
+
+    if (scrollInfo.dynamicSpeed > 0) {
+      scrollInfo.dynamicSpeed -= scrollInfo.unit * 2
+      scrollInfo.rafId = requestAnimationFrame(rafRun)
+
+      $log(scrollInfo)
+
+      return
+    }
+
+    scrollInfo.dynamicSpeed = 0
+    scrollInfo.rafId = 0
+    $log(scrollInfo)
+  }
 
   function updateCallback(newTop: number) {
     // 原生的 scrollTo 加上 smooth 滚动有延迟，不加 smooth 配合 raf 又有严重的性能问题
     dom.wrapper.scrollTop = newTop
   }
 
-  function scrollTo(target: HTMLElement, top: number) {
+  function scrollToAcceleration(newTop: number) {
+    scrollInfo.direction = newTop > scrollInfo.currentTop ? 'down' : 'up'
+    scrollInfo.targetTop = newTop;
+    scrollInfo.dynamicSpeed += scrollInfo.unit
+    if (!scrollInfo.rafId) {
+      scrollInfo.rafId = requestAnimationFrame(rafRun)
+    }
+  }
+
+  function scrollToEaseAnimation(newTop: number) {
     const animation = new Animation({
-      start: target.scrollTop,
-      end: top,
+      start: dom.wrapper.scrollTop,
+      end: newTop,
       duration: 100,
       timingFunction: ease,
       updateCallback,
@@ -78,7 +148,6 @@ const setup = (ctx: CtxPre) => {
       e.stopPropagation();
       const top = dom.wrapper.scrollTop;
       const bottom = top + common.listHeight;
-      // console.log('scrollCb')
       reducer.bookmark.updIsRender({ top, bottom });
     },
     scrollToShow(e: React.MouseEvent<HTMLLIElement, MouseEvent>, node: BookmarkTreeNode) {
@@ -99,7 +168,10 @@ const setup = (ctx: CtxPre) => {
       const folder = getFolder(node);
       if (folder === null) return;
 
-      scrollTo(dom.wrapper, folder.top - li.getBoundingClientRect().top + FOLDER_TITLE_HEIGHT)
+      const newTop = folder.top - li.getBoundingClientRect().top + FOLDER_TITLE_HEIGHT
+
+      scrollToAcceleration(newTop)
+      // scrollToEaseAnimation(newTop)
     },
     openTab: reducer.tab.openTab,
   };

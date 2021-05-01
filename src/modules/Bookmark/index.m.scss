@@ -90,4 +90,5 @@
   right: 0;
   left: 0;
   @include dark(background-color, 'bg');
+  transition: height ease 500ms 1000ms, top ease 500ms 2000ms;
 }
