@@ -1,12 +1,5 @@
 {
   "branch": "master",
-  "prepare": [
-    {
-      "path": "semantic-release-chrome",
-      "distFolder": "build",
-      "asset": "extension.zip"
-    }
-  ],
   "plugins": [
     "@semantic-release/commit-analyzer",
     "@semantic-release/release-notes-generator",
@@ -21,12 +14,15 @@
         "message": "chore(release): ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}"
       }
     ],
-    "@semantic-release/github"
-  ],
-  "publish":[
-    {
-      "path": "semantic-release-chrome",
-      "asset": "extension.zip"
-    }
+    [
+      "@semantic-release/github",
+      {
+        "assets": [
+          {
+            "path": "build"
+          }
+        ]
+      }
+    ]
   ]
 }
