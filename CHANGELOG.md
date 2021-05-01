@@ -1,3 +1,10 @@
+## [1.0.1](https://github.com/MrLth/extension/compare/v1.0.0...v1.0.1) (2021-05-01)
+
+
+### Bug Fixes
+
+* **ci:** 修复 ci 不执行 build 的 bug ([c0ce8a0](https://github.com/MrLth/extension/commit/c0ce8a06df4b141ab7cdbd70521cc3132f884503))
+
 # 1.0.0 (2021-05-01)
 
 
