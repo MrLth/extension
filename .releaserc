@@ -1,5 +1,11 @@
 {
   "branch": "master",
+  "prepare": [
+    {
+      "path": "semantic-release-chrome",
+      "asset": "my-extension.zip"
+    }
+  ],
   "plugins": [
     "@semantic-release/commit-analyzer",
     "@semantic-release/release-notes-generator",
