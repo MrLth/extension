@@ -1,3 +1,10 @@
+## [1.0.2](https://github.com/MrLth/extension/compare/v1.0.1...v1.0.2) (2021-05-01)
+
+
+### Performance Improvements
+
+* 删除了一些 log ([bfc13c1](https://github.com/MrLth/extension/commit/bfc13c14ebd6fb1459e91478301f51d3aba754bd))
+
 ## [1.0.1](https://github.com/MrLth/extension/compare/v1.0.0...v1.0.1) (2021-05-01)
 
 
