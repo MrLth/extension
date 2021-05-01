@@ -11,6 +11,7 @@
         "iconshuaxin",
         "iconsleepmode",
         "middlewares",
+        "thedoctor",
         "xlink"
     ],
     "typescript.tsdk": "node_modules/typescript/lib"

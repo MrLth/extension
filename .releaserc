@@ -19,7 +19,7 @@
       {
         "assets": [
           {
-            "path": "build"
+            "path": "extension.zip"
           }
         ]
       }

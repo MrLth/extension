@@ -20,6 +20,11 @@ jobs:
         run: npm ci
       - name: Build
         run: npm run build
+      - name: Archive Release
+        uses: thedoctor0/zip-release@master
+        with:
+          filename: extension.zip
+          path: build
       - name: Release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
