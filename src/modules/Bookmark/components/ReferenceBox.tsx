@@ -2,7 +2,7 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2021-04-30 19:17:56
- * @LastEditTime: 2021-05-02 02:32:02
+ * @LastEditTime: 2021-05-02 03:35:13
  * @Description: file content
  */
 
@@ -11,9 +11,6 @@ import React, {
 } from 'react'
 import { usePrevious } from 'ahooks'
 import { debounce } from 'lodash-es'
-import Animation from 'utils/animate/Animation'
-import { ease } from 'utils/animate/timing-function'
-import TimeLine from 'utils/animate/TimeLine'
 import useUpdateRef from 'hooks/useUpdateRef'
 import c from '../index.m.scss'
 
