@@ -2,7 +2,7 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2021-04-30 19:17:56
- * @LastEditTime: 2021-05-01 18:41:13
+ * @LastEditTime: 2021-05-02 02:32:02
  * @Description: file content
  */
 
@@ -57,8 +57,6 @@ function ReferenceBox({ reactiveRef }: Props): JSX.Element {
       setTop(scrollTop)
     }
   }, [prevScrollTop, scrollTop])
-
-  $log({ top })
 
   return (
     <div
