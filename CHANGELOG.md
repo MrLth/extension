@@ -1,3 +1,10 @@
+## [1.0.5](https://github.com/MrLth/extension/compare/v1.0.4...v1.0.5) (2021-05-01)
+
+
+### Bug Fixes
+
+* 暂时放弃 semantic-release-chrome ([e79bd21](https://github.com/MrLth/extension/commit/e79bd21ab368e5a542b92d3afecc032c57d86e08))
+
 ## [1.0.2](https://github.com/MrLth/extension/compare/v1.0.1...v1.0.2) (2021-05-01)
 
 
