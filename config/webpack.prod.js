@@ -3,7 +3,7 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2020-05-27 15:30:26
- * @LastEditTime: 2021-02-23 00:39:20
+ * @LastEditTime: 2021-05-02 13:46:50
  * @Description: file content
  */
 
@@ -53,6 +53,7 @@ module.exports = merge(config, {
             options: {
               modules: {
                 auto: /\.(local|module|m)\.s?css$/,
+                localIdentName: '[folder]_[hash:base64:5]__[local]',
               },
             },
           },
