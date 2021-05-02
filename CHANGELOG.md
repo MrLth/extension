@@ -1,3 +1,11 @@
+# [1.1.0](https://github.com/MrLth/extension/compare/v1.0.6...v1.1.0) (2021-05-02)
+
+
+### Features
+
+* 修改 manifest, 添加 icons ([659d49b](https://github.com/MrLth/extension/commit/659d49b4bc7eba89c4456b8d8614d5a367d326a3))
+* **manifest:** 使 background 持久化 ([02d4cda](https://github.com/MrLth/extension/commit/02d4cda1ccea3c83ac74f8b1adb4f24f930028f5))
+
 ## [1.0.6](https://github.com/MrLth/extension/compare/v1.0.5...v1.0.6) (2021-05-01)
 
 
