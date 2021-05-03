@@ -1,5 +1,30 @@
 {
   "branch": "master",
+  "verifyConditions": [
+    "semantic-release-chrome",
+    "@semantic-release/github"
+  ],
+  "prepare": [
+    {
+      "path": "semantic-release-chrome",
+      "asset": "extension.zip"
+    }
+  ],
+  "publish": [
+    {
+      "path": "semantic-release-chrome",
+      "asset": "extension.zip",
+      "extensionId": "mijbgkgainebmihplkehcknfnoikidgn"
+    },
+    {
+      "path": "@semantic-release/github",
+      "assets": [
+        {
+          "path": "extension.zip"
+        }
+      ]
+    }
+  ],
   "plugins": [
     "@semantic-release/commit-analyzer",
     "@semantic-release/release-notes-generator",
@@ -12,16 +37,6 @@
           "CHANGELOG.md"
         ],
         "message": "chore(release): ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}"
-      }
-    ],
-    [
-      "@semantic-release/github",
-      {
-        "assets": [
-          {
-            "path": "extension.zip"
-          }
-        ]
       }
     ]
   ]
