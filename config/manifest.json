@@ -12,7 +12,6 @@
     "128": "icons/x128.png"
   },
   "permissions": [
-    "activeTab",
     "tabs",
     "bookmarks",
     "history",
