@@ -2,7 +2,7 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2021-02-22 17:17:23
- * @LastEditTime: 2021-05-05 17:18:23
+ * @LastEditTime: 2021-05-05 20:29:02
  * @Description: file content
  */
 import { SettingsType, useConcent, NoMap } from 'concent';
@@ -16,7 +16,9 @@ import { BookmarkTreeNode } from './model/state';
 
 const moduleName = 'bookmark';
 const connect = [] as const;
-const initState = () => ({});
+const initState = () => ({
+  clickedFolder: null as BookmarkTreeNode,
+});
 
 type Module = typeof moduleName
 type Conn = ItemsType<typeof connect>
@@ -24,7 +26,7 @@ type State = ReturnType<typeof initState>
 type CtxPre = CtxMSConn<EmptyObject, Module, State, Conn>
 
 const setup = (ctx: CtxPre) => {
-  const { effect, reducer } = ctx;
+  const { setState, effect, reducer } = ctx;
 
   const common = {
     listHeight: 0,
@@ -77,8 +79,6 @@ const setup = (ctx: CtxPre) => {
 
       scrollInfo.rafId = requestAnimationFrame(rafRun)
 
-      $log(scrollInfo)
-
       return
     }
 
@@ -86,14 +86,11 @@ const setup = (ctx: CtxPre) => {
       scrollInfo.dynamicSpeed -= scrollInfo.unit * 2
       scrollInfo.rafId = requestAnimationFrame(rafRun)
 
-      $log(scrollInfo)
-
       return
     }
 
     scrollInfo.dynamicSpeed = 0
     scrollInfo.rafId = 0
-    $log(scrollInfo)
   }
 
   function updateCallback(newTop: number) {
@@ -174,6 +171,7 @@ const setup = (ctx: CtxPre) => {
       // scrollToEaseAnimation(newTop)
     },
     piledOutShow(node: BookmarkTreeNode) {
+      setState({ clickedFolder: node })
       $log({ node })
     },
     openTab: reducer.tab.openTab,

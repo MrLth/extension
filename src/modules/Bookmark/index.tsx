@@ -2,7 +2,7 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2021-02-22 08:34:51
- * @LastEditTime: 2021-05-05 15:52:20
+ * @LastEditTime: 2021-05-05 20:27:06
  * @Description: file content
  */
 import React, { useRef } from 'react';
@@ -38,7 +38,7 @@ const Bookmark = (): JSX.Element => {
       <section className={cn('content')}>
         <BookmarkList ref={settings.refList} rootNode={state.bookmarkTree} settings={settings} />
       </section>
-      <PiledOut />
+      <PiledOut node={state.clickedFolder} settings={settings} />
     </>
 
   );

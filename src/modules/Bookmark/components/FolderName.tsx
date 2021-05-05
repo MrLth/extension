@@ -2,7 +2,7 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2021-02-20 19:59:04
- * @LastEditTime: 2021-05-05 17:20:23
+ * @LastEditTime: 2021-05-05 20:39:00
  * @Description: file content
  */
 import React from 'react';
@@ -21,34 +21,34 @@ interface Props {
   node: BookmarkTreeNode
   settings: Settings
 }
-const FolderName = ({ node, settings }: Props): JSX.Element => (node.folders.length > 0
-  ? (
+
+function FolderName({ node, settings }: Props): JSX.Element {
+  const haveFolder = node.folders.length > 0
+  return (
     <>
       <li
-        className={cn('folder-name', 'open')}
+        role="menuitem"
+        className={cn('folder-name', { open: haveFolder })}
         style={{ paddingLeft: node.depth * SUB_NODE_PADDING_UNIT }}
         onMouseEnter={(e) => settings.scrollToShow(e, node)}
+        onClick={() => settings.piledOutShow(node)}
+        onKeyDown={loop}
       >
-        <img src={folderOpenSvg} alt="folder-open" />
+        <img src={haveFolder ? folderOpenSvg : folderSvg} alt="folder" />
         {node.title}
       </li>
       {
-        node.folders.map((v) => <FolderName key={v.id} node={v} settings={settings} />)
-      }
+      haveFolder
+      && node.folders.map((child) => (
+        <FolderName
+          key={child.id}
+          node={child}
+          settings={settings}
+        />
+      ))
+    }
     </>
   )
-  : (
-    <li
-      role="menuitem"
-      className={c['folder-name']}
-      style={{ paddingLeft: node.depth * SUB_NODE_PADDING_UNIT }}
-      onMouseEnter={(e) => settings.scrollToShow(e, node)}
-      onClick={() => settings.piledOutShow(node)}
-      onKeyDown={loop}
-    >
-      <img src={folderSvg} alt="folder" />
-      {node.title}
-    </li>
-  ));
+}
 
 export default FolderName;

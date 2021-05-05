@@ -2,7 +2,7 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2021-02-23 00:15:42
- * @LastEditTime: 2021-04-29 16:46:35
+ * @LastEditTime: 2021-05-05 21:24:33
  * @Description: file content
  */
 import { Fn } from 'utils/type';
@@ -336,7 +336,10 @@ class TabHandler {
 
   // 3. 补齐 opener 关系，因为新打开的 newTab 不会获得之前的 opener 的关系
   refillOpenerTabId(): void {
-    const { openerIdMap = new Map<number, number>() } = chrome.extension.getBackgroundPage()
+    const openerIdMap = chrome
+      .extension
+      .getBackgroundPage()?.openerIdMap
+      ?? new Map<number, number>()
 
     for (const tab of this.tabMap.values()) {
       if (!tab.openerTabId && openerIdMap.has(tab.id)) {
