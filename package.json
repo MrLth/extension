@@ -98,7 +98,7 @@
     "style-loader": "^2.0.0",
     "stylelint": "^13.11.0",
     "stylelint-config-prettier": "^8.0.2",
-    "stylelint-config-rational-order": "^0.1.2",
+    "stylelint-config-rational-order": "^0.0.4",
     "stylelint-config-standard": "^20.0.0",
     "stylelint-declaration-block-no-ignored-properties": "^2.3.0",
     "stylelint-order": "^4.1.0",
