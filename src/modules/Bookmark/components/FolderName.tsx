@@ -2,14 +2,14 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2021-02-20 19:59:04
- * @LastEditTime: 2021-02-24 16:43:40
+ * @LastEditTime: 2021-05-05 17:20:23
  * @Description: file content
  */
 import React from 'react';
 
 import folderSvg from '@img/folder.svg';
 import folderOpenSvg from '@img/folder-open.svg';
-import { moduleClassnames } from 'utils';
+import { loop, moduleClassnames } from 'utils';
 import { SUB_NODE_PADDING_UNIT } from 'utils/const';
 import { BookmarkTreeNode } from '../model/state';
 import { Settings } from '../setup';
@@ -39,9 +39,12 @@ const FolderName = ({ node, settings }: Props): JSX.Element => (node.folders.len
   )
   : (
     <li
+      role="menuitem"
       className={c['folder-name']}
       style={{ paddingLeft: node.depth * SUB_NODE_PADDING_UNIT }}
       onMouseEnter={(e) => settings.scrollToShow(e, node)}
+      onClick={() => settings.piledOutShow(node)}
+      onKeyDown={loop}
     >
       <img src={folderSvg} alt="folder" />
       {node.title}

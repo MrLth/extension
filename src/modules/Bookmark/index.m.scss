@@ -92,3 +92,14 @@
   @include dark(background-color, 'bg');
   transition: height ease 500ms 1000ms, top ease 500ms 2000ms;
 }
+
+.piled-out{
+  position: absolute;
+  top:0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 20;
+  display: none;
+  background-color: #fff;
+}

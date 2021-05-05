@@ -2,7 +2,7 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2021-02-22 17:17:23
- * @LastEditTime: 2021-05-01 18:32:09
+ * @LastEditTime: 2021-05-05 17:18:23
  * @Description: file content
  */
 import { SettingsType, useConcent, NoMap } from 'concent';
@@ -172,6 +172,9 @@ const setup = (ctx: CtxPre) => {
 
       scrollToAcceleration(newTop)
       // scrollToEaseAnimation(newTop)
+    },
+    piledOutShow(node: BookmarkTreeNode) {
+      $log({ node })
     },
     openTab: reducer.tab.openTab,
   };

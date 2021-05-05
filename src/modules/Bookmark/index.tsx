@@ -2,7 +2,7 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2021-02-22 08:34:51
- * @LastEditTime: 2021-04-30 23:43:28
+ * @LastEditTime: 2021-05-05 15:52:20
  * @Description: file content
  */
 import React, { useRef } from 'react';
@@ -13,6 +13,7 @@ import useCC from './setup'
 import c from './index.m.scss';
 import FolderNameList from './components/FolderNameList';
 import ReferenceBox from './components/ReferenceBox';
+import PiledOut from './components/PiledOut';
 
 const cn = moduleClassnames(c);
 
@@ -37,6 +38,7 @@ const Bookmark = (): JSX.Element => {
       <section className={cn('content')}>
         <BookmarkList ref={settings.refList} rootNode={state.bookmarkTree} settings={settings} />
       </section>
+      <PiledOut />
     </>
 
   );
