@@ -2,14 +2,14 @@
 @import 'utils/index';
 
 .part {
-  width: calc((100vw - 171px) / 3);
+  flex: 1;
   height: 100vh;
 }
 
-.bookmark {
-  display: flex;
-  width: calc((100vw - 171px) / 3 + 171px);
+.aside {
+  height: 100vh;
 }
+
 
 .tab {
   position: relative;

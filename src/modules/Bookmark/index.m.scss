@@ -85,7 +85,7 @@
   }
 }
 
-.ref-box{
+.ref-box {
   position: absolute;
   right: 0;
   left: 0;
@@ -93,13 +93,30 @@
   transition: height ease 500ms 1000ms, top ease 500ms 2000ms;
 }
 
-.piled-out{
+.piled-out {
   position: absolute;
-  top:0;
-  right: 0;
+  top: 0;
   bottom: 0;
-  left: 155px;
   z-index: 20;
-  // display: none;
+  overflow-x: auto;
+  overflow-y: hidden;
   background-color: #fff;
+
+  ul {
+    display: inline;
+    writing-mode: vertical-lr;
+  }
+
+  li {
+    display: inline-block;
+    width: 300px;
+    writing-mode: horizontal-tb;
+  }
+
 }
+
+// .test{
+//   flex:1;
+//   height: 100%;
+//   background-color: green;
+// }

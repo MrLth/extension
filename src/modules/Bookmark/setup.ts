@@ -2,7 +2,7 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2021-02-22 17:17:23
- * @LastEditTime: 2021-05-05 20:29:02
+ * @LastEditTime: 2021-05-05 21:37:20
  * @Description: file content
  */
 import { SettingsType, useConcent, NoMap } from 'concent';

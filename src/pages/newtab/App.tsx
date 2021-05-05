@@ -2,10 +2,10 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2020-12-11 14:57:20
- * @LastEditTime: 2021-04-28 09:10:49
+ * @LastEditTime: 2021-05-05 22:54:24
  * @Description: file content
  */
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { debounce } from 'lodash-es';
 import { useConcent } from 'concent';
 // import { hot } from 'react-hot-loader/root';
@@ -53,9 +53,20 @@ function App(): JSX.Element {
     };
   }, [setState]);
 
+  const asideRef = useRef<HTMLDivElement>()
+  const sectionRef = useRef<HTMLDivElement>()
+
+  const [update, setUpdate] = useState(false)
+  useEffect(() => {
+    setUpdate(true)
+  }, [])
+
   return (
     <>
-      <div className={cn('part', 'bookmark')}><Bookmark /></div>
+      <div className={c.aside} ref={asideRef} />
+      <div className={c.part} ref={sectionRef} />
+      <Bookmark asideRef={asideRef} sectionRef={sectionRef} />
+      {/* <div className={cn('part', 'bookmark')}><Bookmark /></div> */}
       <div className={cn('part', {
         'hidden-record': isHide,
       })}

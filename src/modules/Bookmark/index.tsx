@@ -2,11 +2,12 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2021-02-22 08:34:51
- * @LastEditTime: 2021-05-05 20:27:06
+ * @LastEditTime: 2021-05-05 23:10:57
  * @Description: file content
  */
-import React, { useRef } from 'react';
+import React, { useRef, MutableRefObject } from 'react';
 import { moduleClassnames } from 'utils';
+import { createPortal } from 'react-dom';
 import BookmarkList from './components/BookmarkList';
 import useCC from './setup'
 
@@ -17,7 +18,11 @@ import PiledOut from './components/PiledOut';
 
 const cn = moduleClassnames(c);
 
-const Bookmark = (): JSX.Element => {
+interface Props {
+  asideRef: MutableRefObject<HTMLDivElement>,
+  sectionRef: MutableRefObject<HTMLDivElement>
+}
+const Bookmark = ({ asideRef, sectionRef }: Props): JSX.Element => {
   const { state, settings } = useCC()
 
   $log({ BookMark: 'BookMark' }, 'render', 5);
@@ -26,19 +31,30 @@ const Bookmark = (): JSX.Element => {
 
   return (
     <>
-      <aside className={cn('content', 'content-left')}>
-        <ul className={c['folder-list']} ref={reactiveRef}>
-          <ReferenceBox reactiveRef={reactiveRef} />
-          <FolderNameList
-            folders={state.bookmarkTree?.folders}
-            settings={settings}
-          />
-        </ul>
-      </aside>
-      <section className={cn('content')}>
-        <BookmarkList ref={settings.refList} rootNode={state.bookmarkTree} settings={settings} />
-      </section>
-      <PiledOut node={state.clickedFolder} settings={settings} />
+      {asideRef.current && createPortal(
+        <aside className={cn('content', 'content-left')}>
+          <ul className={c['folder-list']} ref={reactiveRef}>
+            <ReferenceBox reactiveRef={reactiveRef} />
+            <FolderNameList
+              folders={state.bookmarkTree?.folders}
+              settings={settings}
+            />
+          </ul>
+        </aside>,
+        asideRef.current,
+      )}
+      {sectionRef.current && createPortal(
+        <section className={cn('content')}>
+          <BookmarkList ref={settings.refList} rootNode={state.bookmarkTree} settings={settings} />
+        </section>,
+        sectionRef.current,
+      )}
+      <PiledOut
+        node={state.clickedFolder}
+        settings={settings}
+        asideRef={asideRef}
+        sectionRef={sectionRef}
+      />
     </>
 
   );

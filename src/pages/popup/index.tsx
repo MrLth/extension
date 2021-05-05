@@ -2,7 +2,7 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2020-12-11 14:57:20
- * @LastEditTime: 2021-04-28 10:27:50
+ * @LastEditTime: 2021-05-05 22:59:49
  * @Description: file content
  */
 import React, { useEffect } from 'react';
@@ -37,7 +37,7 @@ const App = () => {
   }, [setState]);
   return (
     <>
-      <div className={c['popup-wrapper']} style={{ minHeight: `${4.9125 + 2 * 7}rem`, minWidth: 300, paddingBottom: 10 }}>
+      <div style={{ minHeight: `${4.9125 + 2 * 7}rem`, minWidth: 300, paddingBottom: 10 }}>
         <Tab />
       </div>
     </>
