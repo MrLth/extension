@@ -3,7 +3,7 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2020-05-27 15:30:26
- * @LastEditTime: 2021-04-29 15:34:13
+ * @LastEditTime: 2021-05-02 18:38:26
  * @Description: file content
  */
 // const { resolve: _resolve } = require('path');
@@ -107,6 +107,7 @@ module.exports = {
     new CopyWebpackPlugin({
       patterns: [
         { from: resolve('config/manifest.json') },
+        { from: resolve('public/icons'), to: 'icons' },
       ],
     }),
 
