@@ -1,5 +1,5 @@
-@use "sass:map";
-@import 'utils/index';
+@use 'utils/scss/index';
+@use 'utils/scss/color';
 
 @property --houdini-bg-color {
   syntax: '<color>';
@@ -51,77 +51,61 @@
     }
 
     .btn-close {
-      @include darkProp(
+      @include color.prop(
         background,
-        linear-gradient(to right, transparent, map.get($colors, 'bg')),
-        linear-gradient(to right, transparent, map.get($dark-colors, 'bg'))
+        linear-gradient(to right, transparent, color.light('bg')),
+        linear-gradient(to right, transparent, color.dark('bg'))
       );
     }
 
     &.activated {
       margin: 0 0.3rem;
       border-radius: 0.3rem;
-      @include darkProp(
-        background-color,
-        map.get($dark-colors, 'gray-1'),
-        map.get($dark-colors, 'gray-5')
-      );
+      @include color.prop(background-color, color.dark('gray-1'), color.dark('gray-5'));
       transition: background-color ease 0.4s;
 
       .unit-tab {
         padding-left: 0.7rem;
       }
       .btn-close {
-        @include darkProp(
-          --houdini-bg-color,
-          map.get($dark-colors, 'gray-1'),
-          map.get($dark-colors, 'gray-5')
-        );
+        @include color.prop(--houdini-bg-color, color.dark('gray-1'), color.dark('gray-5'));
         background: linear-gradient(to right, transparent, var(--houdini-bg-color));
         border-radius: 0.3rem;
         transition: --houdini-bg-color ease 0.4s;
       }
 
       &:hover {
-        @include darkProp(
-          background-color,
-          map.get($dark-colors, 'gray-2'),
-          map.get($dark-colors, 'gray-6')
-        );
+        @include color.prop(background-color, color.dark('gray-2'), color.dark('gray-6'));
 
         .btn-close {
-          @include darkProp(
-            --houdini-bg-color,
-            map.get($dark-colors, 'gray-2'),
-            map.get($dark-colors, 'gray-6')
-          );
+          @include color.prop(--houdini-bg-color, color.dark('gray-2'), color.dark('gray-6'));
         }
       }
     }
     &-selected {
-      @include dark(background-color, 'blue-4');
+      @include color.auto(background-color, 'blue-4');
     }
 
     &-selected.activated {
       margin: 0;
       border-radius: 0;
-      @include dark(background-color, 'blue-5');
+      @include color.auto(background-color, 'blue-5');
     }
   }
 
   .focused {
     .activated .buttons {
-      @include darkProp(
+      @include color.prop(
         background,
-        linear-gradient(to right, transparent, map.get($colors, 'btn-text')),
-        linear-gradient(to right, transparent, map.get($dark-colors, 'btn-text'))
+        linear-gradient(to right, transparent, color.light('btn-text')),
+        linear-gradient(to right, transparent, color.dark('btn-text'))
       );
     }
   }
 }
 
 .darg-hover {
-  @include dark(background-color, 'blue-5');
+  @include color.auto(background-color, 'blue-5');
   position: absolute;
   left: 0;
   width: 100%;
@@ -139,7 +123,7 @@
   width: 18px;
   height: 32px;
   vertical-align: middle;
-  @include dark(fill, 'bg-hl');
+  @include color.auto(fill, 'bg-hl');
 }
 
 .unit-tab span[role='link'] {

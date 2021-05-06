@@ -1,4 +1,5 @@
-@import 'utils/index';
+@use 'utils/scss/index';
+@use 'utils/scss/color';
 
 .content {
   @extend %card;
@@ -19,11 +20,10 @@
   padding: 0.25rem 0.1vw;
   overflow-y: auto;
 
-  @include dark(background-color, 'bg-1');
-  // background-color: #010409;
+  @include color.auto(background-color, 'bg-1');
 
   &::-webkit-scrollbar {
-    @include dark(background-color, 'bg');
+    @include color.auto(background-color, 'bg');
   }
 
   .folder-name {
@@ -50,25 +50,23 @@
   flex: 1;
   height: 100%;
   overflow-y: auto;
+}
 
-  .bookmark-list {
-    // width: 300px;
-    // width: 100%
-    position: relative;
+.bookmark-list {
+  position: relative;
 
-    .folder {
-      width: 100%;
-
-      .folder-title {
-        @extend %sub-title;
-      }
-    }
-
-    .label {
-      @extend %label;
-      width: 100%;
-    }
+  .folder {
+    width: 100%;
   }
+
+  .label {
+    @extend %label;
+    width: 100%;
+  }
+}
+
+.folder-title {
+  @extend %sub-title;
 }
 
 .delimiter {
@@ -76,7 +74,7 @@
   right: 0;
   left: 0;
   height: 2px;
-  @include dark(background-color, 'blue-4');
+  @include color.auto(background-color, 'blue-4');
 
   &-hide {
     right: 100%;
@@ -89,7 +87,7 @@
   position: absolute;
   right: 0;
   left: 0;
-  @include dark(background-color, 'bg');
+  @include color.auto(background-color, 'bg');
   transition: height ease 500ms 1000ms, top ease 500ms 2000ms;
 }
 
@@ -102,21 +100,19 @@
   overflow-y: hidden;
   background-color: #fff;
 
+  a{
+    @extend %a;
+  }
+
   ul {
     display: inline;
     writing-mode: vertical-lr;
   }
 
-  li {
+  li,
+  .label {
     display: inline-block;
     width: 300px;
     writing-mode: horizontal-tb;
   }
-
 }
-
-// .test{
-//   flex:1;
-//   height: 100%;
-//   background-color: green;
-// }

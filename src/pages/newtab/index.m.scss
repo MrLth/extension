@@ -1,5 +1,5 @@
-@use "sass:map";
-@import 'utils/index';
+@use 'utils/scss/index';
+@use 'utils/scss/color';
 
 .part {
   flex: 1;
@@ -9,7 +9,6 @@
 .aside {
   height: 100vh;
 }
-
 
 .tab {
   position: relative;
@@ -25,23 +24,19 @@
   height: 1rem;
   font-size: 1rem;
   text-align: center;
-  @include dark(color, 'text');
+  @include color.auto(color, 'text');
 
-  @include darkProp(
+  @include color.prop(
     background,
-    linear-gradient(to top, transparent, map.get($colors, 'bg')),
-    linear-gradient(to top, transparent, map.get($dark-colors, 'bg'))
+    linear-gradient(to top, transparent, color.light('bg')),
+    linear-gradient(to top, transparent, color.dark('bg'))
   );
-  @include darkProp(
+  @include color.prop(
     border-right,
-    1px solid map.get($colors, 'border'),
-    1px solid map.get($dark-colors, 'border')
+    1px solid color.light('border'),
+    1px solid color.dark('border')
   );
-  @include darkProp(
-    border-left,
-    1px solid map.get($colors, 'border'),
-    1px solid map.get($dark-colors, 'border')
-  );
+  @include color.prop(border-left, 1px solid color.light('border'), 1px solid color.dark('border'));
 
   user-select: none;
 
@@ -63,11 +58,7 @@
   position: relative;
   flex: 1;
   height: 50%;
-  @include darkProp(
-    border-top,
-    1px solid map.get($colors, 'border'),
-    1px solid map.get($dark-colors, 'border')
-  );
+  @include color.prop(border-top, 1px solid color.light('border'), 1px solid color.dark('border'));
 }
 
 .hidden-record {
@@ -78,12 +69,12 @@
     height: 2rem;
   }
   .arrow {
-    @include dark(color, 'text');
+    @include color.auto(color, 'text');
     padding-bottom: 1rem;
-    @include darkProp(
+    @include color.prop(
       background,
-      linear-gradient(to right, transparent, map.get($colors, 'bg')),
-      linear-gradient(to right, transparent, map.get($dark-colors, 'bg'))
+      linear-gradient(to right, transparent, color.light('bg')),
+      linear-gradient(to right, transparent, color.dark('bg'))
     );
   }
 }

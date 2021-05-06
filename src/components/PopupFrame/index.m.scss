@@ -1,11 +1,11 @@
-@use "sass:map";
-@import 'utils/index';
+@use 'utils/scss/index';
+@use 'utils/scss/color';
 
 .content {
   position: absolute;
   width: 120px;
 
-  @include dark(background-color, 'bg-hl');
+  @include color.auto(background-color, 'bg-hl');
   border-radius: 0.3125rem;
 
   box-shadow: 0 1.5px 3.5px rgba(0, 0, 0, 0.2), 0 5.1px 11.8px rgba(0, 0, 0, 0.119),
@@ -18,11 +18,11 @@
     height: 2rem;
     line-height: 2rem;
 
-    @include dark(color, 'text-1');
-    @include darkProp(
+    @include color.auto(color, 'text-1');
+    @include color.prop(
       border-bottom,
-      1px map.get($colors, 'border') solid,
-      1px map.get($dark-colors, 'border') solid
+      1px color.light('border') solid,
+      1px color.dark('border') solid
     );
     transition: color 0.1s ease-in-out, background-color 0.1s ease-in-out;
     user-select: none;
@@ -51,10 +51,10 @@
     }
 
     &:hover {
-      @include dark(color, 'blue-5');
+      @include color.auto(color, 'blue-5');
 
       div:first-child {
-        @include dark(color, 'blue-5');
+        @include color.auto(color, 'blue-5');
       }
     }
   }

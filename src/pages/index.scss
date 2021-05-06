@@ -1,8 +1,9 @@
-@import 'utils/index';
+@use 'utils/scss/index';
+@use 'utils/scss/color';
 
 body {
   font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif, Apple Color Emoji, Segoe UI Emoji;
-  @include dark(background-color, 'bg');
+  @include color.auto(background-color, 'bg');
 }
 
 li {
@@ -27,10 +28,10 @@ ul {
 
 
 ::-webkit-scrollbar-thumb {
-  @include dark(background-color, 'border');
+  @include color.auto(background-color, 'border');
   border-radius: 2px 0 0 2px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  @include dark(background-color, 'border-hl');
+  @include color.auto(background-color, 'border-hl');
 }

@@ -1,0 +1,90 @@
+@use './color';
+
+%card {
+  @include color.auto(color, 'text');
+  @include color.auto(background, 'bg');
+  @include color.prop(border-left, 1px color.light('border') solid, 1px color.dark('border') solid);
+  flex: 1 0 300px;
+  height: 100%;
+
+  .focused {
+    %sub-title {
+      @include color.auto(color, 'blue-4');
+    }
+  }
+
+  a {
+    @extend %a;
+  }
+}
+
+%a {
+  @include color.auto(color, 'text');
+  text-decoration: none;
+}
+
+%btn-close {
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding: 0 0.3rem 0 1rem;
+  font-size: 1rem;
+  line-height: 2rem;
+  opacity: 0;
+  transition: opacity 0.1s ease 0.05s;
+  svg {
+    margin-left: 0.3rem;
+    cursor: pointer;
+  }
+}
+
+%unit-tab {
+  height: 2rem;
+  padding-left: 1rem;
+
+  overflow: hidden;
+  line-height: 2rem;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  cursor: default;
+
+  img {
+    width: 1.125rem;
+    height: 1.125rem;
+    margin-right: 0.875rem;
+    vertical-align: sub;
+  }
+}
+
+%label {
+  position: relative;
+  display: block;
+  user-select: none;
+
+  .unit-tab {
+    @extend %unit-tab;
+  }
+
+  .btn-close {
+    @extend %btn-close;
+  }
+
+  &:hover .btn-close {
+    opacity: 1;
+  }
+}
+
+%sub-title {
+  @include color.auto(color, 'text');
+  height: 2.5rem;
+  margin: 0;
+  padding-top: 0.75rem;
+  padding-left: 0.75rem;
+  font-size: 0.9375rem;
+  line-height: 2.5rem;
+
+  h3 {
+    margin: 0;
+    font-size: inherit;
+  }
+}

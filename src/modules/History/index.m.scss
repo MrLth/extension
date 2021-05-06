@@ -1,4 +1,5 @@
-@import 'utils/index';
+@use 'utils/scss/index';
+@use 'utils/scss/color';
 
 .content {
   @extend %card;
@@ -67,5 +68,5 @@
   height: 1.125rem;
   margin-right: 0.875rem;
   text-align: center;
-  @include dark(color, 'bg-hl');
+  @include color.auto(color, 'bg-hl');
 }
