@@ -2,15 +2,19 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2021-05-05 15:48:31
- * @LastEditTime: 2021-05-05 23:30:36
+ * @LastEditTime: 2021-05-07 13:43:58
  * @Description: file content
  */
-import React, { MutableRefObject } from 'react'
+import { usePrevious } from 'ahooks'
+import React, { MutableRefObject, useRef } from 'react'
+import { moduleClassnames } from 'utils'
 import c from '../index.m.scss'
 import { BookmarkTreeNode } from '../model/state'
 import { Settings } from '../setup'
 import FlatFolder from './FlatFolder'
 import Label from './Label'
+
+const cn = moduleClassnames(c)
 
 interface Props {
   node: BookmarkTreeNode,
@@ -22,7 +26,12 @@ interface Props {
 function PiledOut({
   node, settings, asideRef, sectionRef,
 }: Props): JSX.Element {
-  $log({ node })
+  const prevNodeRef = useRef<BookmarkTreeNode>(null)
+  const prevNode = prevNodeRef.current
+  const isHidden = prevNode?.id === node?.id
+  $log({ node, prevNode, isHidden })
+
+  prevNodeRef.current = isHidden ? null : node
 
   const left = asideRef.current?.clientWidth
   const maxWidth = left ? window.innerWidth - left : 0
@@ -30,7 +39,9 @@ function PiledOut({
 
   return (
     <div
-      className={c['piled-out']}
+      className={cn('piled-out', {
+        'piled-out-hidden': isHidden,
+      })}
       style={{
         left,
         maxWidth,

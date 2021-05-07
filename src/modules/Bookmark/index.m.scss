@@ -98,9 +98,9 @@
   z-index: 20;
   overflow-x: auto;
   overflow-y: hidden;
-  background-color: #fff;
+  @include color.auto(background-color, 'bg-1');
 
-  a{
+  a {
     @extend %a;
   }
 
@@ -114,5 +114,14 @@
     display: inline-block;
     width: 300px;
     writing-mode: horizontal-tb;
+  }
+
+  .folder-title {
+    padding-left: 0;
+    text-align: center;
+  }
+
+  &-hidden{
+    display: none;
   }
 }
