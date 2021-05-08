@@ -1,5 +1,5 @@
 {
-  "branch": "main",
+  "branch": ["main"],
   "verifyConditions": [
     "semantic-release-chrome",
     "@semantic-release/github"
