@@ -2,14 +2,14 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2021-02-22 08:34:51
- * @LastEditTime: 2021-05-05 20:20:37
+ * @LastEditTime: 2021-05-08 08:40:49
  * @Description: file content
  */
-import { BookmarkTreeNode } from 'modules/Bookmark/model/state';
 import React from 'react';
 import { Settings } from '../setup';
 import c from '../index.m.scss';
 import Label from './Label';
+import { BookmarkTreeNode } from '../model/type';
 
 const assembleTitle = (node: BookmarkTreeNode): string => (node.depth > 1 ? `${node.title} < ${assembleTitle(node.parent)}` : node.title);
 

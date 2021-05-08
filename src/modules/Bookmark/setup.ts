@@ -2,7 +2,7 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2021-02-22 17:17:23
- * @LastEditTime: 2021-05-05 21:37:20
+ * @LastEditTime: 2021-05-08 09:23:07
  * @Description: file content
  */
 import { SettingsType, useConcent, NoMap } from 'concent';
@@ -12,21 +12,27 @@ import { FOLDER_TITLE_HEIGHT } from 'utils/const';
 import TimeLine from 'utils/animate/TimeLine';
 import Animation from 'utils/animate/Animation';
 import { ease, linear } from 'utils/animate/timing-function';
-import { BookmarkTreeNode } from './model/state';
+import { generateNewKey } from 'utils';
+import { BookmarkTreeNode, IdLinkList } from './model/type';
 
+export const initLinkList: IdLinkList = { id: '', next: null }
 const moduleName = 'bookmark';
 const connect = [] as const;
 const initState = () => ({
   clickedFolder: null as BookmarkTreeNode,
+  isHidePiledOut: true,
+  folderUpdateKey: Infinity,
 });
 
 type Module = typeof moduleName
 type Conn = ItemsType<typeof connect>
-type State = ReturnType<typeof initState>
+export type State = ReturnType<typeof initState>
 type CtxPre = CtxMSConn<EmptyObject, Module, State, Conn>
 
 const setup = (ctx: CtxPre) => {
-  const { setState, effect, reducer } = ctx;
+  const {
+    setState, effect, reducer, state,
+  } = ctx;
 
   const common = {
     listHeight: 0,
@@ -129,6 +135,70 @@ const setup = (ctx: CtxPre) => {
     });
   }, []);
 
+  // eslint-disable-next-line no-use-before-define
+  let scrollToShowParasCache: Parameters<typeof scrollToShow>
+
+  function getFolder(_node: BookmarkTreeNode): BookmarkTreeNode {
+    if ('top' in _node) {
+      return _node
+    }
+    if ('parent' in _node) {
+      return getFolder(_node.parent)
+    }
+    return null
+  }
+
+  function scrollToShow(e: React.MouseEvent<HTMLLIElement, MouseEvent>, node: BookmarkTreeNode) {
+    scrollToShowParasCache = [e, node]
+    if (!state.isHidePiledOut) {
+      return
+    }
+    e.stopPropagation();
+
+    const li = e.target as HTMLLIElement;
+
+    const folder = getFolder(node);
+    if (folder === null) return;
+
+    const newTop = folder.top - li.getBoundingClientRect().top + FOLDER_TITLE_HEIGHT
+
+    scrollToAcceleration(newTop)
+    // scrollToEaseAnimation(newTop)
+  }
+
+  let prevFolder: BookmarkTreeNode
+  let folderUpdateKey: number
+
+  function updateFolderKey(...folders: BookmarkTreeNode[]) {
+    folderUpdateKey = generateNewKey(folderUpdateKey)
+    for (let node of folders) {
+      while (node && node.id !== '1') {
+        node.updateKey = folderUpdateKey
+        node = node.parent
+      }
+    }
+  }
+
+  function piledOutShow(node: BookmarkTreeNode) {
+    if (!state.isHidePiledOut && state.clickedFolder.id === node.id) {
+      updateFolderKey(node)
+      setState({
+        clickedFolder: node,
+        isHidePiledOut: true,
+        folderUpdateKey,
+      })
+      scrollToShow(...scrollToShowParasCache)
+    } else {
+      updateFolderKey(node, prevFolder)
+      prevFolder = node
+      setState({
+        clickedFolder: node,
+        isHidePiledOut: false,
+        folderUpdateKey,
+      })
+    }
+  }
+
   const settings = {
     refList: {
       set current(v: HTMLUListElement) {
@@ -147,34 +217,12 @@ const setup = (ctx: CtxPre) => {
       const bottom = top + common.listHeight;
       reducer.bookmark.updIsRender({ top, bottom });
     },
-    scrollToShow(e: React.MouseEvent<HTMLLIElement, MouseEvent>, node: BookmarkTreeNode) {
-      e.stopPropagation();
-
-      const li = e.target as HTMLLIElement;
-
-      const getFolder = (_node: BookmarkTreeNode): BookmarkTreeNode => {
-        if ('top' in _node) {
-          return _node
-        }
-        if ('parent' in _node) {
-          return getFolder(_node.parent)
-        }
-        return null
-      };
-
-      const folder = getFolder(node);
-      if (folder === null) return;
-
-      const newTop = folder.top - li.getBoundingClientRect().top + FOLDER_TITLE_HEIGHT
-
-      scrollToAcceleration(newTop)
-      // scrollToEaseAnimation(newTop)
-    },
-    piledOutShow(node: BookmarkTreeNode) {
-      setState({ clickedFolder: node })
-      $log({ node })
-    },
+    scrollToShow,
+    piledOutShow,
     openTab: reducer.tab.openTab,
+    hidePiledOut() {
+      ctx.setState({ isHidePiledOut: true })
+    },
   };
 
   return settings;

@@ -2,11 +2,10 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2021-02-20 19:59:04
- * @LastEditTime: 2021-05-05 20:22:41
+ * @LastEditTime: 2021-05-08 08:41:33
  * @Description: file content
  */
 import React, { forwardRef } from 'react';
-import { BookmarkTreeNode } from 'modules/Bookmark/model/state';
 import { EmptyObject } from 'utils/type';
 import { CtxDeS } from 'utils/type/concent';
 import { SettingsType } from 'concent';
@@ -15,6 +14,7 @@ import Folder from './Folder';
 import Label from './Label';
 // import { Settings } from '.';
 import { Settings } from '../setup'
+import { BookmarkTreeNode } from '../model/type';
 // import {Settings} from './index'
 
 const initState = () => ({

@@ -2,10 +2,10 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2021-02-20 19:59:04
- * @LastEditTime: 2021-05-05 23:29:05
+ * @LastEditTime: 2021-05-08 08:41:53
  * @Description: file content
  */
-import { BookmarkTreeNode } from 'modules/Bookmark/model/state';
+import { BookmarkTreeNode } from 'modules/Bookmark/model/type';
 import React from 'react';
 import defaultIcon from '@img/defaultIcon.svg';
 import { preventDefault } from 'utils';

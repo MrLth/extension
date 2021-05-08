@@ -31,6 +31,19 @@
     position: relative;
     z-index: 10;
     padding-right: 1.5vw;
+    user-select: none;
+
+    &-activated {
+      border-radius: 0.3rem;
+      @include color.prop(background-color, color.dark('gray-1'), color.dark('gray-5'));
+      transition: background-color ease 0.4s;
+    }
+
+    &:hover {
+      &-activated {
+        @include color.prop(background-color, color.dark('gray-2'), color.dark('gray-6'));
+      }
+    }
 
     img {
       margin-right: 0.75rem;
@@ -96,9 +109,13 @@
   top: 0;
   bottom: 0;
   z-index: 20;
+  padding-top: 0.25rem;
   overflow-x: auto;
   overflow-y: hidden;
+  opacity: 1;
+  transition: opacity ease .2s;
   @include color.auto(background-color, 'bg-1');
+  @include color.prop(border-left, 1px color.light('border') solid, 1px color.dark('border') solid);
 
   a {
     @extend %a;
@@ -116,12 +133,11 @@
     writing-mode: horizontal-tb;
   }
 
-  .folder-title {
-    padding-left: 0;
-    text-align: center;
-  }
-
-  &-hidden{
-    display: none;
+  &-hidden {
+    opacity: 0;
+    // display: none;
   }
 }
+
+
+

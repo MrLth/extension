@@ -2,7 +2,7 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2020-05-29 17:30:01
- * @LastEditTime: 2021-04-28 23:25:51
+ * @LastEditTime: 2021-05-08 08:14:13
  * @Description: 整个项目会用到的方法和api
  */
 
@@ -149,4 +149,12 @@ export function loop(): null {
 
 export function isNewtab(url: string): boolean {
   return Boolean(url.match(/^(edge|chrome):\/\/newtab\/?$/))
+}
+
+export function generateNewKey(updateKey: number) {
+  let newKey;
+  do {
+    newKey = +new Date() * 100 + ((Math.random() * 100) | 0);
+  } while (newKey === updateKey);
+  return newKey
 }
