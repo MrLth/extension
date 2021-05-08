@@ -109,11 +109,12 @@
   top: 0;
   bottom: 0;
   z-index: 20;
+  box-sizing: border-box;
   padding-top: 0.25rem;
   overflow-x: auto;
   overflow-y: hidden;
   opacity: 1;
-  transition: opacity ease .2s;
+  transition: opacity 0.2s ease;
   @include color.auto(background-color, 'bg-1');
   @include color.prop(border-left, 1px color.light('border') solid, 1px color.dark('border') solid);
 
@@ -135,9 +136,9 @@
 
   &-hidden {
     opacity: 0;
-    // display: none;
   }
 }
 
-
-
+.display-none {
+  display: none;
+}

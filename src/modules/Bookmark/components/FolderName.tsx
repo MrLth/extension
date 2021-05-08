@@ -2,19 +2,18 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2021-02-20 19:59:04
- * @LastEditTime: 2021-05-08 09:26:46
+ * @LastEditTime: 2021-05-08 10:43:16
  * @Description: file content
  */
-import React, { memo, MutableRefObject } from 'react';
+import React, { memo } from 'react';
 
 import folderSvg from '@img/folder.svg';
 import folderOpenSvg from '@img/folder-open.svg';
 import { loop, moduleClassnames } from 'utils';
 import { SUB_NODE_PADDING_UNIT } from 'utils/const';
-import useUpdateRef from 'hooks/useUpdateRef';
 import { useWhyDidYouUpdate } from 'use-hooks';
-import { BookmarkTreeNode, IdLinkList } from '../model/type';
-import { Settings, State, initLinkList } from '../setup';
+import { BookmarkTreeNode } from '../model/type';
+import { Settings, State } from '../setup';
 import c from '../index.m.scss';
 
 const cn = moduleClassnames(c)

@@ -2,7 +2,7 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2021-02-22 17:17:23
- * @LastEditTime: 2021-05-08 09:23:07
+ * @LastEditTime: 2021-05-08 11:37:11
  * @Description: file content
  */
 import { SettingsType, useConcent, NoMap } from 'concent';
@@ -11,7 +11,7 @@ import { EmptyObject } from 'utils/type';
 import { FOLDER_TITLE_HEIGHT } from 'utils/const';
 import TimeLine from 'utils/animate/TimeLine';
 import Animation from 'utils/animate/Animation';
-import { ease, linear } from 'utils/animate/timing-function';
+import { ease } from 'utils/animate/timing-function';
 import { generateNewKey } from 'utils';
 import { BookmarkTreeNode, IdLinkList } from './model/type';
 

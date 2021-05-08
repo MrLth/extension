@@ -2,13 +2,12 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2021-02-22 08:34:51
- * @LastEditTime: 2021-05-08 08:38:14
+ * @LastEditTime: 2021-05-08 11:36:49
  * @Description: file content
  */
 import React, { useRef, MutableRefObject } from 'react';
 import { moduleClassnames } from 'utils';
 import { createPortal } from 'react-dom';
-import useUpdateRef from 'hooks/useUpdateRef';
 import BookmarkList from './components/BookmarkList';
 import useCC from './setup'
 
@@ -16,7 +15,6 @@ import c from './index.m.scss';
 import FolderNameList from './components/FolderNameList';
 import ReferenceBox from './components/ReferenceBox';
 import PiledOut from './components/PiledOut';
-import { IdLinkList } from './model/type';
 
 const cn = moduleClassnames(c);
 

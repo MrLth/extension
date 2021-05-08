@@ -2,14 +2,14 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2021-04-30 13:53:03
- * @LastEditTime: 2021-04-30 16:17:28
+ * @LastEditTime: 2021-05-08 11:36:41
  * @Description: file content
  */
 import {
-  useMap, usePrevious, useScroll, useSet,
+  useMap, usePrevious, useScroll,
 } from 'ahooks'
 import {
-  MutableRefObject, useEffect, useMemo, useRef, useState,
+  MutableRefObject, useEffect, useRef,
 } from 'react'
 
 function isUpdate(prev: number | undefined, next: number) {

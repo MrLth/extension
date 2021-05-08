@@ -2,14 +2,13 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2021-02-20 19:59:04
- * @LastEditTime: 2021-05-08 08:39:20
+ * @LastEditTime: 2021-05-08 11:36:24
  * @Description: file content
  */
-import React, { memo, useRef } from 'react';
-import useUpdateRef from 'hooks/useUpdateRef';
+import React, { memo } from 'react';
 import { Settings, State } from '../setup';
 import FolderName from './FolderName';
-import { IdLinkList, BookmarkTreeNode } from '../model/type';
+import { BookmarkTreeNode } from '../model/type';
 
 export interface FolderNameListProps {
   folders: BookmarkTreeNode[]
@@ -20,7 +19,7 @@ export interface FolderNameListProps {
 
 function FolderNameList(
   {
-    folders, settings, state, updateKey,
+    folders, settings, state,
   }: FolderNameListProps,
 ): JSX.Element {
   return (

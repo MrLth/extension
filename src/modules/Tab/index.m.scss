@@ -130,4 +130,8 @@
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
+
+  :global(#popup) &{
+    min-width: 300px;
+  }
 }
