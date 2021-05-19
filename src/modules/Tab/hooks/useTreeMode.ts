@@ -2,7 +2,7 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2021-04-28 17:55:21
- * @LastEditTime: 2021-04-30 07:54:24
+ * @LastEditTime: 2021-05-19 22:22:25
  * @Description: file content
  */
 
@@ -76,7 +76,7 @@ function addTabId(
   tab: MyTab,
   addCb?: Fn,
 ): void {
-  if (!isNewtab(openerTab.url) && !isNewtab(tab.url)) {
+  if (!isNewtab(openerTab.url) && !isNewtab(tab.url) && !tab.url.startsWith('https://www.google.com')) {
     openerTab.openedTabIds.add(tab.id)
     if (isFunction(addCb)) {
       addCb()

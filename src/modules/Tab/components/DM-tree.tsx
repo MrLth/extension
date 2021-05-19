@@ -2,7 +2,7 @@
  * @Author: mrlthf11
  * @LastEditors: mrlthf11
  * @Date: 2021-04-28 14:48:18
- * @LastEditTime: 2021-04-29 13:46:34
+ * @LastEditTime: 2021-05-19 22:20:41
  * @Description: file content
  */
 import React, { memo } from 'react'
@@ -19,8 +19,9 @@ interface Props {
 }
 
 function DisplayModeTree({
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   tabs, selectedTabs, settings, updateKey,
-}: Props) {
+}: Props): JSX.Element {
   const structureItems = useTreeMode(tabs)
   return (
     <>
